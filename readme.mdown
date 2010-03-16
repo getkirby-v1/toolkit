@@ -2,7 +2,7 @@
 
 Welcome to Kirby – a stripped down and easy to use toolkit for PHP. It's by no means a full featured mvc/wtf framework, it's more like jQuery or Mootools for PHP. Kirby is there to make nerdy things a little less nerdy.
 
-Kirby is in alpha and completely free to use. Please read the [docs][] to learn more about it, [follow Kirby on Twitter][twitter] and download the latest version to get started.
+Kirby is in alpha and completely free to use. Please read the [docs][] to learn more about it, [follow Kirby on Twitter][twitter] and [download][download] the latest version to get started.
 
 ## Features
 
@@ -74,3 +74,4 @@ Please let me know if you like Kirby or you hate Kirby or whatever: [mail@bastia
 
 [twitter]: http://twitter.com/getkirby
 [docs]: http://getkirby.com/docs
+[download]: http://github.com/nilsr/kirby/archives/master
