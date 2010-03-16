@@ -1,0 +1,76 @@
+# Kirby (Semi-Official-Repository)
+
+Welcome to Kirby – a stripped down and easy to use toolkit for PHP. It's by no means a full featured mvc/wtf framework, it's more like jQuery or Mootools for PHP. Kirby is there to make nerdy things a little less nerdy.
+
+Kirby is in alpha and completely free to use. Please read the [docs][] to learn more about it, [follow Kirby on Twitter][twitter] and download the latest version to get started.
+
+## Features
+
+- Database Handling (MySQL)
+- Loads of string and array helpers
+- File and directory handling
+- Session and Cookie helpers
+- Browser detection
+- Easy language support
+- Easy request handling
+- Validation
+- Easy app configuration
+
+Here are two tiny examples to give you a better idea what Kirby does
+
+## Easy database handling
+
+    <?php
+      
+    require_once('kirby.php');
+      
+    // setup the database
+    c::set('db.host', 'localhost');
+    c::set('db.user', 'root');
+    c::set('db.password', 'password');
+    c::set('db.name', 'database');
+      
+    // select all users from an imaginary user table
+    $users = db::select('users', '*');
+      
+    // build a list of encoded email addresses
+    // with a fallback for users without an email address
+    foreach($users AS $user) {
+        echo str::email( a::get($user, 'email', 'no email') );
+    } 
+      
+    ?>
+
+## Handling requests and validation
+
+    <?php
+
+    require_once('kirby.php');
+
+    if(get('submit')) {
+    
+        $email = get('email');
+
+        if(!v::email($email)) {
+            echo 'That is not a valid email address';
+        } else {
+            db::insert('newsletter', array('email' => $email));
+            go('/success');
+        }
+    
+    }
+
+    ?>
+    <form>
+      <input type="text" name="email" />
+      <input type="submit" name="submit" value="Subscribe" />
+    </form>
+
+## Requirements
+Kirby likes PHP 5, Apache on unix systems and MySQL. Everything else is not supported.
+
+## Feedback
+Please let me know if you like Kirby or you hate Kirby or whatever: [mail@bastian-allgeier.de](mailto:mail@bastian-allgeier.de)
+
+[twitter]: http://twitter.com/getkirby
+[docs]: http://getkirby.com/docs
