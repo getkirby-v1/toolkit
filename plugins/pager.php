@@ -7,7 +7,7 @@ class pager {
 	static public $limit;
 	static public $pages;
 
-	function setup($entries, $page, $limit) {
+	function set($entries, $page, $limit) {
 		self::$entries = $entries;
 		self::$limit   = $limit;
 		self::$pages   = ($entries > 0) ? ceil($entries / $limit) : 0;
