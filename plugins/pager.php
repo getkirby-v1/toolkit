@@ -26,6 +26,22 @@ class pager {
 		return (self::$page-1 >= 1) ? self::$page-1 : self::$page;
 	}
 	
+	function first() {
+		return 1;
+	}
+
+	function last() {
+		return self::$pages;
+	}
+
+	function is_first() {
+		return (self::$page == 1) ? true : false;
+	}
+
+	function is_last() {
+		return (self::$page == self::$pages) ? true : false;
+	}
+	
 	function count() {
 		return self::$pages;
 	}
