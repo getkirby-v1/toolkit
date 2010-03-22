@@ -3,6 +3,7 @@
 c::set('version', 0.1);
 c::set('language', 'en');
 c::set('charset', 'utf-8');
+c::set('root', dirname(__FILE__));
 
 /*
 
