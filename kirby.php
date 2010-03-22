@@ -93,6 +93,34 @@ class a {
 		return @json_encode( (array)$array );
 	}
 
+	function xml($array, $tag='root', $head=true, $charset='utf-8', $tab='  ', $level=0) {
+		$result  = ($level==0 && $head) ? '<?xml version="1.0" encoding="' . $charset . '"?>' . "\n" : '';
+		$nlevel  = ($level+1);
+		$result .= str_repeat($tab, $level) . '<' . $tag . '>' . "\n";
+		foreach($array AS $key => $value) {
+			$key = str::lower($key);
+			if(is_array($value)) {
+				$mtags = false;
+				foreach($value AS $key2 => $value2) {
+					if(is_array($value2)) {
+						$result .= self::xml($value2, $key, $head, $charset, $tab, $nlevel);
+					} else if(trim($value2) != '') {
+						$value2  = (htmlspecialchars($value2) != $value2) ? '<![CDATA[' . $value2 . ']]>' : $value2;
+						$result .= str_repeat($tab, $nlevel) . '<' . $key . '>' . $value2 . '</' . $key . '>' . "\n";
+					}
+					$mtags = true;
+				}
+				if(!$mtags && count($value) > 0) {
+					$result .= self::xml($value, $key, $head, $charset, $tab, $nlevel);
+				}
+			} else if(trim($value) != '') {
+				$value   = (htmlspecialchars($value) != $value) ? '<![CDATA[' . $value . ']]>' : $value;
+				$result .= str_repeat($tab, $nlevel) . '<' . $key . '>' . $value . '</' . $key . '>' . "\n";
+			}
+		}
+		return $result . str_repeat($tab, $level) . '</' . $tag . '>' . "\n";
+	}
+			
 	function extract($array, $key) {
 		$output = array();
 		foreach($array AS $a) if(isset($a[$key])) $output[] = $a[ $key ];
