@@ -1053,40 +1053,35 @@ class l {
 		return a::get(self::$lang, $key, $default);
 	}
 
-	function current() {
-		if(s::get('language')) return s::get('language');
-		return l::toggle( c::get('language', 'en') );
-	}
-
-	function toggle($language='en') {
+	function change($language='en') {
 		s::set('language', l::sanitize($language));
 		return s::get('language');
 	}
 
-	function detect() {
+	function current() {
+		if(s::get('language')) return s::get('language');		
 		$lang = str::split(server::get('http_accept_language'), '-');
 		$lang = str::trim(a::get($lang, 0));
-		return l::sanitize($lang);
+		$lang = l::sanitize($lang);
+		s::set('language', $lang);
+		return $lang;		
 	}
 
 	function locale($language=false) {
-
 		if(!$language) $language = l::current();
-
-		switch($language) {
-			case 'de':
-				setlocale(LC_ALL, 'de_DE@euro', 'de_DE', 'de', 'ge');
-				break;
-			case 'fr':
-				setlocale(LC_ALL, 'fr_FR', 'fr_FR', 'fr');
-				break;
-			case 'es':
-				setlocale(LC_ALL, 'es_ES', 'es_ES', 'es');
-				break;
-			default:
-				setlocale(LC_ALL, 'en_US', 'en_US', 'en');
-				break;
-		}
+		$default_locales = array(
+			'de' => array('de_DE.UTF8','de_DE@euro','de_DE','de','ge'),
+			'fr' => array('fr_FR.UTF8','fr_FR','fr'),
+			'es' => array('es_ES.UTF8','es_ES','es'),
+			'it' => array('it_IT.UTF8','it_IT','it');
+			'pt' => array('pt_PT.UTF8','pt_PT','pt');
+			'zh' => array('zh_CN.UTF8','zh_CN','zh');
+			'en' => array('en_US.UTF8','en_US','en'),
+		);
+		$locales = c::get('locales', array());
+		$locales = array_merge($default_locales, $locales);
+		setlocale(LC_ALL, a::get($locales, $language, array('en_US.UTF8','en_US','en')));
+		return setlocale(LC_ALL, 0);
 	}
 
 	function load($file) {
