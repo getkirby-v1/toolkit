@@ -934,7 +934,7 @@ class f {
 
 	function extension($filename) {
 		$ext = str_replace('.', '', strtolower(strrchr(trim($filename), '.')));
-		return str::strip_query($ext);
+		return url::strip_query($ext);
 	}
 
 	function filename($name) {
