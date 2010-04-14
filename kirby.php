@@ -77,8 +77,14 @@ class a {
 		return (isset($array[ $key ])) ? $array[ $key ] : $default;
 	}
 
-	function remove($array, $key) {
-		unset($array[$key]);
+	function remove($array, $search, $key=false) {
+		if($key) {
+			unset($array[$search]);
+		} else {
+			while($index = array_search($search, $array)) {
+				unset($array[$index]);
+			}
+		}
 		return $array;
 	}
 
