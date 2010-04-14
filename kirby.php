@@ -81,8 +81,14 @@ class a {
 		if($key) {
 			unset($array[$search]);
 		} else {
-			while($index = array_search($search, $array)) {
-				unset($array[$index]);
+			$found_all = false;	
+			while(!$found_all) {
+				$index = array_search($search, $array);
+				if($index !== false) {
+					unset($array[$index]);
+				} else {
+					$found_all = true;
+				}
 			}
 		}
 		return $array;
