@@ -9,7 +9,7 @@ class remote {
 		$response = self::request($url, false, $timeout, $headers);
 		$content  = a::get($response, 'content');
 
-		if(app::error($response)) return $response;
+		if(core::error($response)) return $response;
 		if(empty($content)) return false;
 		if($format) return self::parse($content, $format);
 
@@ -22,7 +22,7 @@ class remote {
 		$response	= self::request($url, $data, $timeout, $headers);
 		$content	= a::get($response, 'content');
 
-		if(app::error($response)) return $response;
+		if(core::error($response)) return $response;
 		if(empty($content)) return false;
 		if($format) return self::parse($content, $format);
 
