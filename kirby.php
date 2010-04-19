@@ -487,11 +487,12 @@ class cookie {
 
 class db {
 
-	public	static $trace		= array();
+	public	static $trace	= array();
 	private static $connection = false;
-	private static $database	 = false;
+	private static $database = false;
 	private static $charset	= false;
 	private static $last_query = false;
+	private static $affected = 0;
 
 	function connect() {
 
@@ -588,6 +589,7 @@ class db {
 		// execute the query
 		$result = @mysql_query($sql, $connection);
 
+		self::$affected = @mysql_affected_rows();
 		self::$trace[] = $sql;
 
 		if(!$result) return self::error(l::get('db.errors.query_failed', 'The database query failed'));
@@ -610,11 +612,16 @@ class db {
 		// execute the query
 		$execute = @mysql_query($sql, $connection);
 
+		self::$affected = @mysql_affected_rows();
 		self::$trace[] = $sql;
 
 		if(!$execute) return self::error(l::get('db.errors.query_failed', 'The database query failed'));
 		return self::last_id();
 
+	}
+
+	function affected() {
+			return self::$affected;
 	}
 
 	function last_id() {
