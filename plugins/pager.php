@@ -19,7 +19,7 @@ class pager {
 	}
 
 	function next() {
-		return (self::$page+1 < self::$pages) ? self::$page+1 : self::$page;
+		return (self::$page+1 <= self::$pages) ? self::$page+1 : self::$page;
 	}
 
 	function previous() {
