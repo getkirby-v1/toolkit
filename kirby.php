@@ -10,7 +10,10 @@ c::set('root', dirname(__FILE__));
 ############### HELPER ###############
 
 */
-function go($url, $code=false) {
+function go($url=false, $code=false) {
+
+	if(empty($url)) $url = c::get('url', '/');
+
 	// send an appropriate header
 	if($code) {
 		switch($code) {
@@ -781,7 +784,7 @@ class db {
 			if($value === 'NOW()')
 				$output[] = $key . ' = NOW()';
 			elseif(is_array($value))
-				$output[] = a::json($value);
+				$output[] = $key . ' = \'' . a::json($value) . '\'';
 			else
 				$output[] = $key . ' = \'' . self::escape($value) . '\'';
 		}
@@ -931,7 +934,7 @@ class f {
 
 	function write($file,$content,$append=false){
 		if(is_array($content)) $content = a::json($content);
-		$mode	= ($append) ? FILE_APPEND : FILE_BINARY;
+		$mode	= ($append) ? FILE_APPEND : false;
 		$write = @file_put_contents($file, $content, $mode);
 		@chmod($file, 0777);
 		return $write;
