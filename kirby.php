@@ -1534,6 +1534,13 @@ class str {
 		return strstr($str, $needle);
 	}
 
+	function match($string, $preg, $get=false, $placeholder=false) {
+		$match = preg_match($preg, $string, $array);
+		if(!$match) return false;
+		if(!$get) return $array;
+		return a::get($array, $get, $placeholder);
+	}
+
 	function random($length=false) {
 		$length = ($length) ? $length : rand(5,10);
 		$chars	= range('a','z');
