@@ -1,4 +1,4 @@
-# Kirby (Semi-Official-Repository)
+# Kirby
 
 Welcome to Kirby – a stripped down and easy to use toolkit for PHP. It's by no means a full featured mvc/wtf framework, it's more like jQuery or Mootools for PHP. Kirby is there to make nerdy things a little less nerdy.
 
