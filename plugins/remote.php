@@ -4,9 +4,11 @@ class remote {
 
 	public static $response = false;
 
-	function get($url, $format='plain', $timeout=10, $headers=array()) {
+	function get($url, $data=array(), $format=false, $options=array()) {
 
-		$response = self::request($url, false, $timeout, $headers);
+    $query    = http_build_query($data);    
+    $url      = (url::has_query($url)) ? $url . '&' . $query : $url . '?' . $query;
+		$response = self::request($url, false, $options);
 		$content  = a::get($response, 'content');
 
 		if(core::error($response)) return $response;
@@ -16,10 +18,10 @@ class remote {
 		return $content;
 	}
 
-	function post($url, $data=array(), $format=false, $timeout=10, $headers=array()) {
+	function post($url, $data=array(), $format=false, $options=array()) {
 
 		$data			= http_build_query($data);
-		$response	= self::request($url, $data, $timeout, $headers);
+		$response	= self::request($url, $data, $options);
 		$content	= a::get($response, 'content');
 
 		if(core::error($response)) return $response;
@@ -39,38 +41,46 @@ class remote {
 		return a::get($headers, 'Content-Length', -1);
 	}
 
-	function request($url, $data=null, $timeout=10, $headers=array()) {
+	function request($url, $post=false, $options=array()) {
 
+    $defaults = array(
+        'timeout'  => 10,
+        'headers'  => array(),
+        'encoding' => 'utf-8',
+        'agent'    => self::agent()
+    );
+    
+    $options = array_merge($defaults, $options);
 		$ch = curl_init();
 
-		$options = array(
+		$params = array(
 			CURLOPT_URL 						=> $url,
 			CURLOPT_RETURNTRANSFER	=> true,
 			CURLOPT_FOLLOWLOCATION	=> true,
-			CURLOPT_ENCODING 				=> 'utf-8',
-			CURLOPT_USERAGENT 			=> self::agent(),
+			CURLOPT_ENCODING 				=> $options['encoding'],
+			CURLOPT_USERAGENT 			=> $options['agent'],
 			CURLOPT_AUTOREFERER			=> true,
-			CURLOPT_CONNECTTIMEOUT	=> $timeout,
-			CURLOPT_TIMEOUT 				=> $timeout,
+			CURLOPT_CONNECTTIMEOUT	=> $options['timeout'],
+			CURLOPT_TIMEOUT 				=> $options['timeout'],
 			CURLOPT_MAXREDIRS 			=> 10,
 			CURLOPT_SSL_VERIFYPEER	=> false,
 		);
 
-		if(!empty($headers)) $options[CURLOPT_HTTPHEADER] = $headers;
+		if(!empty($headers)) $params[CURLOPT_HTTPHEADER] = $options['headers'];
 
-		if(!empty($data)) {
-			$options[CURLOPT_POST] = true;
-			$options[CURLOPT_POSTFIELDS] = $data;
+		if(!empty($post)) {
+			$params[CURLOPT_POST] = true;
+			$params[CURLOPT_POSTFIELDS] = $post;
 		}
 
-		curl_setopt_array( $ch, $options );
+		curl_setopt_array($ch, $params);
 
 		$content  = curl_exec($ch);
 		$error 		= curl_errno($ch);
 		$message  = curl_error($ch);
 		$response = curl_getinfo($ch);
 
-		curl_close ($ch);
+		curl_close($ch);
 
 		$response['error']   = $error;
 		$response['message'] = $message;
@@ -128,7 +138,11 @@ class remote {
 		return a::get($agents, $id);
 
 	}
+	
+	function response() {
+    return self::$response;
+	}
 
-}
+} 
 
 ?>
