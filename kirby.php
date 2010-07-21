@@ -1697,6 +1697,10 @@ class str {
 
 class url {
 
+	function current() {
+		return 'http://' . server::get('http_host') . server::get('request_uri');
+	}
+
 	function short($url, $chars=false, $base=false, $rep='…') {
 		$url = str_replace('http://','',$url);
 		$url = str_replace('https://','',$url);
