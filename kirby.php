@@ -84,7 +84,7 @@ class a {
 		if($key) {
 			unset($array[$search]);
 		} else {
-			$found_all = false;	
+			$found_all = false;
 			while(!$found_all) {
 				$index = array_search($search, $array);
 				if($index !== false) {
@@ -136,7 +136,7 @@ class a {
 		}
 		return $result . str_repeat($tab, $level) . '</' . $tag . '>' . "\n";
 	}
-			
+
 	function extract($array, $key) {
 		$output = array();
 		foreach($array AS $a) if(isset($a[$key])) $output[] = $a[ $key ];
@@ -1081,12 +1081,12 @@ class l {
 	}
 
 	function current() {
-		if(s::get('language')) return s::get('language');		
+		if(s::get('language')) return s::get('language');
 		$lang = str::split(server::get('http_accept_language'), '-');
 		$lang = str::trim(a::get($lang, 0));
 		$lang = l::sanitize($lang);
 		s::set('language', $lang);
-		return $lang;		
+		return $lang;
 	}
 
 	function locale($language=false) {
@@ -1217,7 +1217,7 @@ class s {
 	}
 
 	function remove($key) {
-		return a::remove($_SESSION, $key);
+		$_SESSION = a::remove($_SESSION, $key, true);
 	}
 
 	function start() {
