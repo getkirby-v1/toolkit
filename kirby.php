@@ -619,8 +619,9 @@ class db {
 		self::$trace[] = $sql;
 
 		if(!$execute) return self::error(l::get('db.errors.query_failed', 'The database query failed'));
-		return self::last_id();
-
+		
+		$last_id = self::last_id();
+		return ($last_id === false) ? self::$affected : self::last_id();
 	}
 
 	function affected() {
@@ -1217,7 +1218,7 @@ class s {
 	}
 
 	function remove($key) {
-		return a::remove($_SESSION, $key);
+		return a::remove( & $_SESSION, $key);
 	}
 
 	function start() {
