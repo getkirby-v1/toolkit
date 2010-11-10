@@ -174,7 +174,7 @@ class a {
 	function fill($array, $limit, $fill='placeholder') {
 		if(count($array) < $limit) {
 			$diff = $limit-count($array);
-			for($x=0; $x<$diff; $x++) $array[] = 'placeholder';
+			for($x=0; $x<$diff; $x++) $array[] = $fill;
 		}
 		return $array;
 	}
