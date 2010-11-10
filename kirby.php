@@ -1,6 +1,6 @@
 <?php
 
-c::set('version', 0.1);
+c::set('version', 0.2);
 c::set('language', 'en');
 c::set('charset', 'utf-8');
 c::set('root', dirname(__FILE__));
@@ -80,7 +80,7 @@ class a {
 		return (isset($array[ $key ])) ? $array[ $key ] : $default;
 	}
 
-	function remove($array, $search, $key=false) {
+	function remove($array, $search, $key=true) {
 		if($key) {
 			unset($array[$search]);
 		} else {
@@ -1218,7 +1218,7 @@ class s {
 	}
 
 	function remove($key) {
-		return a::remove( & $_SESSION, $key, true);
+		return a::remove( & $_SESSION, $key);
 	}
 
 	function start() {
