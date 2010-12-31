@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<!-- saved from url=(0027)http://getkirby.com/plugins -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>Kirby</title>
+
+
+<meta name="description" content="Kirby is a super simple, designy PHP toolkit">
+<meta name="keywords" content="php, toolkit, jquery, simple, design">
+<meta name="author" content="Bastian Allgeier">
+<meta http-equiv="imagetoolbar" content="no">
+
+<link rel="shortcut icon" href="http://getkirby.com/favicon.ico">
+
+<link rel="stylesheet" href="./plugins_files/styles.css" media="all" type="text/css">
+
+<link rel="stylesheet" type="text/css" media="screen" href="./plugins_files/Flame.twilight.css"><script src="./plugins_files/Fuel.php.js" type="text/javascript"></script></head>
+
+<body>
+
+<div id="page">
+
+  <div id="menu">
+  
+    <ul>
+            <li><a href="http://getkirby.com/home">kirby</a></li>
+            <li><a href="http://getkirby.com/docs">docs</a></li>
+            <li><a href="http://getkirby.com/download">download</a></li>
+            <li><a class="active" href="./plugins_files/plugins.htm">plugins</a></li>
+          </ul>
+  
+  </div>
+  
+  <div id="content" class="plugins">
+  
+<h1>Plugins</h1>
+
+<p>
+	While the core of Kirby should stay as clean and simple as possible there's a lot of room for plugins. 
+	I will release some of which I've already built within the next weeks. Please feel free to build your
+	own and add them on <a href="http://github.com/bastianallgeier/kirby">Github</a>
+</p>
+
+<h2>Remote</h2>
+
+<p>Remote is the a Plugin, which makes it easy to handle remote get and post requests.</p>
+
+<pre><code style="display: none; ">&lt;?php
+
+require_once('kirby.php');
+require_once('plugins/remote.php');
+
+$data = remote::get('http://api.twitter.com/1/statuses/show/bastianallgeier.json', 'json');
+
+a::show($data);
+
+?&gt;</code><pre class="twilightLighter"><span class="de1">&lt;?php</span>
+
+<span class="me1">require_once</span><span class="br0">(</span><span class="st0">'kirby.php'</span><span class="br0">)</span>;
+<span class="me1">require_once</span><span class="br0">(</span><span class="st0">'plugins/remote.php'</span><span class="br0">)</span>;
+
+<span class="kw3">$data</span> = <span class="kw4">remote</span>::<span class="me1">get</span><span class="br0">(</span><span class="st0">'http://api.twitter.com/1/statuses/show/bastianallgeier.json'</span>, <span class="st0">'json'</span><span class="br0">)</span>;
+
+<span class="kw4">a</span>::<span class="me1">show</span><span class="br0">(</span><span class="kw3">$data</span><span class="br0">)</span>;
+
+<span class="de2">?&gt;</span></pre></pre>
+
+<p>
+	This is all you've got to do to get the latest Tweets from the Twitter API, for example. Remote can automatically
+	parse the response (here it will parse the json) and return a nice and pretty PHP array. There's a lot more remote
+	can do for you, so stay tuned for more docs or dive into the code.
+</p>
+
+<h2>Template</h2>
+
+<p>This is probably the tiniest template engine ever. It is very easy to use and yet powerfull enough for bigger projects.</p>
+
+<pre><code style="display: none; ">&lt;?php
+
+require_once('kirby.php');
+require_once('plugins/template.php');
+
+// fill the template
+tpl::set('title', 'Some random Site title');
+tpl::set('body', 'Great site, bla, bla, bla');
+
+// load the default template
+tpl::load('blog');
+
+?&gt;</code><pre class="twilightLighter"><span class="de1">&lt;?php</span>
+
+<span class="me1">require_once</span><span class="br0">(</span><span class="st0">'kirby.php'</span><span class="br0">)</span>;
+<span class="me1">require_once</span><span class="br0">(</span><span class="st0">'plugins/template.php'</span><span class="br0">)</span>;
+<span class="co1">
+// fill the template</span>
+<span class="kw4">tpl</span>::<span class="me1">set</span><span class="br0">(</span><span class="st0">'title'</span>, <span class="st0">'Some random Site title'</span><span class="br0">)</span>;
+<span class="kw4">tpl</span>::<span class="me1">set</span><span class="br0">(</span><span class="st0">'body'</span>, <span class="st0">'Great site, bla, bla, bla'</span><span class="br0">)</span>;
+<span class="co1">
+// load the default template</span>
+<span class="kw4">tpl</span>::<span class="me1">load</span><span class="br0">(</span><span class="st0">'blog'</span><span class="br0">)</span>;
+
+<span class="de2">?&gt;</span></pre></pre>
+
+<p>
+Just add a template folder to the same directory where your kirby core file stays and add 
+your template files there. All template files are normal php files:
+</p>
+<pre><code style="display: none; ">&lt;!-- this is your templates/blog.php template file --&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;&lt;?php echo $title ?&gt;&lt;/title&gt;
+  &lt;/head&gt;
+  
+  &lt;body&gt;
+  &lt;?php echo $body ?&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code><pre class="twilightLighter">&lt;!-- <span class="kw4">this</span> <span class="kw4">is</span> <span class="kw4">your</span> <span class="kw4">templates</span>/<span class="kw4">blog</span>.<span class="kw4">php</span> <span class="kw4">template</span> <span class="kw2">file</span> --&gt;
+&lt;<span class="kw4">html</span>&gt;
+  &lt;<span class="kw4">head</span>&gt;
+    &lt;<span class="kw4">title</span>&gt;<span class="de1">&lt;?php</span> <span class="kw1">echo</span> <span class="kw3">$title</span> <span class="de2">?&gt;</span>&lt;/<span class="kw4">title</span>&gt;
+  &lt;/<span class="kw4">head</span>&gt;
+  
+  &lt;<span class="kw4">body</span>&gt;
+  <span class="de1">&lt;?php</span> <span class="kw1">echo</span> <span class="kw3">$body</span> <span class="de2">?&gt;</span>
+  &lt;/<span class="kw4">body</span>&gt;
+&lt;/<span class="kw4">html</span>&gt;</pre></pre>
+
+<p>You can even use tpl::load() inside template files to add common code snippets:</p>
+<pre><code style="display: none; ">&lt;!-- this is your templates/blog.php template file --&gt;
+&lt;html&gt;
+  &lt;head&gt;
+    &lt;title&gt;&lt;?php echo $title ?&gt;&lt;/title&gt;
+  &lt;/head&gt;
+  
+  &lt;body&gt;
+  &lt;?php echo tpl::load('menu') ?&gt;
+  &lt;?php echo $body ?&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code><pre class="twilightLighter">&lt;!-- <span class="kw4">this</span> <span class="kw4">is</span> <span class="kw4">your</span> <span class="kw4">templates</span>/<span class="kw4">blog</span>.<span class="kw4">php</span> <span class="kw4">template</span> <span class="kw2">file</span> --&gt;
+&lt;<span class="kw4">html</span>&gt;
+  &lt;<span class="kw4">head</span>&gt;
+    &lt;<span class="kw4">title</span>&gt;<span class="de1">&lt;?php</span> <span class="kw1">echo</span> <span class="kw3">$title</span> <span class="de2">?&gt;</span>&lt;/<span class="kw4">title</span>&gt;
+  &lt;/<span class="kw4">head</span>&gt;
+  
+  &lt;<span class="kw4">body</span>&gt;
+  <span class="de1">&lt;?php</span> <span class="kw1">echo</span> <span class="kw4">tpl</span>::<span class="me1">load</span><span class="br0">(</span><span class="st0">'menu'</span><span class="br0">)</span> <span class="de2">?&gt;</span>
+  <span class="de1">&lt;?php</span> <span class="kw1">echo</span> <span class="kw3">$body</span> <span class="de2">?&gt;</span>
+  &lt;/<span class="kw4">body</span>&gt;
+&lt;/<span class="kw4">html</span>&gt;</pre></pre>
+
+
+<h2>Timer</h2>
+
+<p>Include the timer to do some raw benchmarking of your code.</p>
+
+<pre><code style="display: none; ">&lt;?php
+
+require_once('kirby.php');
+require_once('plugins/timer.php');
+
+// some code
+
+echo timer::get();
+// sample output: 0.123412 
+
+// start a new timer
+timer::set('another_timer');
+
+// some more code
+
+echo timer::get('another_timer');
+// sample output : 1.21231
+
+?&gt;</code><pre class="twilightLighter"><span class="de1">&lt;?php</span>
+
+<span class="me1">require_once</span><span class="br0">(</span><span class="st0">'kirby.php'</span><span class="br0">)</span>;
+<span class="me1">require_once</span><span class="br0">(</span><span class="st0">'plugins/timer.php'</span><span class="br0">)</span>;
+<span class="co1">
+// some code</span>
+
+<span class="kw1">echo</span> <span class="kw4">timer</span>::<span class="me1">get</span><span class="br0">(</span><span class="br0">)</span>;<span class="co1">
+// sample output: 0.123412 </span>
+<span class="co1">
+// start a new timer</span>
+<span class="kw4">timer</span>::<span class="me1">set</span><span class="br0">(</span><span class="st0">'another_timer'</span><span class="br0">)</span>;
+<span class="co1">
+// some more code</span>
+
+<span class="kw1">echo</span> <span class="kw4">timer</span>::<span class="me1">get</span><span class="br0">(</span><span class="st0">'another_timer'</span><span class="br0">)</span>;<span class="co1">
+// sample output : 1.21231</span>
+
+<span class="de2">?&gt;</span></pre></pre>
+
+<p>
+	You can start as many timers as you like and get them back later. A global timer is started when you include
+	the plugin, which will be returned when you don't specify a key i.e: echo timer::get();
+</p>
+
+
+<h2>Upload</h2>
+
+<p>
+	Handling file uploads is always a pain in the ass. This plugin tries to make it as joyful as possible. 
+	All you need to do is to set the name of the file field and the destination, where the file should be stored.
+</p>
+
+<pre><code style="display: none; ">&lt;?php
+
+require_once('kirby.php');
+require_once('plugins/upload.php');
+
+if(get('submit')) {
+  upload::file('file-upload', 'files/upload.jpg');
+}
+
+?&gt;
+&lt;form action="" enctype="multipart/form-data" method="post"&gt;
+&lt;input type="file" name="file-upload" /&gt;
+&lt;input type="submit" name="submit" /&gt;
+&lt;/form&gt;</code><pre class="twilightLighter"><span class="de1">&lt;?php</span>
+
+<span class="me1">require_once</span><span class="br0">(</span><span class="st0">'kirby.php'</span><span class="br0">)</span>;
+<span class="me1">require_once</span><span class="br0">(</span><span class="st0">'plugins/upload.php'</span><span class="br0">)</span>;
+
+<span class="me1">if</span><span class="br0">(</span><span class="me1">get</span><span class="br0">(</span><span class="st0">'submit'</span><span class="br0">)</span><span class="br0">)</span> <span class="br0">{</span>
+  <span class="kw4">upload</span>::<span class="me1">file</span><span class="br0">(</span><span class="st0">'file-upload'</span>, <span class="st0">'files/upload.jpg'</span><span class="br0">)</span>;
+<span class="br0">}</span>
+
+<span class="de2">?&gt;</span>
+&lt;<span class="kw4">form</span> <span class="kw4">action</span>=<span class="st0">""</span> <span class="kw4">enctype</span>=<span class="st0">"multipart/form-data"</span> <span class="kw4">method</span>=<span class="st0">"post"</span>&gt;
+&lt;<span class="kw4">input</span> <span class="kw4">type</span>=<span class="st0">"file"</span> <span class="kw4">name</span>=<span class="st0">"file-upload"</span> /&gt;
+&lt;<span class="kw4">input</span> <span class="kw4">type</span>=<span class="st0">"submit"</span> <span class="kw4">name</span>=<span class="st0">"submit"</span> /&gt;
+&lt;/<span class="kw4">form</span>&gt;</pre></pre>
+
+<p>
+	There are a lot of ways to customize the upload. Please stay tuned for the documentation.
+</p>
+
+
+<h2>Pager</h2>
+
+<p>
+	The pager plugin helps to page through a larger number of entries. Just enter the number of entries,
+	the current page and the limit of entries, which will be shown and all the calculation is done for you.
+	Additionally the pager sanitizes user input, so if you enter a invalid page number the nearest possible page
+	will be returned instead.
+</p>
+
+<pre><code style="display: none; ">&lt;?php
+
+require_once('kirby.php');
+require_once('plugins/pager.php');
+
+$entries = 100;
+$page    = 2;
+$limit   = 20;
+
+pager::set($entries, $page, $limit);
+
+echo pager::get();
+// output: 2
+
+echo pager::next();
+// output: 3
+
+echo pager::previous();
+// output: 1
+
+echo pager::last();
+// output: 5
+
+echo pager::first();
+// output: 1
+
+echo pager::db();
+// output: 20 (returns a valid page number for SQL queries)
+
+?&gt;</code><pre class="twilightLighter"><span class="de1">&lt;?php</span>
+
+<span class="me1">require_once</span><span class="br0">(</span><span class="st0">'kirby.php'</span><span class="br0">)</span>;
+<span class="me1">require_once</span><span class="br0">(</span><span class="st0">'plugins/pager.php'</span><span class="br0">)</span>;
+
+<span class="kw3">$entries</span> = <span class="nu0">100</span>;
+<span class="kw3">$page</span>    = <span class="nu0">2</span>;
+<span class="kw3">$limit</span>   = <span class="nu0">20</span>;
+
+<span class="kw4">pager</span>::<span class="me1">set</span><span class="br0">(</span><span class="kw3">$entries</span>, <span class="kw3">$page</span>, <span class="kw3">$limit</span><span class="br0">)</span>;
+
+<span class="kw1">echo</span> <span class="kw4">pager</span>::<span class="me1">get</span><span class="br0">(</span><span class="br0">)</span>;<span class="co1">
+// output: 2</span>
+
+<span class="kw1">echo</span> <span class="kw4">pager</span>::<span class="me1">next</span><span class="br0">(</span><span class="br0">)</span>;<span class="co1">
+// output: 3</span>
+
+<span class="kw1">echo</span> <span class="kw4">pager</span>::<span class="me1">previous</span><span class="br0">(</span><span class="br0">)</span>;<span class="co1">
+// output: 1</span>
+
+<span class="kw1">echo</span> <span class="kw4">pager</span>::<span class="me1">last</span><span class="br0">(</span><span class="br0">)</span>;<span class="co1">
+// output: 5</span>
+
+<span class="kw1">echo</span> <span class="kw4">pager</span>::<span class="me1">first</span><span class="br0">(</span><span class="br0">)</span>;<span class="co1">
+// output: 1</span>
+
+<span class="kw1">echo</span> <span class="kw4">pager</span>::<span class="me1">db</span><span class="br0">(</span><span class="br0">)</span>;<span class="co1">
+// output: 20 (returns a valid page number for SQL queries)</span>
+
+<span class="de2">?&gt;</span></pre></pre>
+
+<h2>Crypt</h2>
+
+<p>
+	<a href="http://oelna.de/">Arno</a> has built a great crypt plugin, which helps to encode and decode strings.
+	This requires mcrypt.
+</p>
+
+<pre><code style="display: none; ">&lt;?php
+
+require_once('kirby.php');
+require_once('plugins/crypt.php');
+
+$key = '12345';
+$secret_text = 'supersecretpassword';
+$encrypted_text = crypt::encode($secret_text, $key);
+
+// later
+
+echo crypt::decode($encrypted_text, $key);
+// output: 'supersecretpassword'
+
+?&gt;</code><pre class="twilightLighter"><span class="de1">&lt;?php</span>
+
+<span class="me1">require_once</span><span class="br0">(</span><span class="st0">'kirby.php'</span><span class="br0">)</span>;
+<span class="me1">require_once</span><span class="br0">(</span><span class="st0">'plugins/crypt.php'</span><span class="br0">)</span>;
+
+<span class="kw3">$key</span> = <span class="st0">'12345'</span>;
+<span class="kw3">$secret_text</span> = <span class="st0">'supersecretpassword'</span>;
+<span class="kw3">$encrypted_text</span> = <span class="kw2">crypt</span>::<span class="me1">encode</span><span class="br0">(</span><span class="kw3">$secret_text</span>, <span class="kw3">$key</span><span class="br0">)</span>;
+<span class="co1">
+// later</span>
+
+<span class="kw1">echo</span> <span class="kw2">crypt</span>::<span class="me1">decode</span><span class="br0">(</span><span class="kw3">$encrypted_text</span>, <span class="kw3">$key</span><span class="br0">)</span>;<span class="co1">
+// output: 'supersecretpassword'</span>
+
+<span class="de2">?&gt;</span></pre></pre>  </div>
+
+  <div id="footer">
+    © 2010 –&nbsp;<a href="http://bastian-allgeier.de/">Bastian Allgeier</a>
+    <ul>
+      <li><a href="http://twitter.com/getkirby">Follow Kirby on Twitter</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<script type="text/javascript" src="./plugins_files/mootools.js"></script>
+<script type="text/javascript" src="./plugins_files/Lighter.js"></script>
+<script type="text/javascript" src="./plugins_files/Fuel.js"></script>
+<script type="text/javascript" src="./plugins_files/scripts.js"></script>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="./plugins_files/ga.js" type="text/javascript"></script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-431401-11");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+
+
+
+</body></html>

@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<!-- saved from url=(0029)http://getkirby.com/docs/file -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>Kirby</title>
+
+
+<meta name="description" content="Kirby is a super simple, designy PHP toolkit">
+<meta name="keywords" content="php, toolkit, jquery, simple, design">
+<meta name="author" content="Bastian Allgeier">
+<meta http-equiv="imagetoolbar" content="no">
+
+<link rel="shortcut icon" href="http://getkirby.com/favicon.ico">
+
+<link rel="stylesheet" href="./file_files/styles.css" media="all" type="text/css">
+
+<link rel="stylesheet" type="text/css" media="screen" href="./file_files/Flame.twilight.css"><script src="./file_files/Fuel.php.js" type="text/javascript"></script></head>
+
+<body>
+
+<div id="page">
+
+  <div id="menu">
+  
+    <ul>
+            <li><a href="http://getkirby.com/home">kirby</a></li>
+            <li><a class="active" href="http://getkirby.com/docs">docs</a></li>
+            <li><a href="http://getkirby.com/download">download</a></li>
+            <li><a href="http://getkirby.com/plugins">plugins</a></li>
+          </ul>
+  
+  </div>
+  
+  <div id="content" class="docs">
+  <h1>Documentation</h1>
+
+
+<ul id="docsmenu">
+    <li><a href="http://getkirby.com/docs/array">array</a></li>
+      <li><a href="http://getkirby.com/docs/browser">browser</a></li>
+      <li><a href="http://getkirby.com/docs/config">config</a></li>
+      <li><a href="http://getkirby.com/docs/content">content</a></li>
+      <li><a href="http://getkirby.com/docs/cookie">cookie</a></li>
+      <li><a href="http://getkirby.com/docs/core">core</a></li>
+      <li><a href="http://getkirby.com/docs/database">database</a></li>
+      <li><a href="http://getkirby.com/docs/dir">dir</a></li>
+      <li><a class="active" href="./file_files/file.htm">file</a></li>
+      <li><a href="http://getkirby.com/docs/globals">globals</a></li>
+      <li><a href="http://getkirby.com/docs/helper">helper</a></li>
+      <li><a href="http://getkirby.com/docs/language">language</a></li>
+      <li><a href="http://getkirby.com/docs/request">request</a></li>
+      <li><a href="http://getkirby.com/docs/server">server</a></li>
+      <li><a href="http://getkirby.com/docs/session">session</a></li>
+      <li><a href="http://getkirby.com/docs/size">size</a></li>
+      <li><a href="http://getkirby.com/docs/string">string</a></li>
+      <li><a href="http://getkirby.com/docs/url">url</a></li>
+      <li><a href="http://getkirby.com/docs/validation">validation</a></li>
+      <li><a href="http://getkirby.com/docs/xml">xml</a></li>
+  </ul>
+
+<div id="documentation">
+<h2>F (File)</h2>
+
+<p>The f class simplifies file handling</p>
+
+<h3>Function: f::write</h3>
+
+<p>Create a new file with some content</p>
+
+<h4>Syntax</h4>
+
+<pre><code style="display: none; ">f::write('filename', 'content');
+</code><pre class="twilightLighter"><span class="kw4">f</span>::<span class="me1">write</span><span class="br0">(</span><span class="st0">'filename'</span>, <span class="st0">'content'</span><span class="br0">)</span>;</pre></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>filename - (string) The filename for the new file</li>
+<li>content - (mixed) Content can either be a string, binary stuff or an array. Arrays will be converted to json</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(boolean) returns true or false</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code style="display: none; ">f::write('test.txt', 'hello');
+// creates a new text file with hello as content
+
+// create a new file
+f::write('text.txt', array('test' =&gt; 'hello'));
+// creates a new file and encodes the array as json    
+</code><pre class="twilightLighter"><span class="kw4">f</span>::<span class="me1">write</span><span class="br0">(</span><span class="st0">'test.txt'</span>, <span class="st0">'hello'</span><span class="br0">)</span>;<span class="co1">
+// creates a new text file with hello as content</span>
+<span class="co1">
+// create a new file</span>
+<span class="kw4">f</span>::<span class="me1">write</span><span class="br0">(</span><span class="st0">'text.txt'</span>, <span class="me1">array</span><span class="br0">(</span><span class="st0">'test'</span> =&gt; <span class="st0">'hello'</span><span class="br0">)</span><span class="br0">)</span>;<span class="co1">
+// creates a new file and encodes the array as json    </span></pre></pre>
+
+<hr>
+
+<h3>Function: f::read</h3>
+
+<p>Read a file and return all the content</p>
+
+<h4>Syntax</h4>
+
+<pre><code style="display: none; ">f::read('filename'[, 'format']);
+</code><pre class="twilightLighter"><span class="kw4">f</span>::<span class="me1">read</span><span class="br0">(</span><span class="st0">'filename'</span><span class="br0">[</span>, <span class="st0">'format'</span><span class="br0">]</span><span class="br0">)</span>;</pre></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>filename - (string) The filename/path to the file</li>
+<li>format - (string) The content can be parsed at once (json, xml, php)</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(mixed) returns the content or false</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code style="display: none; ">$content = f::read('test.txt');
+// i.e. content is hello
+
+$content = f::read('text.txt', 'json');
+// returns an array with the parsed content
+</code><pre class="twilightLighter"><span class="kw3">$content</span> = <span class="kw4">f</span>::<span class="me1">read</span><span class="br0">(</span><span class="st0">'test.txt'</span><span class="br0">)</span>;<span class="co1">
+// i.e. content is hello</span>
+
+<span class="kw3">$content</span> = <span class="kw4">f</span>::<span class="me1">read</span><span class="br0">(</span><span class="st0">'text.txt'</span>, <span class="st0">'json'</span><span class="br0">)</span>;<span class="co1">
+// returns an array with the parsed content</span></pre></pre>
+
+<hr>
+
+<h3>Function: f::move</h3>
+
+<p>Move the file to a new directory or rename it</p>
+
+<h4>Syntax</h4>
+
+<pre><code style="display: none; ">f::move('old_filename', 'new_filename');
+</code><pre class="twilightLighter"><span class="kw4">f</span>::<span class="me1">move</span><span class="br0">(</span><span class="st0">'old_filename'</span>, <span class="st0">'new_filename'</span><span class="br0">)</span>;</pre></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>old_filename - (string) The path to the original file</li>
+<li>new_filename - (string) The path to where the file should be next</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(boolean) returns true or false</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code style="display: none; ">$move = f::move('test.txt', 'super.txt');
+
+if($move) echo 'The file has been moved';
+</code><pre class="twilightLighter"><span class="kw3">$move</span> = <span class="kw4">f</span>::<span class="me1">move</span><span class="br0">(</span><span class="st0">'test.txt'</span>, <span class="st0">'super.txt'</span><span class="br0">)</span>;
+
+<span class="me1">if</span><span class="br0">(</span><span class="kw3">$move</span><span class="br0">)</span> <span class="kw1">echo</span> <span class="st0">'The file has been moved'</span>;</pre></pre>
+
+<hr>
+
+<h3>Function: f::remove</h3>
+
+<p>Removes the file</p>
+
+<h4>Syntax</h4>
+
+<pre><code style="display: none; ">f::remove('filename');
+</code><pre class="twilightLighter"><span class="kw4">f</span>::<span class="me1">remove</span><span class="br0">(</span><span class="st0">'filename'</span><span class="br0">)</span>;</pre></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>filename - (string) The path to the file</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(boolean) returns true or false</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code style="display: none; ">$remove = f::remove('test.txt');
+
+if($remove) echo 'The file has been removed';
+</code><pre class="twilightLighter"><span class="kw3">$remove</span> = <span class="kw4">f</span>::<span class="me1">remove</span><span class="br0">(</span><span class="st0">'test.txt'</span><span class="br0">)</span>;
+
+<span class="me1">if</span><span class="br0">(</span><span class="kw3">$remove</span><span class="br0">)</span> <span class="kw1">echo</span> <span class="st0">'The file has been removed'</span>;</pre></pre>
+
+<hr>
+
+<h3>Function: f::extension</h3>
+
+<p>Get the extension of the filename</p>
+
+<h4>Syntax</h4>
+
+<pre><code style="display: none; ">f::extension('filename');
+</code><pre class="twilightLighter"><span class="kw4">f</span>::<span class="me1">extension</span><span class="br0">(</span><span class="st0">'filename'</span><span class="br0">)</span>;</pre></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>filename - (string) The filename</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) returns the extension</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code style="display: none; ">$extension = f::extension('test.txt');
+// extension is txt
+</code><pre class="twilightLighter"><span class="kw3">$extension</span> = <span class="kw4">f</span>::<span class="me1">extension</span><span class="br0">(</span><span class="st0">'test.txt'</span><span class="br0">)</span>;<span class="co1">
+// extension is txt</span></pre></pre>
+
+<hr>
+
+<h3>Function: f::filename</h3>
+
+<p>Get the filename without the path</p>
+
+<h4>Syntax</h4>
+
+<pre><code style="display: none; ">f::filename('path');
+</code><pre class="twilightLighter"><span class="kw4">f</span>::<span class="me1">filename</span><span class="br0">(</span><span class="st0">'path'</span><span class="br0">)</span>;</pre></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>path - (string) The path to the file</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) returns the filename</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code style="display: none; ">$filename = f::filename('/var/www/test.txt');
+// filename is test.txt
+</code><pre class="twilightLighter"><span class="kw3">$filename</span> = <span class="kw4">f</span>::<span class="me1">filename</span><span class="br0">(</span><span class="st0">'/var/www/test.txt'</span><span class="br0">)</span>;<span class="co1">
+// filename is test.txt</span></pre></pre>
+
+<hr>
+
+<h3>Function: f::name</h3>
+
+<p>Get the name without the path and the extension</p>
+
+<h4>Syntax</h4>
+
+<pre><code style="display: none; ">f::name('path');
+</code><pre class="twilightLighter"><span class="kw4">f</span>::<span class="me1">name</span><span class="br0">(</span><span class="st0">'path'</span><span class="br0">)</span>;</pre></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>path - (string) The path to the file</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) returns the name</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code style="display: none; ">$name = f::name('/var/www/test.txt');
+// name is test
+</code><pre class="twilightLighter"><span class="kw3">$name</span> = <span class="kw4">f</span>::<span class="me1">name</span><span class="br0">(</span><span class="st0">'/var/www/test.txt'</span><span class="br0">)</span>;<span class="co1">
+// name is test</span></pre></pre>
+
+<hr>
+
+<h3>Function: f::dirname</h3>
+
+<p>Get the name of the directory without filename itself</p>
+
+<h4>Syntax</h4>
+
+<pre><code style="display: none; ">f::dirname('path');
+</code><pre class="twilightLighter"><span class="kw4">f</span>::<span class="me1">dirname</span><span class="br0">(</span><span class="st0">'path'</span><span class="br0">)</span>;</pre></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>path - (string) The path to the file</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) returns the dirname</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code style="display: none; ">$dirname = f::dirname('/var/www/test.txt');
+// dirname is /var/www
+</code><pre class="twilightLighter"><span class="kw3">$dirname</span> = <span class="kw4">f</span>::<span class="me1">dirname</span><span class="br0">(</span><span class="st0">'/var/www/test.txt'</span><span class="br0">)</span>;<span class="co1">
+// dirname is /var/www</span></pre></pre>
+
+<hr>
+
+<h3>Function: f::size</h3>
+
+<p>Get the size of the file</p>
+
+<h4>Syntax</h4>
+
+<pre><code style="display: none; ">f::size('path'[,'nice_size']);
+</code><pre class="twilightLighter"><span class="kw4">f</span>::<span class="me1">size</span><span class="br0">(</span><span class="st0">'path'</span><span class="br0">[</span>,<span class="st0">'nice_size'</span><span class="br0">]</span><span class="br0">)</span>;</pre></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>path - (string) The path to the file</li>
+<li>nice_size - (boolean) true: the size will be returned in a human readable format, otherwise in kb   </li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(mixed) returns the size</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code style="display: none; ">$size = f::size('/var/www/test.txt');
+// size is ie: 1231939
+
+$size = f::size('/var/www/test.txt', true);
+// size is ie: 1,2 MB
+</code><pre class="twilightLighter"><span class="kw3">$size</span> = <span class="kw4">f</span>::<span class="me1">size</span><span class="br0">(</span><span class="st0">'/var/www/test.txt'</span><span class="br0">)</span>;<span class="co1">
+// size is ie: 1231939</span>
+
+<span class="kw3">$size</span> = <span class="kw4">f</span>::<span class="me1">size</span><span class="br0">(</span><span class="st0">'/var/www/test.txt'</span>, <span class="kw4">true</span><span class="br0">)</span>;<span class="co1">
+// size is ie: 1,2 MB</span></pre></pre>
+
+<hr>
+
+<h3>Function: f::nice_size</h3>
+
+<p>Converts kb into a human readable size format</p>
+
+<h4>Syntax</h4>
+
+<pre><code style="display: none; ">f::nice_size('size');
+</code><pre class="twilightLighter"><span class="kw4">f</span>::<span class="me1">nice_size</span><span class="br0">(</span><span class="st0">'size'</span><span class="br0">)</span>;</pre></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>size - (int) the size of a file in kb</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) returns the readable size</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code style="display: none; ">$nice_size = f::nice_size(1231939);
+// nice size is: 1,2 MB
+</code><pre class="twilightLighter"><span class="kw3">$nice_size</span> = <span class="kw4">f</span>::<span class="me1">nice_size</span><span class="br0">(</span><span class="nu0">1231939</span><span class="br0">)</span>;<span class="co1">
+// nice size is: 1,2 MB</span></pre></pre>
+
+<hr>
+
+<h3>Function: f::convert</h3>
+
+<p>Converts the filename into a new file type</p>
+
+<h4>Syntax</h4>
+
+<pre><code style="display: none; ">f::convert('filename', 'filetype');
+</code><pre class="twilightLighter"><span class="kw4">f</span>::<span class="me1">convert</span><span class="br0">(</span><span class="st0">'filename'</span>, <span class="st0">'filetype'</span><span class="br0">)</span>;</pre></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>filename - (string) the name of the file</li>
+<li>filetype - (string) the extension of the new type. i.e. jpg</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) returns the new filename</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code style="display: none; ">$convert = f::convert('test.txt', 'jpg');
+// convert will be test.jpg
+</code><pre class="twilightLighter"><span class="kw3">$convert</span> = <span class="kw4">f</span>::<span class="me1">convert</span><span class="br0">(</span><span class="st0">'test.txt'</span>, <span class="st0">'jpg'</span><span class="br0">)</span>;<span class="co1">
+// convert will be test.jpg</span></pre></pre>
+
+<hr>
+
+<h3>Function: f::safe_name</h3>
+
+<p>Converts a given string into a safe filename</p>
+
+<h4>Syntax</h4>
+
+<pre><code style="display: none; ">f::save_name('string');
+</code><pre class="twilightLighter"><span class="kw4">f</span>::<span class="me1">save_name</span><span class="br0">(</span><span class="st0">'string'</span><span class="br0">)</span>;</pre></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>string - (string) the unsafe string</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) returns the new filename</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code style="display: none; ">$safe = f::safe_name('über genious.txt');
+// safe will be ueber-genious.txt
+</code><pre class="twilightLighter"><span class="kw3">$safe</span> = <span class="kw4">f</span>::<span class="me1">safe_name</span><span class="br0">(</span><span class="st0">'über genious.txt'</span><span class="br0">)</span>;<span class="co1">
+// safe will be ueber-genious.txt</span></pre></pre>
+</div>  </div>
+
+  <div id="footer">
+    © 2010 –&nbsp;<a href="http://bastian-allgeier.de/">Bastian Allgeier</a>
+    <ul>
+      <li><a href="http://twitter.com/getkirby">Follow Kirby on Twitter</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<script type="text/javascript" src="./file_files/mootools.js"></script>
+<script type="text/javascript" src="./file_files/Lighter.js"></script>
+<script type="text/javascript" src="./file_files/Fuel.js"></script>
+<script type="text/javascript" src="./file_files/scripts.js"></script>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="./file_files/ga.js" type="text/javascript"></script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-431401-11");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+
+
+
+</body></html>

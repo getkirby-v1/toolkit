@@ -1,0 +1,256 @@
+* {
+		margin: 0px;
+		padding: 0px;
+}
+
+body {
+		font-family: Myriad Pro, 'Lucida Grande', Tahoma, Arial, sans-serif;
+		font-size: 12px;
+		color: #363636;
+		background: #111 url(/images/back.png);
+}
+
+li {
+		list-style: none;
+}
+
+img {
+		border: none;
+    -ms-interpolation-mode: bicubic;
+}
+
+a {
+		text-decoration: none;
+    color: #e33000;
+		outline: none !important;
+}
+
+fieldset {
+		border: 0px;
+}
+
+h1, h2, h3, h4 {
+		font-size: 12px;
+    font-weight: normal;
+}
+
+hr {
+		border-top: 0px;
+		border-bottom: 0px;
+		background: none;
+		border-left: none;
+		border-right: none;
+		height: 1px;
+		margin: 30px 0px;
+}
+
+.hide {
+		display: none !important;
+}
+
+.ghost {
+    visibility: hidden !important;
+    position: absolute;
+    top: -6000px;
+    left: -6000px;
+    width: 0px;
+    height: 0px;
+}
+
+.clear {
+		display: block !important;
+		float: none !important;
+		clear: both !important;
+}
+
+#page {
+    position: relative;
+    width: 700px;
+    margin: 50px auto;
+}
+
+#content {
+    background: #f0f0f0;
+    border-top: 1px solid #fff;
+    -webkit-box-shadow: #000 0px 0px 10px;
+    -moz-box-shadow: #000 0px 0px 10px;
+    padding: 20px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;    
+}
+
+#menu {
+    overflow: hidden;
+    background: #000 url(/images/logo.png) no-repeat 668px 5px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    margin-bottom: 20px;
+}
+
+#menu li a {
+    display: inline;
+    padding: 6px 20px 5px;
+    float: left;
+    font-size: 16px;
+    color: #fff;
+    line-height: 14px;
+}
+
+#menu li a.active,
+#menu li a:hover {
+    color: #e33000 !important;
+}
+
+h1 {
+    font-size: 30px;
+    font-weight: bold;
+    color: #e33000;
+    margin-bottom: 10px;
+}
+
+h2 {
+    font-weight: bold;
+    font-size: 20px;
+    margin-bottom: 5px;
+    text-shadow: #fff 0px 1px 0px;
+    color: #111;
+}
+
+h3 {
+    font-size: 20px;
+    color: #8F9657;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 5px;
+}
+
+h4 {
+    font-size: 16px;
+    margin-bottom: 5px;
+    color: #000;
+}
+
+p {
+    line-height: 18px;
+    font-size: 14px;
+    text-shadow: #fff 0px 1px 0px;
+    margin-bottom: 20px;
+}
+
+code {
+    background: #fff;
+    display: block;
+    overflow: auto;
+    padding: 10px;
+    margin-bottom: 40px;
+    border: 1px solid #bbb;
+    -webkit-box-shadow: #ddd 0px 0px 5px;
+    -moz-box-shadow: #ddd 0px 0px 5px;
+    margin-top: 5px;
+    visibility: hidden;
+}
+
+ul, ol {
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+#content.home {
+    background: #f0f0f0 url(/images/teaser.png) no-repeat top center;
+    border-top: none;
+    padding-top: 160px;
+}
+
+#footer {
+    position: relative;
+    margin-top: 10px;
+    color: #fff;
+    font-size: 14px;
+}
+
+#footer ul {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+}
+
+
+#features {
+    overflow: auto;
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    background: #f9f9f9;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border: 1px solid #fff;
+    -webkit-box-shadow: rgba(0,0,0,.3) 0px 0px 2px;
+    -moz-box-shadow: rgba(0,0,0,.3) 0px 0px 2px;
+}
+#features ul {
+    width: 50%;
+    float: left;
+    font-size: 14px;
+    margin-bottom: 0px;
+}
+#features li {
+    list-style: square;
+    margin-left: 15px;
+}
+
+#download {
+    overflow: auto;
+    margin-bottom: 20px;
+    padding: 10px 20px 7px 20px;
+    background: #f9f9f9;
+    -webkit-border-radius: 4px;
+    border: 1px solid #fff;
+    -webkit-box-shadow: rgba(0,0,0,.3) 0px 0px 2px;
+    font-size: 16px;
+}
+
+#docsmenu {
+    overflow: hidden;
+    width: 700px;
+    margin-bottom: 30px;
+}
+
+#docsmenu li {
+    width: 164px;
+    float: left;
+    text-align: center;
+    margin: 0px 1px 1px 0px;
+    list-style: none !important;
+}
+
+#docsmenu a,
+#docsmenu span {
+    display: block;
+    background: #e33000;
+    padding: 4px 10px 2px;
+    color: #fff;
+    font-size: 14px;
+}
+#docsmenu a.active {
+    color: #fff;
+    background: #111;
+}
+
+
+
+#documentation .twilightLighter {
+    margin-bottom: 20px;
+}
+
+#documentation ol,
+#documentation ul {
+    margin-left: 15px;
+}
+#documentation ol li {
+    list-style: decimal;
+}
+#documentation ul li {
+    list-style: square;
+}
+
+#documentation em {
+    font-weight: bold;
+}

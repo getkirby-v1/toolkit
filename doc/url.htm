@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<!-- saved from url=(0028)http://getkirby.com/docs/url -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>Kirby</title>
+
+
+<meta name="description" content="Kirby is a super simple, designy PHP toolkit">
+<meta name="keywords" content="php, toolkit, jquery, simple, design">
+<meta name="author" content="Bastian Allgeier">
+<meta http-equiv="imagetoolbar" content="no">
+
+<link rel="shortcut icon" href="http://getkirby.com/favicon.ico">
+
+<link rel="stylesheet" href="./url_files/styles.css" media="all" type="text/css">
+
+<link rel="stylesheet" type="text/css" media="screen" href="./url_files/Flame.twilight.css"><script src="./url_files/Fuel.php.js" type="text/javascript"></script></head>
+
+<body>
+
+<div id="page">
+
+  <div id="menu">
+  
+    <ul>
+            <li><a href="http://getkirby.com/home">kirby</a></li>
+            <li><a class="active" href="http://getkirby.com/docs">docs</a></li>
+            <li><a href="http://getkirby.com/download">download</a></li>
+            <li><a href="http://getkirby.com/plugins">plugins</a></li>
+          </ul>
+  
+  </div>
+  
+  <div id="content" class="docs">
+  <h1>Documentation</h1>
+
+
+<ul id="docsmenu">
+    <li><a href="http://getkirby.com/docs/array">array</a></li>
+      <li><a href="http://getkirby.com/docs/browser">browser</a></li>
+      <li><a href="http://getkirby.com/docs/config">config</a></li>
+      <li><a href="http://getkirby.com/docs/content">content</a></li>
+      <li><a href="http://getkirby.com/docs/cookie">cookie</a></li>
+      <li><a href="http://getkirby.com/docs/core">core</a></li>
+      <li><a href="http://getkirby.com/docs/database">database</a></li>
+      <li><a href="http://getkirby.com/docs/dir">dir</a></li>
+      <li><a href="http://getkirby.com/docs/file">file</a></li>
+      <li><a href="http://getkirby.com/docs/globals">globals</a></li>
+      <li><a href="http://getkirby.com/docs/helper">helper</a></li>
+      <li><a href="http://getkirby.com/docs/language">language</a></li>
+      <li><a href="http://getkirby.com/docs/request">request</a></li>
+      <li><a href="http://getkirby.com/docs/server">server</a></li>
+      <li><a href="http://getkirby.com/docs/session">session</a></li>
+      <li><a href="http://getkirby.com/docs/size">size</a></li>
+      <li><a href="http://getkirby.com/docs/string">string</a></li>
+      <li><a class="active" href="./url_files/url.htm">url</a></li>
+      <li><a href="http://getkirby.com/docs/validation">validation</a></li>
+      <li><a href="http://getkirby.com/docs/xml">xml</a></li>
+  </ul>
+
+<div id="documentation">
+<h2>URL</h2>
+
+<p>The url class is still very alpha. There are more features to come.</p>
+
+<h3>Function: url::short</h3>
+
+<p>Shorten a url</p>
+
+<h4>Syntax</h4>
+
+<pre><code style="display: none; ">url::short('url', 'length'[, 'rep'])
+</code><pre class="twilightLighter"><span class="kw4">url</span>::<span class="me1">short</span><span class="br0">(</span><span class="st0">'url'</span>, <span class="st0">'length'</span><span class="br0">[</span>, <span class="st0">'rep'</span><span class="br0">]</span><span class="br0">)</span></pre></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>url - (string) the looooong url</li>
+<li>length - (int) the number of chars it should finally have</li>
+<li>rep - (string) the replacement character - default: …</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) returns the shortened url</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code style="display: none; ">echo url::short('http://veryveryverylongurl.com', 30);
+// output: veryveryverylongurl.com
+</code><pre class="twilightLighter"><span class="kw1">echo</span> <span class="kw4">url</span>::<span class="me1">short</span><span class="br0">(</span><span class="st0">'http://veryveryverylongurl.com'</span>, <span class="nu0">30</span><span class="br0">)</span>;<span class="co1">
+// output: veryveryverylongurl.com</span></pre></pre>
+
+<hr>
+
+<h3>Function: url::has_query</h3>
+
+<p>Checks, whether an url has a query attached.</p>
+
+<h4>Syntax</h4>
+
+<pre><code style="display: none; ">url::has_query('url')
+</code><pre class="twilightLighter"><span class="kw4">url</span>::<span class="me1">has_query</span><span class="br0">(</span><span class="st0">'url'</span><span class="br0">)</span></pre></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>url - (string) the url</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(boolean) true: there's a query attached, false: there's no query attached</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code style="display: none; ">if(url::has_query('http://www.youtube.com/watch?v=9q_aXttJduk')) echo 'Yes, there is a query attached';
+// output: 'Yes, there is a query attached'
+</code><pre class="twilightLighter"><span class="me1">if</span><span class="br0">(</span><span class="kw4">url</span>::<span class="me1">has_query</span><span class="br0">(</span><span class="st0">'http://www.youtube.com/watch?v=9q_aXttJduk'</span><span class="br0">)</span><span class="br0">)</span> <span class="kw1">echo</span> <span class="st0">'Yes, there is a query attached'</span>;<span class="co1">
+// output: 'Yes, there is a query attached'</span></pre></pre>
+
+<hr>
+
+<h3>Function: url::strip_query</h3>
+
+<p>Strips the query off the url</p>
+
+<h4>Syntax</h4>
+
+<pre><code style="display: none; ">url::strip_query('url')
+</code><pre class="twilightLighter"><span class="kw4">url</span>::<span class="me1">strip_query</span><span class="br0">(</span><span class="st0">'url'</span><span class="br0">)</span></pre></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>url - (string) the url</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) the stripped url</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code style="display: none; ">echo url::strip_query('http://www.youtube.com/watch?v=9q_aXttJduk');
+// output: 'http://www.youtube.com/watch'
+</code><pre class="twilightLighter"><span class="kw1">echo</span> <span class="kw4">url</span>::<span class="me1">strip_query</span><span class="br0">(</span><span class="st0">'http://www.youtube.com/watch?v=9q_aXttJduk'</span><span class="br0">)</span>;<span class="co1">
+// output: 'http://www.youtube.com/watch'</span></pre></pre>
+
+<hr>
+
+<h3>Function: url::strip_hash</h3>
+
+<p>Strips the hash off the url</p>
+
+<h4>Syntax</h4>
+
+<pre><code style="display: none; ">url::strip_hash('url')
+</code><pre class="twilightLighter"><span class="kw4">url</span>::<span class="me1">strip_hash</span><span class="br0">(</span><span class="st0">'url'</span><span class="br0">)</span></pre></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>url - (string) the url</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) the stripped url</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code style="display: none; ">echo url::strip_hash('http://testurl.com/#somehash');
+// output: 'http://testurl.com/'
+</code><pre class="twilightLighter"><span class="kw1">echo</span> <span class="kw4">url</span>::<span class="me1">strip_hash</span><span class="br0">(</span><span class="st0">'http://testurl.com/#somehash'</span><span class="br0">)</span>;<span class="co1">
+// output: 'http://testurl.com/'</span></pre></pre>
+
+<hr>
+
+<h3>Function: url::valid</h3>
+
+<p>Checks whether an url is valid</p>
+
+<h4>Syntax</h4>
+
+<pre><code style="display: none; ">url::valid('url')
+</code><pre class="twilightLighter"><span class="kw4">url</span>::<span class="me1">valid</span><span class="br0">(</span><span class="st0">'url'</span><span class="br0">)</span></pre></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>url - (string) the url</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) true: url is valid, false: url is not valid</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code style="display: none; ">echo url::valid('http://testurl.com/');
+// output: true
+</code><pre class="twilightLighter"><span class="kw1">echo</span> <span class="kw4">url</span>::<span class="me1">valid</span><span class="br0">(</span><span class="st0">'http://testurl.com/'</span><span class="br0">)</span>;<span class="co1">
+// output: true</span></pre></pre>
+</div>  </div>
+
+  <div id="footer">
+    © 2010 –&nbsp;<a href="http://bastian-allgeier.de/">Bastian Allgeier</a>
+    <ul>
+      <li><a href="http://twitter.com/getkirby">Follow Kirby on Twitter</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<script type="text/javascript" src="./url_files/mootools.js"></script>
+<script type="text/javascript" src="./url_files/Lighter.js"></script>
+<script type="text/javascript" src="./url_files/Fuel.js"></script>
+<script type="text/javascript" src="./url_files/scripts.js"></script>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="./url_files/ga.js" type="text/javascript"></script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-431401-11");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+
+
+
+</body></html>

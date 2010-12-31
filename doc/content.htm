@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<!-- saved from url=(0032)http://getkirby.com/docs/content -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>Kirby</title>
+
+
+<meta name="description" content="Kirby is a super simple, designy PHP toolkit">
+<meta name="keywords" content="php, toolkit, jquery, simple, design">
+<meta name="author" content="Bastian Allgeier">
+<meta http-equiv="imagetoolbar" content="no">
+
+<link rel="shortcut icon" href="http://getkirby.com/favicon.ico">
+
+<link rel="stylesheet" href="./content_files/styles.css" media="all" type="text/css">
+
+<link rel="stylesheet" type="text/css" media="screen" href="./content_files/Flame.twilight.css"><script src="./content_files/Fuel.php.js" type="text/javascript"></script></head>
+
+<body>
+
+<div id="page">
+
+  <div id="menu">
+  
+    <ul>
+            <li><a href="http://getkirby.com/home">kirby</a></li>
+            <li><a class="active" href="http://getkirby.com/docs">docs</a></li>
+            <li><a href="http://getkirby.com/download">download</a></li>
+            <li><a href="http://getkirby.com/plugins">plugins</a></li>
+          </ul>
+  
+  </div>
+  
+  <div id="content" class="docs">
+  <h1>Documentation</h1>
+
+
+<ul id="docsmenu">
+    <li><a href="http://getkirby.com/docs/array">array</a></li>
+      <li><a href="http://getkirby.com/docs/browser">browser</a></li>
+      <li><a href="http://getkirby.com/docs/config">config</a></li>
+      <li><a class="active" href="./content_files/content.htm">content</a></li>
+      <li><a href="http://getkirby.com/docs/cookie">cookie</a></li>
+      <li><a href="http://getkirby.com/docs/core">core</a></li>
+      <li><a href="http://getkirby.com/docs/database">database</a></li>
+      <li><a href="http://getkirby.com/docs/dir">dir</a></li>
+      <li><a href="http://getkirby.com/docs/file">file</a></li>
+      <li><a href="http://getkirby.com/docs/globals">globals</a></li>
+      <li><a href="http://getkirby.com/docs/helper">helper</a></li>
+      <li><a href="http://getkirby.com/docs/language">language</a></li>
+      <li><a href="http://getkirby.com/docs/request">request</a></li>
+      <li><a href="http://getkirby.com/docs/server">server</a></li>
+      <li><a href="http://getkirby.com/docs/session">session</a></li>
+      <li><a href="http://getkirby.com/docs/size">size</a></li>
+      <li><a href="http://getkirby.com/docs/string">string</a></li>
+      <li><a href="http://getkirby.com/docs/url">url</a></li>
+      <li><a href="http://getkirby.com/docs/validation">validation</a></li>
+      <li><a href="http://getkirby.com/docs/xml">xml</a></li>
+  </ul>
+
+<div id="documentation">
+<h2>Content</h2>
+
+<p>The content class helps to handle content output right</p>
+
+<h3>Function: content::start</h3>
+
+<p>Start new content. (This will start the output buffer)</p>
+
+<h4>Syntax</h4>
+
+<pre><code style="display: none; ">content::start();
+</code><pre class="twilightLighter"><span class="kw4">content</span>::<span class="me1">start</span><span class="br0">(</span><span class="br0">)</span>;</pre></pre>
+
+<h4>Example</h4>
+
+<pre><code style="display: none; ">content::start();
+
+echo 'some content';
+
+content::end();
+</code><pre class="twilightLighter"><span class="kw4">content</span>::<span class="me1">start</span><span class="br0">(</span><span class="br0">)</span>;
+
+<span class="kw1">echo</span> <span class="st0">'some content'</span>;
+
+<span class="kw4">content</span>::<span class="me1">end</span><span class="br0">(</span><span class="br0">)</span>;</pre></pre>
+
+<hr>
+
+<h3>Function: content::end</h3>
+
+<p>Return or echo the gathered content. (This will flush the output buffer)</p>
+
+<h4>Syntax</h4>
+
+<pre><code style="display: none; ">content::start('return');
+</code><pre class="twilightLighter"><span class="kw4">content</span>::<span class="me1">start</span><span class="br0">(</span><span class="st0">'return'</span><span class="br0">)</span>;</pre></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>return - (boolean) true: output will be returned, false: output will be echoed immediatelly</li>
+</ol>
+
+<h4>Example</h4>
+
+<pre><code style="display: none; ">content::start();
+echo 'some content';
+content::end();    
+// echo the content immediatelly
+
+
+content::start();
+echo 'some content';
+$content = content::end(true);    
+// return the content    
+</code><pre class="twilightLighter"><span class="kw4">content</span>::<span class="me1">start</span><span class="br0">(</span><span class="br0">)</span>;
+<span class="kw1">echo</span> <span class="st0">'some content'</span>;
+<span class="kw4">content</span>::<span class="me1">end</span><span class="br0">(</span><span class="br0">)</span>;    <span class="co1">
+// echo the content immediatelly</span>
+
+
+<span class="kw4">content</span>::<span class="me1">start</span><span class="br0">(</span><span class="br0">)</span>;
+<span class="kw1">echo</span> <span class="st0">'some content'</span>;
+<span class="kw3">$content</span> = <span class="kw4">content</span>::<span class="me1">end</span><span class="br0">(</span><span class="kw4">true</span><span class="br0">)</span>;    <span class="co1">
+// return the content    </span></pre></pre>
+
+<hr>
+
+<h3>Function: content::type</h3>
+
+<p>Set the content type header</p>
+
+<h4>Syntax</h4>
+
+<pre><code style="display: none; ">content::type('type'[, 'charset']);
+</code><pre class="twilightLighter"><span class="kw4">content</span>::<span class="me1">type</span><span class="br0">(</span><span class="st0">'type'</span><span class="br0">[</span>, <span class="st0">'charset'</span><span class="br0">]</span><span class="br0">)</span>;</pre></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>type - (string) any mime type or a shortcut (see below)</li>
+<li>charset - (string) any valid charset. utf-8 is the default charset</li>
+</ol>
+
+<h4>Shortcuts</h4>
+
+<ul>
+<li>html =&gt; text/html</li>
+<li>css  =&gt; text/css</li>
+<li>js   =&gt; text/javascript</li>
+<li>jpg  =&gt; image/jpeg</li>
+<li>png  =&gt; image/png</li>
+<li>gif  =&gt; image/gif</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code style="display: none; ">content::type('js');
+// some javascript
+
+content::type('png');
+// some png 
+
+content::type('text/rtf', 'iso-8859-1');    
+// rtf document
+</code><pre class="twilightLighter"><span class="kw4">content</span>::<span class="me1">type</span><span class="br0">(</span><span class="st0">'js'</span><span class="br0">)</span>;<span class="co1">
+// some javascript</span>
+
+<span class="kw4">content</span>::<span class="me1">type</span><span class="br0">(</span><span class="st0">'png'</span><span class="br0">)</span>;<span class="co1">
+// some png </span>
+
+<span class="kw4">content</span>::<span class="me1">type</span><span class="br0">(</span><span class="st0">'text/rtf'</span>, <span class="st0">'iso-8859-1'</span><span class="br0">)</span>;    <span class="co1">
+// rtf document</span></pre></pre>
+</div>  </div>
+
+  <div id="footer">
+    © 2010 –&nbsp;<a href="http://bastian-allgeier.de/">Bastian Allgeier</a>
+    <ul>
+      <li><a href="http://twitter.com/getkirby">Follow Kirby on Twitter</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<script type="text/javascript" src="./content_files/mootools.js"></script>
+<script type="text/javascript" src="./content_files/Lighter.js"></script>
+<script type="text/javascript" src="./content_files/Fuel.js"></script>
+<script type="text/javascript" src="./content_files/scripts.js"></script>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="./content_files/ga.js" type="text/javascript"></script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-431401-11");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+
+
+
+</body></html>

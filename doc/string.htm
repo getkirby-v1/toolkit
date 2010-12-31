@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<!-- saved from url=(0031)http://getkirby.com/docs/string -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>Kirby</title>
+
+
+<meta name="description" content="Kirby is a super simple, designy PHP toolkit">
+<meta name="keywords" content="php, toolkit, jquery, simple, design">
+<meta name="author" content="Bastian Allgeier">
+<meta http-equiv="imagetoolbar" content="no">
+
+<link rel="shortcut icon" href="http://getkirby.com/favicon.ico">
+
+<link rel="stylesheet" href="./string_files/styles.css" media="all" type="text/css">
+
+<link rel="stylesheet" type="text/css" media="screen" href="./string_files/Flame.twilight.css"><script src="./string_files/Fuel.php.js" type="text/javascript"></script></head>
+
+<body>
+
+<div id="page">
+
+  <div id="menu">
+  
+    <ul>
+            <li><a href="http://getkirby.com/home">kirby</a></li>
+            <li><a class="active" href="http://getkirby.com/docs">docs</a></li>
+            <li><a href="http://getkirby.com/download">download</a></li>
+            <li><a href="http://getkirby.com/plugins">plugins</a></li>
+          </ul>
+  
+  </div>
+  
+  <div id="content" class="docs">
+  <h1>Documentation</h1>
+
+
+<ul id="docsmenu">
+    <li><a href="http://getkirby.com/docs/array">array</a></li>
+      <li><a href="http://getkirby.com/docs/browser">browser</a></li>
+      <li><a href="http://getkirby.com/docs/config">config</a></li>
+      <li><a href="http://getkirby.com/docs/content">content</a></li>
+      <li><a href="http://getkirby.com/docs/cookie">cookie</a></li>
+      <li><a href="http://getkirby.com/docs/core">core</a></li>
+      <li><a href="http://getkirby.com/docs/database">database</a></li>
+      <li><a href="http://getkirby.com/docs/dir">dir</a></li>
+      <li><a href="http://getkirby.com/docs/file">file</a></li>
+      <li><a href="http://getkirby.com/docs/globals">globals</a></li>
+      <li><a href="http://getkirby.com/docs/helper">helper</a></li>
+      <li><a href="http://getkirby.com/docs/language">language</a></li>
+      <li><a href="http://getkirby.com/docs/request">request</a></li>
+      <li><a href="http://getkirby.com/docs/server">server</a></li>
+      <li><a href="http://getkirby.com/docs/session">session</a></li>
+      <li><a href="http://getkirby.com/docs/size">size</a></li>
+      <li><a class="active" href="./string_files/string.htm">string</a></li>
+      <li><a href="http://getkirby.com/docs/url">url</a></li>
+      <li><a href="http://getkirby.com/docs/validation">validation</a></li>
+      <li><a href="http://getkirby.com/docs/xml">xml</a></li>
+  </ul>
+
+<div id="documentation">
+<h2>STR (String)</h2>
+
+<p>The str class gives you a lot of helpful little tools to handle common tasks on strings.</p>
+
+<h3>Function: str::html</h3>
+
+<p>Returns the given string as valid html</p>
+
+<h4>Syntax</h4>
+
+<pre><code style="display: none; ">str::html('string'[, 'keep_html']);
+</code><pre class="twilightLighter"><span class="kw4">str</span>::<span class="me1">html</span><span class="br0">(</span><span class="st0">'string'</span><span class="br0">[</span>, <span class="st0">'keep_html'</span><span class="br0">]</span><span class="br0">)</span>;</pre></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>string - (string) the string</li>
+<li>keep_html - (boolean) true: any html tags in the string won't be touched false: everything is converted to html</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) nice and clean html</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code style="display: none; ">echo str::html('some &lt;em&gt;über crazy&lt;/em&gt; stuff');
+// output: some &lt;em&gt;&amp;uuml;ber crazy&lt;/em&gt; stuff
+
+echo str::html('some &lt;em&gt;über crazy&lt;/em&gt; stuff', false);    
+// output: some &amp;lt;em&amp;gt;&amp;uuml;ber crazy&amp;lt;/em&amp;gt; stuff
+</code><pre class="twilightLighter"><span class="kw1">echo</span> <span class="kw4">str</span>::<span class="me1">html</span><span class="br0">(</span><span class="st0">'some &lt;em&gt;über crazy&lt;/em&gt; stuff'</span><span class="br0">)</span>;<span class="co1">
+// output: some &lt;em&gt;&amp;uuml;ber crazy&lt;/em&gt; stuff</span>
+
+<span class="kw1">echo</span> <span class="kw4">str</span>::<span class="me1">html</span><span class="br0">(</span><span class="st0">'some &lt;em&gt;über crazy&lt;/em&gt; stuff'</span>, <span class="kw4">false</span><span class="br0">)</span>;    <span class="co1">
+// output: some &amp;lt;em&amp;gt;&amp;uuml;ber crazy&amp;lt;/em&amp;gt; stuff</span></pre></pre>
+
+<hr>
+
+<h3>Function: str::unhtml</h3>
+
+<p>Strip all html tags from a string</p>
+
+<h4>Syntax</h4>
+
+<pre><code style="display: none; ">str::unhtml('html');
+</code><pre class="twilightLighter"><span class="kw4">str</span>::<span class="me1">unhtml</span><span class="br0">(</span><span class="st0">'html'</span><span class="br0">)</span>;</pre></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>html - (string) the html</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) nice and clean string without html tags</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code style="display: none; ">echo str::unhtml('some &lt;em&gt;crazy&lt;/em&gt; stuff');
+// output: some uber crazy stuff
+</code><pre class="twilightLighter"><span class="kw1">echo</span> <span class="kw4">str</span>::<span class="me1">unhtml</span><span class="br0">(</span><span class="st0">'some &lt;em&gt;crazy&lt;/em&gt; stuff'</span><span class="br0">)</span>;<span class="co1">
+// output: some uber crazy stuff</span></pre></pre>
+
+<hr>
+
+<h3>Function: str::xml</h3>
+
+<p>Returns the given string as valid xml</p>
+
+<h4>Syntax</h4>
+
+<pre><code style="display: none; ">str::xml('string');
+</code><pre class="twilightLighter"><span class="kw4">str</span>::<span class="me1">xml</span><span class="br0">(</span><span class="st0">'string'</span><span class="br0">)</span>;</pre></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>string - (string) the string</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) nice and clean xml</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code style="display: none; ">echo str::xml('some über crazy stuff');
+// output: some &amp;#252;ber crazy stuff
+</code><pre class="twilightLighter"><span class="kw1">echo</span> <span class="kw4">str</span>::<span class="me1">xml</span><span class="br0">(</span><span class="st0">'some über crazy stuff'</span><span class="br0">)</span>;<span class="co1">
+// output: some &amp;#252;ber crazy stuff</span></pre></pre>
+
+<hr>
+
+<h3>Function: str::unxml</h3>
+
+<p>Strips all the xml hocuspocus from the string</p>
+
+<h4>Syntax</h4>
+
+<pre><code style="display: none; ">str::unxml('string');
+</code><pre class="twilightLighter"><span class="kw4">str</span>::<span class="me1">unxml</span><span class="br0">(</span><span class="st0">'string'</span><span class="br0">)</span>;</pre></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>string - (string) the string</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) nice and clean string without xml</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code style="display: none; ">echo str::unxml('some &lt;em&gt;&amp;#252;ber&lt;/em&gt; crazy stuff');
+// output: some &amp;uuml;ber crazy stuff
+</code><pre class="twilightLighter"><span class="kw1">echo</span> <span class="kw4">str</span>::<span class="me1">unxml</span><span class="br0">(</span><span class="st0">'some &lt;em&gt;&amp;#252;ber&lt;/em&gt; crazy stuff'</span><span class="br0">)</span>;<span class="co1">
+// output: some &amp;uuml;ber crazy stuff</span></pre></pre>
+
+<hr>
+
+<h3>Function: str::parse</h3>
+
+<p>This is the most awesome function. It parses a string
+with different modes.</p>
+
+<h4>Syntax</h4>
+
+<pre><code style="display: none; ">str::parse('string'[, 'mode']);
+</code><pre class="twilightLighter"><span class="kw4">str</span>::<span class="me1">parse</span><span class="br0">(</span><span class="st0">'string'</span><span class="br0">[</span>, <span class="st0">'mode'</span><span class="br0">]</span><span class="br0">)</span>;</pre></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>string - (string) the string</li>
+<li>mode - (string) Can be either json, xml, php, url or query</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) returns the parsed string</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code style="display: none; ">str::parse('{"test":"cool","super":"genious"}');
+// output: array(
+//  'test' =&gt; 'cool',
+//  'super' =&gt; 'genious'
+// );
+
+str::parse('&lt;xml&gt;&lt;entries&gt;&lt;cool&gt;nice&lt;/cool&gt;&lt;/entries&gt;&lt;/xml&gt;', 'xml');
+// output: array(
+//    'entries' =&gt; array(
+//        'cool' =&gt; 'nice'
+//    )
+// );
+</code><pre class="twilightLighter"><span class="kw4">str</span>::<span class="me1">parse</span><span class="br0">(</span><span class="st0">'{"test":"cool","super":"genious"}'</span><span class="br0">)</span>;<span class="co1">
+// output: array(</span><span class="co1">
+//  'test' =&gt; 'cool',</span><span class="co1">
+//  'super' =&gt; 'genious'</span><span class="co1">
+// );</span>
+
+<span class="kw4">str</span>::<span class="me1">parse</span><span class="br0">(</span><span class="st0">'&lt;xml&gt;&lt;entries&gt;&lt;cool&gt;nice&lt;/cool&gt;&lt;/entries&gt;&lt;/xml&gt;'</span>, <span class="st0">'xml'</span><span class="br0">)</span>;<span class="co1">
+// output: array(</span><span class="co1">
+//    'entries' =&gt; array(</span><span class="co1">
+//        'cool' =&gt; 'nice'</span><span class="co1">
+//    )</span><span class="co1">
+// );</span></pre></pre>
+
+<hr>
+
+<h3>Function: str::email</h3>
+
+<p>Encode an email and build a nice html tag for it</p>
+
+<h4>Syntax</h4>
+
+<pre><code style="display: none; ">str::email('email'[, 'text']);
+</code><pre class="twilightLighter"><span class="kw4">str</span>::<span class="me1">email</span><span class="br0">(</span><span class="st0">'email'</span><span class="br0">[</span>, <span class="st0">'text'</span><span class="br0">]</span><span class="br0">)</span>;</pre></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>email - (string) the email address</li>
+<li>text - (string) the text, which should be linked instead of the email</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) returns the html tag</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code style="display: none; ">echo str::email('mail@bastian-allgeier.de');
+// output: &lt;a title="&amp;#109;&amp;#97;&amp;#x69;&amp;#108;&amp;#x40;&amp;#x62;&amp;#97;&amp;#x73;&amp;#x74;&amp;#x69;&amp;#97;&amp;#110;&amp;#45;&amp;#97;&amp;#x6c;&amp;#108;&amp;#103;&amp;#101;&amp;#x69;&amp;#x65;&amp;#x72;&amp;#46;&amp;#x64;&amp;#101;" class="email" href="mailto:&amp;#109;&amp;#97;&amp;#x69;&amp;#108;&amp;#x40;&amp;#x62;&amp;#97;&amp;#x73;&amp;#x74;&amp;#x69;&amp;#97;&amp;#110;&amp;#45;&amp;#97;&amp;#x6c;&amp;#108;&amp;#103;&amp;#101;&amp;#x69;&amp;#x65;&amp;#x72;&amp;#46;&amp;#x64;&amp;#101;"&gt;&amp;#109;&amp;#x61;&amp;#105;&amp;#x6c;&amp;#64;&amp;#x62;&amp;#97;&amp;#115;&amp;#116;&amp;#x69;&amp;#x61;&amp;#110;&amp;#45;&amp;#97;&amp;#x6c;&amp;#108;&amp;#x67;&amp;#101;&amp;#105;&amp;#x65;&amp;#114;&amp;#46;&amp;#100;&amp;#x65;&lt;/a&gt;
+// unencoded: &lt;a title="mail@bastian-allgeier.de" class="email" href="mailto:mail@bastian-allgeier.de"&gt;mail@bastian-allgeier.de&lt;/a&gt;
+
+echo str::email('mail@bastian-allgeier.de', 'mail me');
+// output: &lt;a title="&amp;#109;&amp;#x61;&amp;#105;&amp;#108;&amp;#64;&amp;#x62;&amp;#x61;&amp;#115;&amp;#x74;&amp;#105;&amp;#x61;&amp;#x6e;&amp;#x2d;&amp;#x61;&amp;#108;&amp;#108;&amp;#103;&amp;#x65;&amp;#x69;&amp;#x65;&amp;#114;&amp;#x2e;&amp;#100;&amp;#101;" class="email" href="mailto:&amp;#109;&amp;#x61;&amp;#105;&amp;#108;&amp;#64;&amp;#x62;&amp;#x61;&amp;#115;&amp;#x74;&amp;#105;&amp;#x61;&amp;#x6e;&amp;#x2d;&amp;#x61;&amp;#108;&amp;#108;&amp;#103;&amp;#x65;&amp;#x69;&amp;#x65;&amp;#114;&amp;#x2e;&amp;#100;&amp;#101;"&gt;&amp;#x6d;&amp;#97;&amp;#x69;&amp;#108;&amp;#x20;&amp;#109;&amp;#101;&lt;/a&gt;
+// unencoded: &lt;a title="mail@bastian-allgeier.de" class="email" href="mailto:mail@bastian-allgeier.de"&gt;mail me&lt;/a&gt;
+</code><pre class="twilightLighter"><span class="kw1">echo</span> <span class="kw4">str</span>::<span class="me1">email</span><span class="br0">(</span><span class="st0">'mail@bastian-allgeier.de'</span><span class="br0">)</span>;<span class="co1">
+// output: &lt;a title="&amp;#109;&amp;#97;&amp;#x69;&amp;#108;&amp;#x40;&amp;#x62;&amp;#97;&amp;#x73;&amp;#x74;&amp;#x69;&amp;#97;&amp;#110;&amp;#45;&amp;#97;&amp;#x6c;&amp;#108;&amp;#103;&amp;#101;&amp;#x69;&amp;#x65;&amp;#x72;&amp;#46;&amp;#x64;&amp;#101;" class="email" href="mailto:&amp;#109;&amp;#97;&amp;#x69;&amp;#108;&amp;#x40;&amp;#x62;&amp;#97;&amp;#x73;&amp;#x74;&amp;#x69;&amp;#97;&amp;#110;&amp;#45;&amp;#97;&amp;#x6c;&amp;#108;&amp;#103;&amp;#101;&amp;#x69;&amp;#x65;&amp;#x72;&amp;#46;&amp;#x64;&amp;#101;"&gt;&amp;#109;&amp;#x61;&amp;#105;&amp;#x6c;&amp;#64;&amp;#x62;&amp;#97;&amp;#115;&amp;#116;&amp;#x69;&amp;#x61;&amp;#110;&amp;#45;&amp;#97;&amp;#x6c;&amp;#108;&amp;#x67;&amp;#101;&amp;#105;&amp;#x65;&amp;#114;&amp;#46;&amp;#100;&amp;#x65;&lt;/a&gt;</span><span class="co1">
+// unencoded: &lt;a title="mail@bastian-allgeier.de" class="email" href="mailto:mail@bastian-allgeier.de"&gt;mail@bastian-allgeier.de&lt;/a&gt;</span>
+
+<span class="kw1">echo</span> <span class="kw4">str</span>::<span class="me1">email</span><span class="br0">(</span><span class="st0">'mail@bastian-allgeier.de'</span>, <span class="st0">'mail me'</span><span class="br0">)</span>;<span class="co1">
+// output: &lt;a title="&amp;#109;&amp;#x61;&amp;#105;&amp;#108;&amp;#64;&amp;#x62;&amp;#x61;&amp;#115;&amp;#x74;&amp;#105;&amp;#x61;&amp;#x6e;&amp;#x2d;&amp;#x61;&amp;#108;&amp;#108;&amp;#103;&amp;#x65;&amp;#x69;&amp;#x65;&amp;#114;&amp;#x2e;&amp;#100;&amp;#101;" class="email" href="mailto:&amp;#109;&amp;#x61;&amp;#105;&amp;#108;&amp;#64;&amp;#x62;&amp;#x61;&amp;#115;&amp;#x74;&amp;#105;&amp;#x61;&amp;#x6e;&amp;#x2d;&amp;#x61;&amp;#108;&amp;#108;&amp;#103;&amp;#x65;&amp;#x69;&amp;#x65;&amp;#114;&amp;#x2e;&amp;#100;&amp;#101;"&gt;&amp;#x6d;&amp;#97;&amp;#x69;&amp;#108;&amp;#x20;&amp;#109;&amp;#101;&lt;/a&gt;</span><span class="co1">
+// unencoded: &lt;a title="mail@bastian-allgeier.de" class="email" href="mailto:mail@bastian-allgeier.de"&gt;mail me&lt;/a&gt;</span></pre></pre>
+
+<hr>
+
+<h3>Function: str::short</h3>
+
+<p>Shorten a string</p>
+
+<h4>Syntax</h4>
+
+<pre><code style="display: none; ">str::short('string', 'length'[, 'rep'])
+</code><pre class="twilightLighter"><span class="kw4">str</span>::<span class="me1">short</span><span class="br0">(</span><span class="st0">'string'</span>, <span class="st0">'length'</span><span class="br0">[</span>, <span class="st0">'rep'</span><span class="br0">]</span><span class="br0">)</span></pre></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>string - (string) the looooong string</li>
+<li>length - (int) the number of chars it should finally have</li>
+<li>rep - (string) the replacement character - default: …</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) returns the shortened string</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code style="display: none; ">echo str::short('This is a very, very, very long string', 10);
+// output: This is a…
+
+echo str::short('This is a very, very, very long string', 10, '####');
+// output: This i####
+</code><pre class="twilightLighter"><span class="kw1">echo</span> <span class="kw4">str</span>::<span class="me1">short</span><span class="br0">(</span><span class="st0">'This is a very, very, very long string'</span>, <span class="nu0">10</span><span class="br0">)</span>;<span class="co1">
+// output: This is a…</span>
+
+<span class="kw1">echo</span> <span class="kw4">str</span>::<span class="me1">short</span><span class="br0">(</span><span class="st0">'This is a very, very, very long string'</span>, <span class="nu0">10</span>, <span class="st0">'####'</span><span class="br0">)</span>;<span class="co1">
+// output: This i####</span></pre></pre>
+
+<hr>
+
+<h3>Function: str::shorturl</h3>
+
+<p>Special function to shorten urls</p>
+
+<h4>Syntax</h4>
+
+<pre><code style="display: none; ">str::shorturl('url', 'length'[, 'rep'])
+</code><pre class="twilightLighter"><span class="kw4">str</span>::<span class="me1">shorturl</span><span class="br0">(</span><span class="st0">'url'</span>, <span class="st0">'length'</span><span class="br0">[</span>, <span class="st0">'rep'</span><span class="br0">]</span><span class="br0">)</span></pre></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>url - (string) the looooong url</li>
+<li>length - (int) the number of chars it should finally have</li>
+<li>rep - (string) the replacement character - default: …</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) returns the shortened url</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code style="display: none; ">echo str::shorturl('http://veryveryverylongurl.com', 30);
+// output: veryveryverylongurl.com
+</code><pre class="twilightLighter"><span class="kw1">echo</span> <span class="kw4">str</span>::<span class="me1">shorturl</span><span class="br0">(</span><span class="st0">'http://veryveryverylongurl.com'</span>, <span class="nu0">30</span><span class="br0">)</span>;<span class="co1">
+// output: veryveryverylongurl.com</span></pre></pre>
+
+<hr>
+
+<h3>...and much, much more</h3>
+
+<p>Please stay tuned for the full documentation for the other str functions.<br>
+(they should be pretty self explainatory in the meanwhile)</p>
+
+<pre><code style="display: none; ">// shorten a string by cutting out characters in the middle test...bla.txt
+str::cutout('string', 20);    
+
+// add a correct apostroph to the string
+str::apostrophe('name');    
+
+// help to create plural or singlar forms
+str::plural(20, 'entries', 'entry');    
+
+// utf-8 able substring function
+str::substr('string', 0, 20);    
+
+// set all letters in lowercase
+str::lower('string');    
+
+// set all letters in uppercase
+str::upper('string');    
+
+// determine the string length (utf8 compatible)
+str::length('string');    
+
+// check if the searchword is contained in the string
+str::contains('string', 'searchword');    
+
+// create a random string
+str::random(10);    
+
+// sanitize a string to be used in an url
+str::urlify('string');    
+
+// split and clean a string
+str::split('string', ':');    
+
+// trim all unneeded whitespaces in a string
+str::trim('string');    
+
+// clean a string by multiple methods
+str::sanitize('string', 'plain');    
+
+// set all first letters in uppercase
+str::ucwords('string');    
+
+// set the first character in uppercase
+str::ucfirst('string');    
+
+// make sure the string is utf8
+str::utf8('string');    
+
+// custom stripslashes function
+str::stripslashes('string');    
+</code><pre class="twilightLighter"><span class="co1">// shorten a string by cutting out characters in the middle test...bla.txt</span>
+<span class="kw4">str</span>::<span class="me1">cutout</span><span class="br0">(</span><span class="st0">'string'</span>, <span class="nu0">20</span><span class="br0">)</span>;    
+<span class="co1">
+// add a correct apostroph to the string</span>
+<span class="kw4">str</span>::<span class="me1">apostrophe</span><span class="br0">(</span><span class="st0">'name'</span><span class="br0">)</span>;    
+<span class="co1">
+// help to create plural or singlar forms</span>
+<span class="kw4">str</span>::<span class="me1">plural</span><span class="br0">(</span><span class="nu0">20</span>, <span class="st0">'entries'</span>, <span class="st0">'entry'</span><span class="br0">)</span>;    
+<span class="co1">
+// utf-8 able substring function</span>
+<span class="kw4">str</span>::<span class="me1">substr</span><span class="br0">(</span><span class="st0">'string'</span>, <span class="nu0">0</span>, <span class="nu0">20</span><span class="br0">)</span>;    
+<span class="co1">
+// set all letters in lowercase</span>
+<span class="kw4">str</span>::<span class="me1">lower</span><span class="br0">(</span><span class="st0">'string'</span><span class="br0">)</span>;    
+<span class="co1">
+// set all letters in uppercase</span>
+<span class="kw4">str</span>::<span class="me1">upper</span><span class="br0">(</span><span class="st0">'string'</span><span class="br0">)</span>;    
+<span class="co1">
+// determine the string length (utf8 compatible)</span>
+<span class="kw4">str</span>::<span class="me1">length</span><span class="br0">(</span><span class="st0">'string'</span><span class="br0">)</span>;    
+<span class="co1">
+// check if the searchword is contained in the string</span>
+<span class="kw4">str</span>::<span class="me1">contains</span><span class="br0">(</span><span class="st0">'string'</span>, <span class="st0">'searchword'</span><span class="br0">)</span>;    
+<span class="co1">
+// create a random string</span>
+<span class="kw4">str</span>::<span class="me1">random</span><span class="br0">(</span><span class="nu0">10</span><span class="br0">)</span>;    
+<span class="co1">
+// sanitize a string to be used in an url</span>
+<span class="kw4">str</span>::<span class="me1">urlify</span><span class="br0">(</span><span class="st0">'string'</span><span class="br0">)</span>;    
+<span class="co1">
+// split and clean a string</span>
+<span class="kw4">str</span>::<span class="me1">split</span><span class="br0">(</span><span class="st0">'string'</span>, <span class="st0">':'</span><span class="br0">)</span>;    
+<span class="co1">
+// trim all unneeded whitespaces in a string</span>
+<span class="kw4">str</span>::<span class="me1">trim</span><span class="br0">(</span><span class="st0">'string'</span><span class="br0">)</span>;    
+<span class="co1">
+// clean a string by multiple methods</span>
+<span class="kw4">str</span>::<span class="me1">sanitize</span><span class="br0">(</span><span class="st0">'string'</span>, <span class="st0">'plain'</span><span class="br0">)</span>;    
+<span class="co1">
+// set all first letters in uppercase</span>
+<span class="kw4">str</span>::<span class="me1">ucwords</span><span class="br0">(</span><span class="st0">'string'</span><span class="br0">)</span>;    
+<span class="co1">
+// set the first character in uppercase</span>
+<span class="kw4">str</span>::<span class="me1">ucfirst</span><span class="br0">(</span><span class="st0">'string'</span><span class="br0">)</span>;    
+<span class="co1">
+// make sure the string is utf8</span>
+<span class="kw4">str</span>::<span class="me1">utf8</span><span class="br0">(</span><span class="st0">'string'</span><span class="br0">)</span>;    
+<span class="co1">
+// custom stripslashes function</span>
+<span class="kw4">str</span>::<span class="me1">stripslashes</span><span class="br0">(</span><span class="st0">'string'</span><span class="br0">)</span>;    </pre></pre>
+</div>  </div>
+
+  <div id="footer">
+    © 2010 –&nbsp;<a href="http://bastian-allgeier.de/">Bastian Allgeier</a>
+    <ul>
+      <li><a href="http://twitter.com/getkirby">Follow Kirby on Twitter</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<script type="text/javascript" src="./string_files/mootools.js"></script>
+<script type="text/javascript" src="./string_files/Lighter.js"></script>
+<script type="text/javascript" src="./string_files/Fuel.js"></script>
+<script type="text/javascript" src="./string_files/scripts.js"></script>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script><script src="./string_files/ga.js" type="text/javascript"></script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-431401-11");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+
+
+
+</body></html>
