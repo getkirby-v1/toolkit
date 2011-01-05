@@ -934,7 +934,15 @@ class f {
 
 	function write($file,$content,$append=false){
 		if(is_array($content)) $content = a::json($content);
-		$mode	= ($append) ? FILE_APPEND : false;
+		$mode = ($append) ? FILE_APPEND : false;
+		$write = @file_put_contents($file, $content, $mode);
+		@chmod($file, 0777);
+		return $write;
+	}
+
+	function append($file,$content,$append=true){
+		if(is_array($content)) $content = a::json($content);
+		$mode = ($append) ? FILE_APPEND : true;
 		$write = @file_put_contents($file, $content, $mode);
 		@chmod($file, 0777);
 		return $write;
