@@ -1,6 +1,6 @@
 <?php
 
-c::set('version', 0.2);
+c::set('version', 0.3);
 c::set('language', 'en');
 c::set('charset', 'utf-8');
 c::set('root', dirname(__FILE__));
@@ -186,7 +186,8 @@ class a {
 		}
 		return $missing;
 	}
-
+	
+	// Not working - atleast not in php 5.3
 	// example: a::sort($array, 'volume DESC, edition ASC');
 	function sort($array, $params) {
 
@@ -941,6 +942,10 @@ class f {
 		return $write;
 	}
 
+	function append($file,$content){
+		return self::write($file,$content,true);
+	}
+	
 	function read($file, $parse=false) {
 		$content = @file_get_contents($file);
 		return ($parse) ? str::parse($content, $parse) : $content;
@@ -974,6 +979,22 @@ class f {
 	function dirname($file=__FILE__) {
 		return dirname($file);
 	}
+	
+	function folder_size($path, $recusive=true, $nice=false) {
+		if (!file_exists($path)) return false;
+		if (is_file($path)) return self::size($path, $nice);
+		$size = 0;
+		foreach(glob($path."/*") AS $file) {
+			if ($file != "." && $file != "..") {
+				if ($recusive) {
+					$size += self::folder_size($file, true);
+				} else {
+					$size += self::size($path);
+				}
+			}
+		}
+		return ($nice) ? self::nice_size($size) : $size;
+	}
 
 	function size($file, $nice=false) {
 		@clearstatcache();
@@ -987,26 +1008,8 @@ class f {
 		$size = str::sanitize($size, 'int');
 		if($size < 1) return '0 kb';
 
-		$gb_c = 1048576 * 1024;
-		$mb_c = 1048576;
-		$kb_c = 1024;
-
-		if($size > $gb_c){
-			$terminator = 'GB';
-			$rounded = round(($size/$gb_c), 2);
-		} else if($size > $mb_c){
-			$terminator = 'MB';
-			$rounded = round(($size/$mb_c), 1);
-		} else if($size > $kb_c){
-			$terminator = 'kb';
-			$rounded = ceil(($size/$kb_c));
-		} else{
-			$terminator = 'bytes';
-			$rounded = $size;
-		}
-
-		return($rounded . ' ' . $terminator);
-
+		$unit=array('b','kb','mb','gb','tb','pb');
+		return @round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
 	}
 
 	function convert($name, $type='jpg') {
