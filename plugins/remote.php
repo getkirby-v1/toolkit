@@ -66,7 +66,7 @@ class remote {
 			CURLOPT_SSL_VERIFYPEER	=> false,
 		);
 
-		if(!empty($headers)) $params[CURLOPT_HTTPHEADER] = $options['headers'];
+		if(!empty($options['headers'])) $params[CURLOPT_HTTPHEADER] = $options['headers'];
 
 		if(!empty($post)) {
 			$params[CURLOPT_POST] = true;
