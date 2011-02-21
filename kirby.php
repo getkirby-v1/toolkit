@@ -1,6 +1,6 @@
 <?php
 
-c::set('version', 0.3);
+c::set('version', 0.4);
 c::set('language', 'en');
 c::set('charset', 'utf-8');
 c::set('root', dirname(__FILE__));
@@ -402,6 +402,32 @@ class c {
 		return c::get();
 	}
 
+	// @since 0.4
+	function get_sub($key, $default=null) {
+		$keys = array_keys(self::$config);
+		$n = array();
+		foreach($keys AS $k) {
+			$pos = strpos($key.'.', $k);
+			if ($pos === 0) {
+				$n[substr($k,strlen($key.'.'))] = self::$config[$k];
+			}
+		}
+		return ($n) ? $n : $default;
+	}
+	
+	// @since 0.4
+	function set_sub($key, $value=null) {
+		if (!is_array($value)) {
+			$m = self::get_sub($key);
+			foreach($m AS $k => $v) {
+				self::set($k, $value);
+			}
+		} else {
+			foreach($value AS $k => $v) {
+				self::set($key.'.'.$k, $v);
+			}
+		}
+	}
 }
 
 
