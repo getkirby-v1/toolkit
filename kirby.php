@@ -299,20 +299,17 @@ class browser {
 			self::$version = $array[1];
 			self::$browser = 'ie';
 			self::$engine	= 'trident';
-		}	else if(strstr(self::$ua, 'firefox/2')) {
-			self::$version = 2;
+		}	else if(strstr(self::$ua, 'firefox/3.6')) {
+			self::$version = 3.6;
 			self::$browser = 'fx';
 			self::$engine	= 'gecko';
 		}	else if (strstr(self::$ua, 'firefox/3.5')) {
 			self::$version = 3.5;
 			self::$browser = 'fx';
 			self::$engine	= 'gecko';
-		}	else if(strstr(self::$ua, 'firefox/3')) {
-			self::$version = 3;
+		}	else if(preg_match('/firefox\/(\d+)/i', self::$ua, $array)) {
+			self::$version = $array[1];
 			self::$browser = 'fx';
-			self::$engine	= 'gecko';
-		} else if(strstr(self::$ua, 'gecko/')) {
-			self::$browser = 'gecko';
 			self::$engine	= 'gecko';
 		} else if(preg_match('/opera(\s|\/)(\d+)/', self::$ua, $array)) {
 			self::$engine	= 'presto';
@@ -321,12 +318,13 @@ class browser {
 		} else if(strstr(self::$ua, 'konqueror')) {
 			self::$browser = 'konqueror';
 			self::$engine	= 'webkit';
-		} else if(strstr(self::$ua, 'chrome')) {
-			self::$browser = 'chrome';
-			self::$engine	= 'webkit';
 		} else if(strstr(self::$ua, 'iron')) {
 			self::$browser = 'iron';
 			self::$engine	= 'webkit';
+		} else if(strstr(self::$ua, 'chrome')) {
+			self::$browser = 'chrome';
+			self::$engine	= 'webkit';
+			if(preg_match('/chrome\/(\d+)/i', self::$ua, $array)) { self::$version = $array[1]; }
 		} else if(strstr(self::$ua, 'applewebkit/')) {
 			self::$browser = 'safari';
 			self::$engine	= 'webkit';
@@ -403,7 +401,7 @@ class c {
 	}
 
 	// @since 0.4
-	function get_sub($key, $default=null) {
+	function get_array($key, $default=null) {
 		$keys = array_keys(self::$config);
 		$n = array();
 		foreach($keys AS $k) {
@@ -416,7 +414,7 @@ class c {
 	}
 	
 	// @since 0.4
-	function set_sub($key, $value=null) {
+	function set_array($key, $value=null) {
 		if (!is_array($value)) {
 			$m = self::get_sub($key);
 			foreach($m AS $k => $v) {
