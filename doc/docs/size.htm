@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Kirby</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="description" content="Kirby is a super simple, designy PHP toolkit" />
+<meta name="keywords" content="php, toolkit, jquery, simple, design" />
+<meta name="author" content="Bastian Allgeier" />
+<meta http-equiv="imagetoolbar" content="no" />
+
+<link rel="shortcut icon" href="/favicon.ico" />
+
+<link rel="stylesheet" href="/css/styles.css" media="all" type="text/css" />
+
+</head>
+
+<body>
+
+<div id="page">
+
+  <div id="menu">
+  
+    <ul>
+            <li><a href="/home.htm">kirby</a></li>
+            <li><a class="active" href="/docs.htm">docs</a></li>
+            <li><a href="/download">download</a></li>
+            <li><a href="/plugins.htm">plugins</a></li>
+          </ul>
+  
+  </div>
+  
+  <div id="content" class="docs">
+  <h1>Documentation</h1>
+
+
+<ul id="docsmenu">
+    <li><a class="active" href="/docs/array.htm">array</a></li>
+      <li><a href="/docs/browser.htm">browser</a></li>
+      <li><a href="/docs/config.htm">config</a></li>
+      <li><a href="/docs/content.htm">content</a></li>
+      <li><a href="/docs/cookie.htm">cookie</a></li>
+      <li><a href="/docs/core.htm">core</a></li>
+      <li><a href="/docs/database.htm">database</a></li>
+      <li><a href="/docs/dir.htm">dir</a></li>
+      <li><a href="/docs/file.htm">file</a></li>
+      <li><a href="/docs/globals.htm">globals</a></li>
+      <li><a href="/docs/helper.htm">helper</a></li>
+      <li><a href="/docs/language.htm">language</a></li>
+      <li><a href="/docs/request.htm">request</a></li>
+      <li><a href="/docs/server.htm">server</a></li>
+      <li><a href="/docs/session.htm">session</a></li>
+      <li><a href="/docs/size.htm">size</a></li>
+      <li><a href="/docs/string.htm">string</a></li>
+      <li><a href="/docs/url.htm">url</a></li>
+      <li><a href="/docs/validation.htm">validation</a></li>
+      <li><a href="/docs/xml.htm">xml</a></li>
+  </ul>
+
+<div id="documentation">
+<h2>Size</h2>
+
+<p>The size class helps scaling image dimensions.</p>
+
+<h3>Function: size::ratio</h3>
+
+<p>Calculate the image ratio</p>
+
+<h4>Syntax</h4>
+
+<pre><code>size::ratio('width', 'height');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>width - (int) the width of an image</li>
+<li>height - (int) the height of an image</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(int) returns the ratio</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>echo size::ratio(1200, 768);
+// output: 1.5625
+</code></pre>
+
+<hr />
+
+<h3>Function: size::fit</h3>
+
+<p>Fit the image size into a predefined box</p>
+
+<h4>Syntax</h4>
+
+<pre><code>size::fit('width', 'height', 'box'[, 'force']);
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>width - (int) the width of an image</li>
+<li>height - (int) the height of an image</li>
+<li>box - (int) the size of the box</li>
+<li>force - (boolean) if the smallest side of the image is smaller as the box this will force to the smallest side to fit.</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(array) returns an array with the new width and height</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$new_size = size::fit(1200, 768, 500);
+// output: array(
+//    'width' =&gt; 500,
+//    'height' =&gt; 320
+// );
+
+$new_size = size::fit(1200, 768, 3000, true);
+// output: array(
+//    'width' =&gt; 3000,
+//    'height' =&gt; 1920
+// );
+</code></pre>
+
+<hr />
+
+<h3>Function: size::fit_width</h3>
+
+<p>Recalculate the image dimensions to fit the width with the given value.</p>
+
+<h4>Syntax</h4>
+
+<pre><code>size::fit_width('width', 'height', 'fit'[, 'force']);
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>width - (int) the width of an image</li>
+<li>height - (int) the height of an image</li>
+<li>fit - (int) the new width</li>
+<li>force - (boolean) if the width of the image is smaller than the new width this will force the width to adjust.</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(array) returns an array with the new width and height</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$new_size = size::fit_width(1200, 768, 500);
+// output: array(
+//    'width' =&gt; 500,
+//    'height' =&gt; 320
+// );
+
+$new_size = size::fit_width(1200, 768, 3000, true);
+// output: array(
+//    'width' =&gt; 3000,
+//    'height' =&gt; 1920
+// );
+</code></pre>
+
+<hr />
+
+<h3>Function: size::fit_height</h3>
+
+<p>Recalculate the image dimensions to fit the height with the given value.</p>
+
+<h4>Syntax</h4>
+
+<pre><code>size::fit_width('width', 'height', 'fit'[, 'force']);
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>width - (int) the width of an image</li>
+<li>height - (int) the height of an image</li>
+<li>fit - (int) the new height</li>
+<li>force - (boolean) if the height of the image is smaller than the new height this will force the height to adjust.</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(array) returns an array with the new width and height</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$new_size = size::fit_height(1200, 768, 500);
+// output: array(
+//    'width' =&gt; 781,
+//    'height' =&gt; 500
+// );
+
+$new_size = size::fit_height(1200, 768, 3000, true);
+// output: array(
+//    'width' =&gt; 4687,
+//    'height' =&gt; 3000
+// );
+</code></pre>
+
+<hr />
+</div>  </div>
+
+  <div id="footer">
+    &copy; 2010 – <a href="http://bastian-allgeier.de">Bastian Allgeier</a>
+    <ul>
+      <li><a href="http://twitter.com/getkirby">Follow Kirby on Twitter</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<script type="text/javascript" src="/js/mootools.js"></script>
+<script type="text/javascript" src="/lighter/Lighter.js"></script>
+<script type="text/javascript" src="/lighter/Fuel.js"></script>
+<script type="text/javascript" src="/js/scripts.js"></script>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-431401-11");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+</body>
+
+</html>

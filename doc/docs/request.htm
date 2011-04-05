@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Kirby</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="description" content="Kirby is a super simple, designy PHP toolkit" />
+<meta name="keywords" content="php, toolkit, jquery, simple, design" />
+<meta name="author" content="Bastian Allgeier" />
+<meta http-equiv="imagetoolbar" content="no" />
+
+<link rel="shortcut icon" href="/favicon.ico" />
+
+<link rel="stylesheet" href="/css/styles.css" media="all" type="text/css" />
+
+</head>
+
+<body>
+
+<div id="page">
+
+  <div id="menu">
+  
+    <ul>
+            <li><a href="/home.htm">kirby</a></li>
+            <li><a class="active" href="/docs.htm">docs</a></li>
+            <li><a href="/download">download</a></li>
+            <li><a href="/plugins.htm">plugins</a></li>
+          </ul>
+  
+  </div>
+  
+  <div id="content" class="docs">
+  <h1>Documentation</h1>
+
+
+<ul id="docsmenu">
+    <li><a class="active" href="/docs/array.htm">array</a></li>
+      <li><a href="/docs/browser.htm">browser</a></li>
+      <li><a href="/docs/config.htm">config</a></li>
+      <li><a href="/docs/content.htm">content</a></li>
+      <li><a href="/docs/cookie.htm">cookie</a></li>
+      <li><a href="/docs/core.htm">core</a></li>
+      <li><a href="/docs/database.htm">database</a></li>
+      <li><a href="/docs/dir.htm">dir</a></li>
+      <li><a href="/docs/file.htm">file</a></li>
+      <li><a href="/docs/globals.htm">globals</a></li>
+      <li><a href="/docs/helper.htm">helper</a></li>
+      <li><a href="/docs/language.htm">language</a></li>
+      <li><a href="/docs/request.htm">request</a></li>
+      <li><a href="/docs/server.htm">server</a></li>
+      <li><a href="/docs/session.htm">session</a></li>
+      <li><a href="/docs/size.htm">size</a></li>
+      <li><a href="/docs/string.htm">string</a></li>
+      <li><a href="/docs/url.htm">url</a></li>
+      <li><a href="/docs/validation.htm">validation</a></li>
+      <li><a href="/docs/xml.htm">xml</a></li>
+  </ul>
+
+<div id="documentation">
+<h2>R (Request)</h2>
+
+<p>The r class helps to handle post and get requests</p>
+
+<h3>Function: r::set</h3>
+
+<p>Adds stuff to the request</p>
+
+<h4>Syntax</h4>
+
+<pre><code>r::set('key', 'value');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>key - (string) </li>
+<li>value - (mixed) the value can be pretty much anything</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(void)</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>r::set('username', 'bastian');
+
+a::show($_REQUEST);
+
+// sample output: array(
+//    'username' =&gt; 'bastian'
+//    ... other stuff from the request
+// );
+</code></pre>
+
+<hr />
+
+<h3>Function: r::get</h3>
+
+<p>Get any value from the request</p>
+
+<h4>Syntax</h4>
+
+<pre><code>r::get('key'[, 'default']);
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>key - (string) </li>
+<li>default - (mixed) set a default value if the result is empty</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(mixed) returns whatever has been stored with this key</li>
+</ul>
+
+<h4>Shortcut</h4>
+
+<p>The shortcut for this function is get()</p>
+
+<h4>Example</h4>
+
+<pre><code>echo r::get('username');
+// sample output 'bastian'
+
+echo r::get('username', 'peter');
+// if no username is found in the request peter will be echoed
+
+echo get('username');
+// shortcut
+</code></pre>
+
+<hr />
+
+<h3>Function: r::parse</h3>
+
+<p>Parse and sanitize the whole request</p>
+
+<h4>Syntax</h4>
+
+<pre><code>r::parse(['param1'[,'param2'[,'param3']]] etc...);
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>a comma sperarated list of params: params1, params2, params3</li>
+</ol>
+
+<h4>Params</h4>
+
+<p>Add all the fields you wanna get from the request in the following way:<br />
+<em>field:type:default</em> (type and default are optional)</p>
+
+<p>list of supported types:</p>
+
+<ul>
+<li>int</li>
+<li>str</li>
+<li>array</li>
+<li>nohtml</li>
+<li>noxml</li>
+<li>enum</li>
+<li>checkbox</li>
+<li>url</li>
+<li>email</li>
+<li>plain</li>
+<li>lower</li>
+<li>upper</li>
+<li>words     </li>
+<li>tags  </li>
+<li>nobreaks</li>
+<li>url</li>
+<li>filename</li>
+</ul>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(array) returns the sanitized array with exactly the fields you've specified above</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$data = r::parse(
+    'id:int:1',
+    'active:enum:n',
+    'username:str',
+    'email:email',
+    'bio:nohtml'
+);
+
+// sample result: array(
+//    'id' =&gt; 211,
+//    'active' =&gt; 'y',
+//    'username' =&gt; 'bastian',
+//    'email' =&gt; 'mail@bastian-allgeier.de',
+//    'bio' =&gt; 'some super exciting bio'
+// );
+</code></pre>
+
+<hr />
+
+<h3>Function: r::ajax</h3>
+
+<p>Checks whether the request has been made via ajax</p>
+
+<h4>Syntax</h4>
+
+<pre><code>r::ajax();
+</code></pre>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(boolean) true: yes, that was ajax - false: boring old fashioned request</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>if(r::ajax()) echo 'ajax rulez';
+</code></pre>
+
+<hr />
+
+<h3>Function: r::referer</h3>
+
+<p>Get the referer for this request</p>
+
+<h4>Syntax</h4>
+
+<pre><code>r::referer(['default_url']);
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>default_url - (string) you can define a default url here, which should be returned when there's no referer</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) returns the url</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>echo r::referer();
+// sample result: http://someurl.com    
+</code></pre>
+</div>  </div>
+
+  <div id="footer">
+    &copy; 2010 – <a href="http://bastian-allgeier.de">Bastian Allgeier</a>
+    <ul>
+      <li><a href="http://twitter.com/getkirby">Follow Kirby on Twitter</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<script type="text/javascript" src="/js/mootools.js"></script>
+<script type="text/javascript" src="/lighter/Lighter.js"></script>
+<script type="text/javascript" src="/lighter/Fuel.js"></script>
+<script type="text/javascript" src="/js/scripts.js"></script>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-431401-11");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+</body>
+
+</html>

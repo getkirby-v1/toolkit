@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Kirby</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="description" content="Kirby is a super simple, designy PHP toolkit" />
+<meta name="keywords" content="php, toolkit, jquery, simple, design" />
+<meta name="author" content="Bastian Allgeier" />
+<meta http-equiv="imagetoolbar" content="no" />
+
+<link rel="shortcut icon" href="/favicon.ico" />
+
+<link rel="stylesheet" href="/css/styles.css" media="all" type="text/css" />
+
+</head>
+
+<body>
+
+<div id="page">
+
+  <div id="menu">
+  
+    <ul>
+            <li><a href="/home.htm">kirby</a></li>
+            <li><a class="active" href="/docs.htm">docs</a></li>
+            <li><a href="/download">download</a></li>
+            <li><a href="/plugins.htm">plugins</a></li>
+          </ul>
+  
+  </div>
+  
+  <div id="content" class="docs">
+  <h1>Documentation</h1>
+
+
+<ul id="docsmenu">
+    <li><a class="active" href="/docs/array.htm">array</a></li>
+      <li><a href="/docs/browser.htm">browser</a></li>
+      <li><a href="/docs/config.htm">config</a></li>
+      <li><a href="/docs/content.htm">content</a></li>
+      <li><a href="/docs/cookie.htm">cookie</a></li>
+      <li><a href="/docs/core.htm">core</a></li>
+      <li><a href="/docs/database.htm">database</a></li>
+      <li><a href="/docs/dir.htm">dir</a></li>
+      <li><a href="/docs/file.htm">file</a></li>
+      <li><a href="/docs/globals.htm">globals</a></li>
+      <li><a href="/docs/helper.htm">helper</a></li>
+      <li><a href="/docs/language.htm">language</a></li>
+      <li><a href="/docs/request.htm">request</a></li>
+      <li><a href="/docs/server.htm">server</a></li>
+      <li><a href="/docs/session.htm">session</a></li>
+      <li><a href="/docs/size.htm">size</a></li>
+      <li><a href="/docs/string.htm">string</a></li>
+      <li><a href="/docs/url.htm">url</a></li>
+      <li><a href="/docs/validation.htm">validation</a></li>
+      <li><a href="/docs/xml.htm">xml</a></li>
+  </ul>
+
+<div id="documentation">
+<h2>DB (Database)</h2>
+
+<p>Kirby makes the interaction with MySQL super simple. You don't have to worry about connections or other stuff. Simply setup your databse config and go for it.</p>
+
+<h3>Setup the database connection</h3>
+
+<p>The config class is used to setup the database connection details. It's beyond the scope of this documentation to explain how to setup a MySQL database, but believe me, it's easy :-)
+You only have to do this once at the beginning of your code and it makes sense to put that stuff in an external config file and just include that each time.</p>
+
+<h4>Example</h4>
+
+<pre><code>c::set('db.host', 'localhost');
+c::set('db.user', 'root');
+c::set('db.password', 'password');
+c::set('db.name', 'database');
+</code></pre>
+
+<hr />
+
+<h3>Function: db::select</h3>
+
+<p>Select a bunch of rows from a table</p>
+
+<h4>Syntax</h4>
+
+<pre><code>db::select('table', 'select_clause'[, 'where_clause'[, 'order_clause'[, 'page'[, 'limit']]]);
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>table - (string) The table name</li>
+<li>select_clause - (mixed) Can be either a select string: 'field1, field2' or an array: array('field1', 'field2')</li>
+<li>where_clause - (mixed) Can be either a string: 'id = 1' or an array: array('id' => 1)</li>
+<li>order_clause - (string) i.e. 'field1 ASC'</li>
+<li>page - (int) </li>
+<li>limit - (int)</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(array) returns an array with all results</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$users = db::select('users', '*');
+// users is an array with all rows and all columns from the table 'users'
+
+
+$posts = db::select('posts', 'id, title, body', array('user' =&gt; 1));
+// posts is an array with all posts from user 1 and the specified columns
+
+
+$comments = db::select('comments', '*', false, 'added DESC', 0,10);
+// comments is an array with 10 comments sorted by comments_added
+</code></pre>
+
+<hr />
+
+<h3>Function: db::row</h3>
+
+<p>Select a single row of a table</p>
+
+<h4>Syntax</h4>
+
+<pre><code>db::row('table', 'select_clause', 'where_clause'[, 'order_clause']);
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>table - (string) The table name</li>
+<li>select_clause - (mixed) Can be either a select string: 'field1, field2' or an array: array('field1', 'field2')</li>
+<li>where_clause - (mixed) Can be either a string: 'id = 1' or an array: array('id' => 1)</li>
+<li>order_clause - (string) i.e. 'field1 ASC'</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(array) returns an array with all selected fields from this row</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$user = db::row('user', '*', array('id' =&gt; 1));
+// sample result: array(
+//    'id' =&gt; 1,
+//    'username' =&gt; 'bastian',
+//    'email' =&gt; 'mail@bastian-allgeier.de'
+// );
+
+$user = db::row('user', 'username', array('id' =&gt; 1));
+// sample result: array(
+//    'username' =&gt; 'bastian'
+// );
+</code></pre>
+
+<hr />
+
+<h3>Function: db::field</h3>
+
+<p>Select a single field from a table</p>
+
+<h4>Syntax</h4>
+
+<pre><code>db::field('table', 'fieldname', 'where_clause');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>table - (string) The table name</li>
+<li>fieldname - (string) The name of the field you want to select</li>
+<li>where_clause - (mixed) Can be either a string: 'id = 1' or an array: array('id' => 1)</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(mixed) returns the value of that field</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$username = db::field('user', 'username', array('id' =&gt; 1));
+// sample result: bastian
+</code></pre>
+
+<hr />
+
+<h3>Function: db::insert</h3>
+
+<p>Insert a new row into a table</p>
+
+<h4>Syntax</h4>
+
+<pre><code>db::insert('table', 'data');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>table - (string) The table name</li>
+<li>data - (mixed) Can be either a string: 'id = 1, title = "test"' or and array: array('id' => 1, 'title' => 'test')</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(mixed) returns the id of that new row or false if it failed</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$id = db::insert('user', array('username' =&gt; 'peter', 'email' =&gt; 'peter@example.com'));
+</code></pre>
+
+<hr />
+
+<h3>Function: db::update</h3>
+
+<p>Update an existing row</p>
+
+<h4>Syntax</h4>
+
+<pre><code>db::update('table', 'data'[, where_clause]);
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>table - (string) The table name</li>
+<li>data - (mixed) Can be either a string: 'id = 1, title = "test"' or and array: array('id' => 1, 'title' => 'test')</li>
+<li>where_clause - (mixed) Can be either a string: 'id = 1' or and array: array('id' => 1)</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(boolean) returns true or false</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>db::update('user', array('username' =&gt; 'peter'), array('id' =&gt; 1));
+// replaces the username of user 1 with peter    
+</code></pre>
+
+<hr />
+
+<h3>Function: db::delete</h3>
+
+<p>Delete a row</p>
+
+<h4>Syntax</h4>
+
+<pre><code>db::delete('table', 'where_clause');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>table - (string) The table name</li>
+<li>where_clause - (mixed) Can be either a string: 'id = 1' or and array: array('id' => 1)</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(boolean) returns true or false</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>db::delete('user', array('id' =&gt; 1));
+// deletes the user with the id 1
+</code></pre>
+
+<hr />
+
+<h3>...and a lot more</h3>
+
+<p>DB has a lot more nifty functions which I will write about some more later.</p>
+
+<pre><code>// select a column from a table    
+db::column('table', 'column_name', 'where_clause', 'order_clause', 'page', 'limit');
+
+// count entries
+db::count('table', 'where_clause');
+
+// the minimum value of a column
+db::min('table', 'column', 'where_clause');
+
+// the maximum value of a column
+db::max('table', 'column', 'where_clause');
+
+// the sum of a column
+db::sum('table', 'column', 'where_clause');
+
+// join tables
+db::join('table1', 'table2', 'on_clause', 'select_clause', 'where_clause', 'order_clause', 'page', 'limit');
+
+// left join tables
+db::left_join('table1', 'table2', 'on_clause', 'select_clause', 'where_clause', 'order_clause', 'page', 'limit');
+
+// execute a custom query
+db::query('query');
+
+// and even some more...
+</code></pre>
+</div>  </div>
+
+  <div id="footer">
+    &copy; 2010 – <a href="http://bastian-allgeier.de">Bastian Allgeier</a>
+    <ul>
+      <li><a href="http://twitter.com/getkirby">Follow Kirby on Twitter</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<script type="text/javascript" src="/js/mootools.js"></script>
+<script type="text/javascript" src="/lighter/Lighter.js"></script>
+<script type="text/javascript" src="/lighter/Fuel.js"></script>
+<script type="text/javascript" src="/js/scripts.js"></script>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-431401-11");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+</body>
+
+</html>

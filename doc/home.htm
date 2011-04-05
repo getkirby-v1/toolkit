@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Kirby</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="description" content="Kirby is a super simple, designy PHP toolkit" />
+<meta name="keywords" content="php, toolkit, jquery, simple, design" />
+<meta name="author" content="Bastian Allgeier" />
+<meta http-equiv="imagetoolbar" content="no" />
+
+<link rel="shortcut icon" href="/favicon.ico" />
+
+<link rel="stylesheet" href="/css/styles.css" media="all" type="text/css" />
+
+</head>
+
+<body>
+
+<div id="page">
+
+  <div id="menu">
+  
+    <ul>
+            <li><a class="active" href="/home.htm">kirby</a></li>
+            <li><a href="/docs.htm">docs</a></li>
+            <li><a href="/download">download</a></li>
+            <li><a href="/plugins.htm">plugins</a></li>
+          </ul>
+  
+  </div>
+  
+  <div id="content" class="home">
+  <p>
+Welcome to Kirby – a stripped down and easy to use toolkit for PHP. 
+It's by no means a full featured mvc/wtf framework, it's more like jQuery or Mootools for PHP. Kirby is there
+to make nerdy things a little less nerdy.
+</p>
+
+<p>
+Kirby is in alpha and completely free to use. 
+Please read the <a href="/docs">docs</a> to learn more about it, follow Kirby on <a href="http://twitter.com/getkirby">Twitter</a> and <a href="/download">download</a> the latest version to get started.
+</p>
+
+<h2>Features</h2>
+<div id="features">
+  <ul class="left">
+    <li>Database Handling (MySQL)</li>
+    <li>Loads of string and array helpers</li>
+    <li>File and directory handling</li>
+    <li>Session and Cookie helpers</li>
+    <li>Browser detection</li>
+  </ul>
+  <ul class="right">
+    <li>Easy language support</li>
+    <li>Easy request handling</li>
+    <li>Validation</li>
+    <li>Easy app configuration</li>
+  </ul>
+</div>
+
+
+<p>
+Here are two tiny examples to give you a better idea what Kirby does
+</p>
+
+<h2>Easy database handling</h2>
+<pre><code>&lt;?php
+
+require_once('kirby.php');
+
+// setup the database
+c::set('db.host', 'localhost');
+c::set('db.user', 'root');
+c::set('db.password', 'password');
+c::set('db.name', 'database');
+
+// select all users from an imaginary user table
+$users = db::select('users', '*');
+
+// build a list of encoded email addresses
+// with a fallback for users without an email address
+foreach($users AS $user) {
+    echo str::email( a::get($user, 'email', 'no email') );
+}
+
+?&gt;</code></pre>
+
+<h2>Handling requests and validation</h2>
+<pre><code>&lt;?php
+
+require_once('kirby.php');
+
+if(get('submit')) {
+    
+    $email = get('email');
+
+    if(!v::email($email)) {
+        echo 'That is not a valid email address';
+    } else {
+        db::insert('newsletter', array('email' =&gt; $email));
+        go('/success');
+    }
+    
+}
+
+?&gt;
+&lt;form&gt;
+  &lt;input type=&quot;text&quot; name=&quot;email&quot; /&gt;
+  &lt;input type=&quot;submit&quot; name=&quot;submit&quot; value=&quot;Subscribe&quot; /&gt;
+&lt;/form&gt;</code></pre>
+
+<h2>What others say</h2>
+<p>&quot;Kirby is a really nice and handy collection of tools to use on a daily basis.&quot;<br />
+<em>- <a href="http://labuschin.com/">Martin Labuschin</a>, Web developer at Trusted Shops</em>
+</p>
+
+
+<h2>Requirements</h2>
+<p>Kirby likes PHP 5, Apache on unix systems and MySQL. Everything else is not supported.</p>
+
+<h2>Feedback</h2>
+<p>Please let me know if you like Kirby or you hate Kirby or whatever: <a title="&#x6d;&#97;&#x69;&#x6c;&#x40;&#x62;&#x61;&#x73;&#116;&#x69;&#97;&#x6e;&#45;&#97;&#108;&#108;&#103;&#101;&#x69;&#x65;&#x72;&#46;&#100;&#101;" class="email" href="mailto:&#x6d;&#97;&#x69;&#x6c;&#x40;&#x62;&#x61;&#x73;&#116;&#x69;&#97;&#x6e;&#45;&#97;&#108;&#108;&#103;&#101;&#x69;&#x65;&#x72;&#46;&#100;&#101;">&#109;&#97;&#105;&#x6c;&#64;&#x62;&#97;&#115;&#116;&#x69;&#x61;&#x6e;&#x2d;&#97;&#x6c;&#108;&#x67;&#x65;&#x69;&#101;&#114;&#46;&#x64;&#101;</a></p>
+  </div>
+
+  <div id="footer">
+    &copy; 2010 – <a href="http://bastian-allgeier.de">Bastian Allgeier</a>
+    <ul>
+      <li><a href="http://twitter.com/getkirby">Follow Kirby on Twitter</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<script type="text/javascript" src="/js/mootools.js"></script>
+<script type="text/javascript" src="/lighter/Lighter.js"></script>
+<script type="text/javascript" src="/lighter/Fuel.js"></script>
+<script type="text/javascript" src="/js/scripts.js"></script>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-431401-11");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+</body>
+
+</html>

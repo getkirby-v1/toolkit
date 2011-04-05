@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Kirby</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="description" content="Kirby is a super simple, designy PHP toolkit" />
+<meta name="keywords" content="php, toolkit, jquery, simple, design" />
+<meta name="author" content="Bastian Allgeier" />
+<meta http-equiv="imagetoolbar" content="no" />
+
+<link rel="shortcut icon" href="/favicon.ico" />
+
+<link rel="stylesheet" href="/css/styles.css" media="all" type="text/css" />
+
+</head>
+
+<body>
+
+<div id="page">
+
+  <div id="menu">
+  
+    <ul>
+            <li><a href="/home.htm">kirby</a></li>
+            <li><a class="active" href="/docs.htm">docs</a></li>
+            <li><a href="/download">download</a></li>
+            <li><a href="/plugins.htm">plugins</a></li>
+          </ul>
+  
+  </div>
+  
+  <div id="content" class="docs">
+  <h1>Documentation</h1>
+
+
+<ul id="docsmenu">
+    <li><a class="active" href="/docs/array.htm">array</a></li>
+      <li><a href="/docs/browser.htm">browser</a></li>
+      <li><a href="/docs/config.htm">config</a></li>
+      <li><a href="/docs/content.htm">content</a></li>
+      <li><a href="/docs/cookie.htm">cookie</a></li>
+      <li><a href="/docs/core.htm">core</a></li>
+      <li><a href="/docs/database.htm">database</a></li>
+      <li><a href="/docs/dir.htm">dir</a></li>
+      <li><a href="/docs/file.htm">file</a></li>
+      <li><a href="/docs/globals.htm">globals</a></li>
+      <li><a href="/docs/helper.htm">helper</a></li>
+      <li><a href="/docs/language.htm">language</a></li>
+      <li><a href="/docs/request.htm">request</a></li>
+      <li><a href="/docs/server.htm">server</a></li>
+      <li><a href="/docs/session.htm">session</a></li>
+      <li><a href="/docs/size.htm">size</a></li>
+      <li><a href="/docs/string.htm">string</a></li>
+      <li><a href="/docs/url.htm">url</a></li>
+      <li><a href="/docs/validation.htm">validation</a></li>
+      <li><a href="/docs/xml.htm">xml</a></li>
+  </ul>
+
+<div id="documentation">
+<h2>DIR (Directory)</h2>
+
+<p>The dir class simplifies directory handling</p>
+
+<h3>Function: dir::make</h3>
+
+<p>Creates a new directory</p>
+
+<h4>Syntax</h4>
+
+<pre><code>dir::make('dirname');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>dirname - (string) The full or relative path for the new directory</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(boolean) If the directory has been created returns true. Otherwise, returns false.</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$create = dir::make('/app/test/new-directory');
+
+if($create) echo 'the directory has been created';
+</code></pre>
+
+<hr />
+
+<h3>Function: dir::read</h3>
+
+<p>Gets a list of all files and directories in that directory and returns it as array</p>
+
+<h4>Syntax</h4>
+
+<pre><code>dir::read('dirname');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>dirname - (string) The full or relative path for the directory</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(array) returns an array with all filenames</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$files = dir::read('mydirectory');
+// returns array('file-1.txt', 'file-2.txt', 'file-3.txt', etc...);
+</code></pre>
+
+<hr />
+
+<h3>Function dir::move</h3>
+
+<p>Moves a directory to a new place or renames it</p>
+
+<h4>Syntax</h4>
+
+<pre><code>dir::move('old_path', 'new_path');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>old_path - (string) The path where the directory is now</li>
+<li>new_path - (string) The path where the directory should be afterwards</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(boolean) returns true if the directory has been moved, otherwise returns false</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$move = dir::move('mydirectory', 'mynewdirectory');
+
+if($move) echo 'the directory has been moved to mynewdirectory';
+</code></pre>
+
+<hr />
+
+<h3>Function dir::remove</h3>
+
+<p>Removes a directory and all its content</p>
+
+<h4>Syntax</h4>
+
+<pre><code>dir::remove('dirname');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>dirname - (string) The full or relative path for the directory</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(boolean) returns true if the directory has been removed, otherwise returns false</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$remove = dir::remove('mydirectory');
+
+if($remove) echo 'the directory has been removed';
+</code></pre>
+</div>  </div>
+
+  <div id="footer">
+    &copy; 2010 – <a href="http://bastian-allgeier.de">Bastian Allgeier</a>
+    <ul>
+      <li><a href="http://twitter.com/getkirby">Follow Kirby on Twitter</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<script type="text/javascript" src="/js/mootools.js"></script>
+<script type="text/javascript" src="/lighter/Lighter.js"></script>
+<script type="text/javascript" src="/lighter/Fuel.js"></script>
+<script type="text/javascript" src="/js/scripts.js"></script>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-431401-11");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+</body>
+
+</html>

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Kirby</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="description" content="Kirby is a super simple, designy PHP toolkit" />
+<meta name="keywords" content="php, toolkit, jquery, simple, design" />
+<meta name="author" content="Bastian Allgeier" />
+<meta http-equiv="imagetoolbar" content="no" />
+
+<link rel="shortcut icon" href="/favicon.ico" />
+
+<link rel="stylesheet" href="/css/styles.css" media="all" type="text/css" />
+
+</head>
+
+<body>
+
+<div id="page">
+
+  <div id="menu">
+  
+    <ul>
+            <li><a href="/home.htm">kirby</a></li>
+            <li><a class="active" href="/docs.htm">docs</a></li>
+            <li><a href="/download">download</a></li>
+            <li><a href="/plugins.htm">plugins</a></li>
+          </ul>
+  
+  </div>
+  
+  <div id="content" class="docs">
+  <h1>Documentation</h1>
+
+
+<ul id="docsmenu">
+    <li><a class="active" href="/docs/array.htm">array</a></li>
+      <li><a href="/docs/browser.htm">browser</a></li>
+      <li><a href="/docs/config.htm">config</a></li>
+      <li><a href="/docs/content.htm">content</a></li>
+      <li><a href="/docs/cookie.htm">cookie</a></li>
+      <li><a href="/docs/core.htm">core</a></li>
+      <li><a href="/docs/database.htm">database</a></li>
+      <li><a href="/docs/dir.htm">dir</a></li>
+      <li><a href="/docs/file.htm">file</a></li>
+      <li><a href="/docs/globals.htm">globals</a></li>
+      <li><a href="/docs/helper.htm">helper</a></li>
+      <li><a href="/docs/language.htm">language</a></li>
+      <li><a href="/docs/request.htm">request</a></li>
+      <li><a href="/docs/server.htm">server</a></li>
+      <li><a href="/docs/session.htm">session</a></li>
+      <li><a href="/docs/size.htm">size</a></li>
+      <li><a href="/docs/string.htm">string</a></li>
+      <li><a href="/docs/url.htm">url</a></li>
+      <li><a href="/docs/validation.htm">validation</a></li>
+      <li><a href="/docs/xml.htm">xml</a></li>
+  </ul>
+
+<div id="documentation">
+<h2>Browser</h2>
+
+<p>The browser class has some useful functions to detect the browser of the current user.</p>
+
+<h3>Function: browser::name</h3>
+
+<p>Returns the name of the current browser</p>
+
+<h4>Syntax</h4>
+
+<pre><code>browser::name([user_agent]);
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>user_agent - (string) you can modify the user agent string here. default is the current ua string</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) returns the name of the browser</li>
+</ul>
+
+<h4>Names</h4>
+
+<ul>
+<li>ie (Internet Explorer)</li>
+<li>fx (Firefox)</li>
+<li>gecko</li>
+<li>opera</li>
+<li>chrome</li>
+<li>safari</li>
+<li>iron</li>
+<li>konquerer</li>
+<li>mozilla</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>browser::name();
+// sample output: safari
+</code></pre>
+
+<hr />
+
+<h3>Function: browser::engine</h3>
+
+<p>Returns the name of the current browser engine</p>
+
+<h4>Syntax</h4>
+
+<pre><code>browser::engine([user_agent]);
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>user_agent - (string) you can modify the user agent string here. default is the current ua string</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) returns the name of the browser engine</li>
+</ul>
+
+<h4>Names</h4>
+
+<ul>
+<li>trident</li>
+<li>gecko</li>
+<li>presto</li>
+<li>webkit</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>browser::engine();
+// sample output: webkit
+</code></pre>
+
+<hr />
+
+<h3>Function: browser::version</h3>
+
+<p>Returns the version of the current browser</p>
+
+<h4>Syntax</h4>
+
+<pre><code>browser::version([user_agent]);
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>user_agent - (string) you can modify the user agent string here. default is the current ua string</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) returns the version of the browser</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>browser::version();
+// sample output: 4
+</code></pre>
+
+<hr />
+
+<h3>Function: browser::platform</h3>
+
+<p>Returns the os</p>
+
+<h4>Syntax</h4>
+
+<pre><code>browser::platform([user_agent]);
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>user_agent - (string) you can modify the user agent string here. default is the current ua string</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) returns the os</li>
+</ul>
+
+<h4>Platforms</h4>
+
+<ul>
+<li>mac</li>
+<li>win</li>
+<li>linux</li>
+<li>mobile</li>
+<li>iphone</li>
+<li>ipod</li>
+<li>webtv</li>
+<li>freebsd</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>browser::platform();
+// sample output: mac
+</code></pre>
+
+<hr />
+
+<h3>Function: browser::mobile</h3>
+
+<p>Checks whether the user browses with a mobile browser</p>
+
+<h4>Syntax</h4>
+
+<pre><code>browser::mobile([user_agent]);
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>user_agent - (string) you can modify the user agent string here. default is the current ua string</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(boolean)</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>if(browser::mobile()) echo 'You are browsing with a mobile phone';
+</code></pre>
+
+<hr />
+
+<h3>Function: browser::iphone</h3>
+
+<p>Checks whether the user browses with a iphone/ipod</p>
+
+<h4>Syntax</h4>
+
+<pre><code>browser::iphone([user_agent]);
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>user_agent - (string) you can modify the user agent string here. default is the current ua string</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(boolean)</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>if(browser::iphone()) echo 'You are browsing with an iphone';
+</code></pre>
+
+<hr />
+
+<h3>Function: browser::css</h3>
+
+<p>Returns a css selector string, which can be used for browser specific css.</p>
+
+<h4>Syntax</h4>
+
+<pre><code>browser::css([user_agent]);
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>user_agent - (string) you can modify the user agent string here. default is the current ua string</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) css browser selector</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>&lt;body class="&lt;?php echo browser::css() ?&gt;"&gt;
+// sampel output: &lt;body class="webkit safari safari4 mac"&gt;
+</code></pre>
+
+<hr />
+
+<h3>Function: browser::detect</h3>
+
+<p>Detect the current browser and return all details</p>
+
+<h4>Syntax</h4>
+
+<pre><code>browser::detect([user_agent]);
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>user_agent - (string) you can modify the user agent string here. default is the current ua string</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(array) all details as array</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$detect = browser::detect();
+// sampel output: array(
+//    'browser' =&gt; 'safari',
+//    'engine'  =&gt; 'webkit',
+//    'version' =&gt; 4,
+//    'platform' =&gt; 'mac'
+// );
+</code></pre>
+
+<hr />
+</div>  </div>
+
+  <div id="footer">
+    &copy; 2010 – <a href="http://bastian-allgeier.de">Bastian Allgeier</a>
+    <ul>
+      <li><a href="http://twitter.com/getkirby">Follow Kirby on Twitter</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<script type="text/javascript" src="/js/mootools.js"></script>
+<script type="text/javascript" src="/lighter/Lighter.js"></script>
+<script type="text/javascript" src="/lighter/Fuel.js"></script>
+<script type="text/javascript" src="/js/scripts.js"></script>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-431401-11");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+</body>
+
+</html>

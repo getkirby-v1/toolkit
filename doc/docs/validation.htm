@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Kirby</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="description" content="Kirby is a super simple, designy PHP toolkit" />
+<meta name="keywords" content="php, toolkit, jquery, simple, design" />
+<meta name="author" content="Bastian Allgeier" />
+<meta http-equiv="imagetoolbar" content="no" />
+
+<link rel="shortcut icon" href="/favicon.ico" />
+
+<link rel="stylesheet" href="/css/styles.css" media="all" type="text/css" />
+
+</head>
+
+<body>
+
+<div id="page">
+
+  <div id="menu">
+  
+    <ul>
+            <li><a href="/home.htm">kirby</a></li>
+            <li><a class="active" href="/docs.htm">docs</a></li>
+            <li><a href="/download">download</a></li>
+            <li><a href="/plugins.htm">plugins</a></li>
+          </ul>
+  
+  </div>
+  
+  <div id="content" class="docs">
+  <h1>Documentation</h1>
+
+
+<ul id="docsmenu">
+    <li><a class="active" href="/docs/array.htm">array</a></li>
+      <li><a href="/docs/browser.htm">browser</a></li>
+      <li><a href="/docs/config.htm">config</a></li>
+      <li><a href="/docs/content.htm">content</a></li>
+      <li><a href="/docs/cookie.htm">cookie</a></li>
+      <li><a href="/docs/core.htm">core</a></li>
+      <li><a href="/docs/database.htm">database</a></li>
+      <li><a href="/docs/dir.htm">dir</a></li>
+      <li><a href="/docs/file.htm">file</a></li>
+      <li><a href="/docs/globals.htm">globals</a></li>
+      <li><a href="/docs/helper.htm">helper</a></li>
+      <li><a href="/docs/language.htm">language</a></li>
+      <li><a href="/docs/request.htm">request</a></li>
+      <li><a href="/docs/server.htm">server</a></li>
+      <li><a href="/docs/session.htm">session</a></li>
+      <li><a href="/docs/size.htm">size</a></li>
+      <li><a href="/docs/string.htm">string</a></li>
+      <li><a href="/docs/url.htm">url</a></li>
+      <li><a href="/docs/validation.htm">validation</a></li>
+      <li><a href="/docs/xml.htm">xml</a></li>
+  </ul>
+
+<div id="documentation">
+<h2>V (Validate)</h2>
+
+<p>The v class helps to validate the most common input formats</p>
+
+<h3>Function: v::password</h3>
+
+<p>Validate a password</p>
+
+<h4>Syntax</h4>
+
+<pre><code>v::password('password');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>password - (string) the password</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(boolean) true: password is valid, false: password is not valid</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>if(v::password('u')) echo 'The password is valid';
+// btw: it is not valid :-) 
+</code></pre>
+
+<hr />
+
+<h3>Function: v::passwords</h3>
+
+<p>Validate and compare two passwords</p>
+
+<h4>Syntax</h4>
+
+<pre><code>v::passwords('password1', 'password2');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>password1 - (string) the first password</li>
+<li>password2 - (string) the second password</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(boolean) true: passwords are valid, false: passwords are not valid</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>if(v::passwords('u', 'u')) echo 'The passwords are valid';
+// btw: they are entered correctly twice, but too short
+</code></pre>
+
+<hr />
+
+<h3>Function: v::string</h3>
+
+<p>Universal string validation function</p>
+
+<h4>Syntax</h4>
+
+<pre><code>v::string('string', 'params');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>string - (string) the string</li>
+<li>params - (array) the params to validate the string after</li>
+</ol>
+
+<h4>Params</h4>
+
+<ol>
+<li>min_length</li>
+<li>mac_length</li>
+<li>format (regex i.e.: a-z0-9)</li>
+</ol>
+
+<p>All params are optional but you should at least specify one of them.</p>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(boolean) true: string is valid, false: string is not valid</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>if(v::string('superteststring', array(
+    'min_length' =&gt; 5,
+    'max_length' =&gt; 9,
+    'format' =&gt; 'a-z0-9'
+))) echo 'The string is valid'
+</code></pre>
+
+<hr />
+
+<h3>Function: v::date</h3>
+
+<p>Validate a date - lol</p>
+
+<h4>Syntax</h4>
+
+<pre><code>v::date('date');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>date - (string) toss in any date string</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(mixed) if the date is valid the date will be returned as timestamp, otherwise return false</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$date = v::date('Yesterday');
+echo $date;
+// output: timestamp of the same time yesterday
+
+$date = v::date('2009-10-11');
+echo $date;          
+// output: 1255212000
+
+if(v::date('32.12.2009')) echo 'That is a valid date';
+// output: nothing, because that's not a valid date
+</code></pre>
+
+<hr />
+
+<h3>Function: v::email</h3>
+
+<p>Validates an email address</p>
+
+<h4>Syntax</h4>
+
+<pre><code>v::email('email');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>email - (string) the wannabe email address</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(mixed) true: email is valid, false: email is not valid</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>if(v::email('mail@bastian-allgeier.de')) echo 'That is a valid email';
+</code></pre>
+
+<hr />
+
+<h3>Function: v::url</h3>
+
+<p>Validates an url address</p>
+
+<h4>Syntax</h4>
+
+<pre><code>v::url('url');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>url - (string) the wannabe url</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(mixed) true: url is valid, false: url is not valid</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>if(v::url('http://testurl.com')) echo 'That is a valid email';
+</code></pre>
+
+<hr />
+
+<h3>Function: v::filename</h3>
+
+<p>Validates a filename</p>
+
+<h4>Syntax</h4>
+
+<pre><code>v::filename('filename');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>filename - (string) the wannabe filename</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(mixed) true: filename is valid, false: filename is not valid</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>if(v::filename('test.txt')) echo 'That is a valid filename';
+</code></pre>
+</div>  </div>
+
+  <div id="footer">
+    &copy; 2010 – <a href="http://bastian-allgeier.de">Bastian Allgeier</a>
+    <ul>
+      <li><a href="http://twitter.com/getkirby">Follow Kirby on Twitter</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<script type="text/javascript" src="/js/mootools.js"></script>
+<script type="text/javascript" src="/lighter/Lighter.js"></script>
+<script type="text/javascript" src="/lighter/Fuel.js"></script>
+<script type="text/javascript" src="/js/scripts.js"></script>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-431401-11");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+</body>
+
+</html>

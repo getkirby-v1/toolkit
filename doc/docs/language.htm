@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Kirby</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="description" content="Kirby is a super simple, designy PHP toolkit" />
+<meta name="keywords" content="php, toolkit, jquery, simple, design" />
+<meta name="author" content="Bastian Allgeier" />
+<meta http-equiv="imagetoolbar" content="no" />
+
+<link rel="shortcut icon" href="/favicon.ico" />
+
+<link rel="stylesheet" href="/css/styles.css" media="all" type="text/css" />
+
+</head>
+
+<body>
+
+<div id="page">
+
+  <div id="menu">
+  
+    <ul>
+            <li><a href="/home.htm">kirby</a></li>
+            <li><a class="active" href="/docs.htm">docs</a></li>
+            <li><a href="/download">download</a></li>
+            <li><a href="/plugins.htm">plugins</a></li>
+          </ul>
+  
+  </div>
+  
+  <div id="content" class="docs">
+  <h1>Documentation</h1>
+
+
+<ul id="docsmenu">
+    <li><a class="active" href="/docs/array.htm">array</a></li>
+      <li><a href="/docs/browser.htm">browser</a></li>
+      <li><a href="/docs/config.htm">config</a></li>
+      <li><a href="/docs/content.htm">content</a></li>
+      <li><a href="/docs/cookie.htm">cookie</a></li>
+      <li><a href="/docs/core.htm">core</a></li>
+      <li><a href="/docs/database.htm">database</a></li>
+      <li><a href="/docs/dir.htm">dir</a></li>
+      <li><a href="/docs/file.htm">file</a></li>
+      <li><a href="/docs/globals.htm">globals</a></li>
+      <li><a href="/docs/helper.htm">helper</a></li>
+      <li><a href="/docs/language.htm">language</a></li>
+      <li><a href="/docs/request.htm">request</a></li>
+      <li><a href="/docs/server.htm">server</a></li>
+      <li><a href="/docs/session.htm">session</a></li>
+      <li><a href="/docs/size.htm">size</a></li>
+      <li><a href="/docs/string.htm">string</a></li>
+      <li><a href="/docs/url.htm">url</a></li>
+      <li><a href="/docs/validation.htm">validation</a></li>
+      <li><a href="/docs/xml.htm">xml</a></li>
+  </ul>
+
+<div id="documentation">
+<h2>L (Language)</h2>
+
+<p>The language class helps to make multi-language support easier.</p>
+
+<h3>Function: l::set</h3>
+
+<p>Set a new language variable</p>
+
+<h4>Syntax</h4>
+
+<pre><code>l::set('key'[, 'value']);
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>key - (mixed) either the key or an array with multiple key/value pairs</li>
+<li>value - (mixed) can be pretty much anything</li>
+</ol>
+
+<h4>Example</h4>
+
+<pre><code>// in the german translation file
+l::set('yes', 'Ja');
+
+// in the english translation file    
+l::set('yes', 'yes');
+
+// set multiple values at once
+l::set(array(
+    'yes' =&gt; 'Ja',
+    'no'  =&gt; 'Nein'
+));
+</code></pre>
+
+<hr />
+
+<h3>Function: l::get</h3>
+
+<p>Get back a value you've stored earlier.</p>
+
+<h4>Syntax</h4>
+
+<pre><code>l::get(['key'[, 'default']]);
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>key - (string) the key where you've stored the value. if empty the whole language array is returned</li>
+<li>default - (mixed) can be pretty much anything to return when the key has not been found</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(mixed)</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>// for german users
+echo l::get('yes');
+// output: Ja
+
+// for english users
+echo l::get('yes');
+// output: yes
+
+a::show( l::get() );
+// returns the whole language array     
+</code></pre>
+
+<hr />
+
+<h3>Function: l::current</h3>
+
+<p>Get the currently active language</p>
+
+<h4>Syntax</h4>
+
+<pre><code>l::current();
+</code></pre>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) return the language iso code (de, en, it, etc...)</li>
+</ul>
+
+<h4>Note</h4>
+
+<p>Make sure to add an array of allowed language codes and a default language to your config file to successfully use this function:</p>
+
+<pre><code>// set allowed languages
+c::set('languages', array('de', 'en', 'fr'));
+
+// set default language
+c::set('language', 'en');
+</code></pre>
+
+<h4>Example</h4>
+
+<pre><code>echo l::current();
+// sample output: en
+</code></pre>
+
+<hr />
+
+<h3>Function: l::toggle</h3>
+
+<p>Set a different language</p>
+
+<h4>Syntax</h4>
+
+<pre><code>l::toggle('language');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>language - (string) the language code for the new lang. must be defined in the config (see note)</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) returns the new language code ('de', 'en', 'fr', etc...)</li>
+</ul>
+
+<h4>Note</h4>
+
+<p>Make sure to add an array of allowed language codes and a default language to your config file to successfully use this function:</p>
+
+<pre><code>// set allowed languages
+c::set('languages', array('de', 'en', 'fr'));
+
+// set default language
+c::set('language', 'en');
+</code></pre>
+
+<h4>Example</h4>
+
+<pre><code>echo l::toggle('fr');
+// sample output: fr
+</code></pre>
+
+<hr />
+
+<h3>Function: l::detect</h3>
+
+<p>Detect the user language</p>
+
+<h4>Syntax</h4>
+
+<pre><code>l::detect();
+</code></pre>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) returns the new language code ('de', 'en', 'fr', etc...)</li>
+</ul>
+
+<h4>Note</h4>
+
+<p>Make sure to add an array of allowed language codes and a default language to your config file to successfully use this function:</p>
+
+<pre><code>// set allowed languages
+c::set('languages', array('de', 'en', 'fr'));
+
+// set default language
+c::set('language', 'en');
+</code></pre>
+
+<h4>Example</h4>
+
+<pre><code>echo l::detect();
+// sample output: en
+</code></pre>
+
+<hr />
+
+<h3>Function: l::locale</h3>
+
+<p>Set the locale enviroment (warning: this is very alpha!!!)</p>
+
+<h4>Syntax</h4>
+
+<pre><code>l::locale('language');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>language - (string) the language code ('de', 'en', 'fr', etc...)</li>
+</ol>
+
+<h4>Note</h4>
+
+<p>Make sure to add an array of allowed language codes and a default language to your config file to successfully use this function:</p>
+
+<pre><code>// set allowed languages
+c::set('languages', array('de', 'en', 'fr'));
+
+// set default language
+c::set('language', 'en');
+</code></pre>
+
+<h4>Example</h4>
+
+<pre><code>echo l::locale('en');
+// does: setlocale(LC_ALL, 'en_US', 'en_US', 'en');
+</code></pre>
+
+<hr />
+
+<h3>Function: l::load</h3>
+
+<p>Load a new language file</p>
+
+<h4>Syntax</h4>
+
+<pre><code>l::load('file');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>file - (string) path to the language file. please see placeholders for more infor</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(array) returns the whole language array on success, otherwise false</li>
+</ul>
+
+<h4>Placeholders</h4>
+
+<p>To load the correct language file, the specified filename for the l::load function can 
+be mixed with a placeholder:</p>
+
+<p>i.e. instead of <em>'/languages/lang-en.php'</em> write <em>'/languages/lang-{language}.php'</em></p>
+
+<p>The placeholder will be replaced with the current language code automatically.</p>
+
+<h4>Note</h4>
+
+<p>Make sure to add an array of allowed language codes and a default language to your config file to successfully use this function:</p>
+
+<pre><code>// set allowed languages
+c::set('languages', array('de', 'en', 'fr'));
+
+// set default language
+c::set('language', 'en');
+</code></pre>
+
+<h4>Example</h4>
+
+<pre><code>l::load('/languages/lang-{language}.php');
+// now all the language variables with the correct values for the current language are available
+</code></pre>
+
+<hr />
+
+<h3>Function: l::sanitize</h3>
+
+<p>Sanitize the language code to make sure only allowed/installed languages are being loaded</p>
+
+<h4>Syntax</h4>
+
+<pre><code>l::sanitize('language');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>language - (string) the language code ('de', 'en', 'fr', etc...)</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) returns the sanitized language code</li>
+</ul>
+
+<h4>Note</h4>
+
+<p>Make sure to add an array of allowed language codes and a default language to your config file to successfully use this function:</p>
+
+<pre><code>// set allowed languages
+c::set('languages', array('de', 'en', 'fr'));
+
+// set default language
+c::set('language', 'en');
+</code></pre>
+
+<h4>Example</h4>
+
+<pre><code>c::set('languages', array('de', 'fr', 'en'));
+c::set('language', 'en')
+
+echo l::sanitize('it');
+// output will be 'en' (the defined default language) because 'it' is not supported   
+
+echo l::sanitize('de');
+// output will be 'de' 
+</code></pre>
+</div>  </div>
+
+  <div id="footer">
+    &copy; 2010 – <a href="http://bastian-allgeier.de">Bastian Allgeier</a>
+    <ul>
+      <li><a href="http://twitter.com/getkirby">Follow Kirby on Twitter</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<script type="text/javascript" src="/js/mootools.js"></script>
+<script type="text/javascript" src="/lighter/Lighter.js"></script>
+<script type="text/javascript" src="/lighter/Fuel.js"></script>
+<script type="text/javascript" src="/js/scripts.js"></script>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-431401-11");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+</body>
+
+</html>

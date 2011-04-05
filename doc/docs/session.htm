@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Kirby</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="description" content="Kirby is a super simple, designy PHP toolkit" />
+<meta name="keywords" content="php, toolkit, jquery, simple, design" />
+<meta name="author" content="Bastian Allgeier" />
+<meta http-equiv="imagetoolbar" content="no" />
+
+<link rel="shortcut icon" href="/favicon.ico" />
+
+<link rel="stylesheet" href="/css/styles.css" media="all" type="text/css" />
+
+</head>
+
+<body>
+
+<div id="page">
+
+  <div id="menu">
+  
+    <ul>
+            <li><a href="/home.htm">kirby</a></li>
+            <li><a class="active" href="/docs.htm">docs</a></li>
+            <li><a href="/download">download</a></li>
+            <li><a href="/plugins.htm">plugins</a></li>
+          </ul>
+  
+  </div>
+  
+  <div id="content" class="docs">
+  <h1>Documentation</h1>
+
+
+<ul id="docsmenu">
+    <li><a class="active" href="/docs/array.htm">array</a></li>
+      <li><a href="/docs/browser.htm">browser</a></li>
+      <li><a href="/docs/config.htm">config</a></li>
+      <li><a href="/docs/content.htm">content</a></li>
+      <li><a href="/docs/cookie.htm">cookie</a></li>
+      <li><a href="/docs/core.htm">core</a></li>
+      <li><a href="/docs/database.htm">database</a></li>
+      <li><a href="/docs/dir.htm">dir</a></li>
+      <li><a href="/docs/file.htm">file</a></li>
+      <li><a href="/docs/globals.htm">globals</a></li>
+      <li><a href="/docs/helper.htm">helper</a></li>
+      <li><a href="/docs/language.htm">language</a></li>
+      <li><a href="/docs/request.htm">request</a></li>
+      <li><a href="/docs/server.htm">server</a></li>
+      <li><a href="/docs/session.htm">session</a></li>
+      <li><a href="/docs/size.htm">size</a></li>
+      <li><a href="/docs/string.htm">string</a></li>
+      <li><a href="/docs/url.htm">url</a></li>
+      <li><a href="/docs/validation.htm">validation</a></li>
+      <li><a href="/docs/xml.htm">xml</a></li>
+  </ul>
+
+<div id="documentation">
+<h2>S (Session)</h2>
+
+<p>The s class helps to handle sessions a bit easier.</p>
+
+<h3>Function: s::set</h3>
+
+<p>Set a new session variable</p>
+
+<h4>Syntax</h4>
+
+<pre><code>s::set('key'[, 'value']);
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>key - (mixed) either the key or an array with multiple key/value pairs</li>
+<li>value - (mixed) can be pretty much anything</li>
+</ol>
+
+<h4>Example</h4>
+
+<pre><code>s::set('username', 'bastian');
+// saves the username in the session
+
+s::set(array(
+    'key1' =&gt; 'val1',
+    'key2' =&gt; 'val2',
+    'key3' =&gt; 'val3'
+));
+// setting multiple variables at once
+</code></pre>
+
+<hr />
+
+<h3>Function: s::get</h3>
+
+<p>Get back a value from the session, you've stored earlier.</p>
+
+<h4>Syntax</h4>
+
+<pre><code>s::get('key'[, 'default']);
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>key - (string) the key where you've stored the value</li>
+<li>default - (mixed) can be pretty much anything to return when the key has not been found</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(mixed) returns whatever is stored with this key</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>s::get('username', 'bastian');
+// saves the username in the session
+
+echo s::get('username');
+// output: 'bastian'
+</code></pre>
+
+<hr />
+
+<h3>Function: s::remove</h3>
+
+<p>Remove a value from the session</p>
+
+<h4>Syntax</h4>
+
+<pre><code>s::remove('key');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>key - (string) the key where you've stored the value</li>
+</ol>
+
+<h4>Example</h4>
+
+<pre><code>$_SESSION = array(
+    'username' =&gt; 'bastian',
+    'id' =&gt; 1,
+);
+
+s::remove('username');
+// $_SESSION = array(
+//    'id' =&gt; 1
+// )
+</code></pre>
+
+<hr />
+
+<h3>Function: s::start</h3>
+
+<p>Start a new session. It's just a shortcut for session_start, so you can use that as well.</p>
+
+<h4>Syntax</h4>
+
+<pre><code>s::start();
+</code></pre>
+
+<h4>Example</h4>
+
+<pre><code>s::start();
+
+// do whatever you want with the session now
+</code></pre>
+
+<hr />
+
+<h3>Function: s::destroy</h3>
+
+<p>Destroy the session, i.e. for logouts. It's just a shortcut for session_destroy, so you can use that as well.</p>
+
+<h4>Syntax</h4>
+
+<pre><code>s::destroy();
+</code></pre>
+
+<h4>Example</h4>
+
+<pre><code>s::start();
+// do whatever you want with the session now
+
+s::destroy();
+// everything stored in the session will be deleted
+</code></pre>
+
+<hr />
+
+<h3>Function: s::expired</h3>
+
+<p>Checks, whether the session has expired</p>
+
+<h4>Syntax</h4>
+
+<pre><code>s::expired('time');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>time - (timestamp) the time when the session has been started</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(boolean) true: the session has expired, false: the session is still valid</li>
+</ul>
+
+<h4>Note</h4>
+
+<p>you must define how long the session stays valid in the config array:</p>
+
+<pre><code>c::set('session.expires', 3600);
+// define the time in seconds, i.e. 1 hour
+</code></pre>
+
+<h4>Example</h4>
+
+<pre><code>c::set('session.expires', 3600);
+
+if( s::expired('sometimestamp-yesterday') ) echo 'your session has expired';
+// output 'your session has expired'
+
+if( s::expired('sometimestamp-two-minutes-ago') ) echo 'your session has expired';
+// output nothing
+</code></pre>
+
+<hr />
+</div>  </div>
+
+  <div id="footer">
+    &copy; 2010 – <a href="http://bastian-allgeier.de">Bastian Allgeier</a>
+    <ul>
+      <li><a href="http://twitter.com/getkirby">Follow Kirby on Twitter</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<script type="text/javascript" src="/js/mootools.js"></script>
+<script type="text/javascript" src="/lighter/Lighter.js"></script>
+<script type="text/javascript" src="/lighter/Fuel.js"></script>
+<script type="text/javascript" src="/js/scripts.js"></script>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-431401-11");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+</body>
+
+</html>

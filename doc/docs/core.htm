@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Kirby</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="description" content="Kirby is a super simple, designy PHP toolkit" />
+<meta name="keywords" content="php, toolkit, jquery, simple, design" />
+<meta name="author" content="Bastian Allgeier" />
+<meta http-equiv="imagetoolbar" content="no" />
+
+<link rel="shortcut icon" href="/favicon.ico" />
+
+<link rel="stylesheet" href="/css/styles.css" media="all" type="text/css" />
+
+</head>
+
+<body>
+
+<div id="page">
+
+  <div id="menu">
+  
+    <ul>
+            <li><a href="/home.htm">kirby</a></li>
+            <li><a class="active" href="/docs.htm">docs</a></li>
+            <li><a href="/download">download</a></li>
+            <li><a href="/plugins.htm">plugins</a></li>
+          </ul>
+  
+  </div>
+  
+  <div id="content" class="docs">
+  <h1>Documentation</h1>
+
+
+<ul id="docsmenu">
+    <li><a class="active" href="/docs/array.htm">array</a></li>
+      <li><a href="/docs/browser.htm">browser</a></li>
+      <li><a href="/docs/config.htm">config</a></li>
+      <li><a href="/docs/content.htm">content</a></li>
+      <li><a href="/docs/cookie.htm">cookie</a></li>
+      <li><a href="/docs/core.htm">core</a></li>
+      <li><a href="/docs/database.htm">database</a></li>
+      <li><a href="/docs/dir.htm">dir</a></li>
+      <li><a href="/docs/file.htm">file</a></li>
+      <li><a href="/docs/globals.htm">globals</a></li>
+      <li><a href="/docs/helper.htm">helper</a></li>
+      <li><a href="/docs/language.htm">language</a></li>
+      <li><a href="/docs/request.htm">request</a></li>
+      <li><a href="/docs/server.htm">server</a></li>
+      <li><a href="/docs/session.htm">session</a></li>
+      <li><a href="/docs/size.htm">size</a></li>
+      <li><a href="/docs/string.htm">string</a></li>
+      <li><a href="/docs/url.htm">url</a></li>
+      <li><a href="/docs/validation.htm">validation</a></li>
+      <li><a href="/docs/xml.htm">xml</a></li>
+  </ul>
+
+<div id="documentation">
+<h2>Core</h2>
+
+<p>The core class helps to handle errors in a very stripped down way and has a little built-in trace function.</p>
+
+<h3>How to handle errors and stuff with the core</h3>
+
+<p>There are a lot of cool PHP features to handle errors, but I could never adjust to them. Here's my way to do it:</p>
+
+<pre><code>function somefunction($a) {
+
+    if($a==5) return array(
+        'status' =&gt; 'success',
+        'msg' =&gt; 'That is exactly what we needed!'
+    );
+
+    return array(
+        'status' =&gt; 'error',
+        'msg' =&gt; 'Please provide a valid value for $a'
+    );            
+
+}
+
+// call the function
+$response = somefunction(5);
+
+// handling errors within the function is very easy now:
+if(core::error($response)) echo core::msg($response);
+</code></pre>
+
+<p>All you have to do is to return an array with a status value and a msg value. You can add as many additional values to the array as you want. This way to handle errors does not make sense for small functions, where returning true or false does a better job.</p>
+
+<hr />
+
+<h3>Function: core::status</h3>
+
+<p>Return the status from a core respone</p>
+
+<h4>Syntax</h4>
+
+<pre><code>core::status('response');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>response - (array) the response from a function</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) returns either error or success</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>function somefunction($a) {
+
+    if($a==5) return array(
+        'status' =&gt; 'success',
+        'msg' =&gt; 'That is exactly what we needed!'
+    );
+
+    return array(
+        'status' =&gt; 'error',
+        'msg' =&gt; 'Please provide a valid value for $a'
+    );            
+
+}
+
+echo core::status(somefunction(5));
+// output: success    
+
+echo core::status(somefunction(4));
+// output: error
+</code></pre>
+
+<hr />
+
+<h3>Function: core::msg</h3>
+
+<p>Return the message from a core respone</p>
+
+<h4>Syntax</h4>
+
+<pre><code>core::msg('response');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>response - (array) the response from a function</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) returns the message string</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>function somefunction($a) {
+
+    if($a==5) return array(
+        'status' =&gt; 'success',
+        'msg' =&gt; 'That is exactly what we needed!'
+    );
+
+    return array(
+        'status' =&gt; 'error',
+        'msg' =&gt; 'Please provide a valid value for $a'
+    );            
+
+}
+
+echo core::msg(somefunction(5));
+// output: 'That is exactly what we needed!'
+
+echo core::msg(somefunction(4));
+// output: 'Please provide a valid value for $a'
+</code></pre>
+
+<hr />
+
+<h3>Function: core::error</h3>
+
+<p>Checks wheater the response contains an error or not.</p>
+
+<h4>Syntax</h4>
+
+<pre><code>core::error('response');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>response - (array) the response from a function</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(boolean) true: the response contains an error, otherwise return false</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>function somefunction($a) {
+
+    if($a==5) return array(
+        'status' =&gt; 'success',
+        'msg' =&gt; 'That is exactly what we needed!'
+    );
+
+    return array(
+        'status' =&gt; 'error',
+        'msg' =&gt; 'Please provide a valid value for $a'
+    );            
+
+}
+
+$response = somefunction(5);
+if(core::error($response)) echo 'Ups, that failed!';
+// output: nothing
+
+$response = somefunction(4);
+if(core::error($response)) echo 'Ups, that failed!';
+// output: 'Ups, that failed!'
+</code></pre>
+
+<hr />
+
+<h3>Function: core::trace</h3>
+
+<p>Simple function to trace stuff for debugging.</p>
+
+<h4>Syntax</h4>
+
+<pre><code>core::trace(['msg']);
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>msg - (string) the stuff you want to trace</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(mixed) return either nothing or if you don't specify a msg it returns the whole trace array </li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>core::trace('this is my super duper trace message');
+
+// later
+core::trace('this is another super duper trace message');
+
+// later
+$trace = core::trace();
+
+// trace: array(
+//    'this is my super duper trace message',
+//    'this is another super duper trace message'
+// );
+</code></pre>
+</div>  </div>
+
+  <div id="footer">
+    &copy; 2010 – <a href="http://bastian-allgeier.de">Bastian Allgeier</a>
+    <ul>
+      <li><a href="http://twitter.com/getkirby">Follow Kirby on Twitter</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<script type="text/javascript" src="/js/mootools.js"></script>
+<script type="text/javascript" src="/lighter/Lighter.js"></script>
+<script type="text/javascript" src="/lighter/Fuel.js"></script>
+<script type="text/javascript" src="/js/scripts.js"></script>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-431401-11");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+</body>
+
+</html>

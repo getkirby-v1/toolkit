@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Kirby</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="description" content="Kirby is a super simple, designy PHP toolkit" />
+<meta name="keywords" content="php, toolkit, jquery, simple, design" />
+<meta name="author" content="Bastian Allgeier" />
+<meta http-equiv="imagetoolbar" content="no" />
+
+<link rel="shortcut icon" href="/favicon.ico" />
+
+<link rel="stylesheet" href="/css/styles.css" media="all" type="text/css" />
+
+</head>
+
+<body>
+
+<div id="page">
+
+  <div id="menu">
+  
+    <ul>
+            <li><a href="/home.htm">kirby</a></li>
+            <li><a class="active" href="/docs.htm">docs</a></li>
+            <li><a href="/download">download</a></li>
+            <li><a href="/plugins.htm">plugins</a></li>
+          </ul>
+  
+  </div>
+  
+  <div id="content" class="docs">
+  <h1>Documentation</h1>
+
+
+<ul id="docsmenu">
+    <li><a class="active" href="/docs/array.htm">array</a></li>
+      <li><a href="/docs/browser.htm">browser</a></li>
+      <li><a href="/docs/config.htm">config</a></li>
+      <li><a href="/docs/content.htm">content</a></li>
+      <li><a href="/docs/cookie.htm">cookie</a></li>
+      <li><a href="/docs/core.htm">core</a></li>
+      <li><a href="/docs/database.htm">database</a></li>
+      <li><a href="/docs/dir.htm">dir</a></li>
+      <li><a href="/docs/file.htm">file</a></li>
+      <li><a href="/docs/globals.htm">globals</a></li>
+      <li><a href="/docs/helper.htm">helper</a></li>
+      <li><a href="/docs/language.htm">language</a></li>
+      <li><a href="/docs/request.htm">request</a></li>
+      <li><a href="/docs/server.htm">server</a></li>
+      <li><a href="/docs/session.htm">session</a></li>
+      <li><a href="/docs/size.htm">size</a></li>
+      <li><a href="/docs/string.htm">string</a></li>
+      <li><a href="/docs/url.htm">url</a></li>
+      <li><a href="/docs/validation.htm">validation</a></li>
+      <li><a href="/docs/xml.htm">xml</a></li>
+  </ul>
+
+<div id="documentation">
+<h2>A (Array)</h2>
+
+<p>The a class is a collection of helpers to make things easier with arrays.</p>
+
+<h3>Function: a::get</h3>
+
+<p>get any value from the array by key</p>
+
+<h4>Syntax</h4>
+
+<pre><code>a::get('array', 'key'[, 'default']);
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>array - (array) the array to search in</li>
+<li>key - (string) the key</li>
+<li>default - (mixed) anything that should be returned when nothing is found in the array</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(mixed) whatever is stored with this key</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$array = array(
+    'cat' =&gt; 'miao',
+    'dog' =&gt; 'wuff',
+    'bird' =&gt; 'tweet'
+);    
+
+echo a::get($array, 'cat');
+// output: 'miao'
+
+echo a::get($array, 'elephant', 'shut up');
+// output: 'shut up'
+</code></pre>
+
+<hr />
+
+<h3>Function: a::remove</h3>
+
+<p>remove an item from an array</p>
+
+<h4>Syntax</h4>
+
+<pre><code>a::remove('array', 'key');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>array - (array) the array to remove something from</li>
+<li>key - (string) the key</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(array) the array</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$array = array(
+    'cat' =&gt; 'miao',
+    'dog' =&gt; 'wuff',
+    'bird' =&gt; 'tweet'
+);    
+
+$array = a::remove($array, 'cat');
+// array is now: array(
+//     'dog' =&gt; 'wuff',
+//     'bird' =&gt; 'tweet'
+// );
+</code></pre>
+
+<hr />
+
+<h3>Function: a::show</h3>
+
+<p>a pretty useful debug function to print the content of arrays</p>
+
+<h4>Syntax</h4>
+
+<pre><code>a::show('array'[, 'echo']);
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>array - (array) the array to show</li>
+<li>echo - (boolean) true: echo the output immediately, false: return the output</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) the html with all the array content</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$array = array(
+    'cat' =&gt; 'miao',
+    'dog' =&gt; 'wuff',
+    'bird' =&gt; 'tweet'
+);    
+
+a::show($array);
+
+// output: 
+// Array
+// (
+//     [cat] =&gt; miao
+//     [dog] =&gt; wuff
+//     [bird] =&gt; tweet
+// )
+</code></pre>
+
+<hr />
+
+<h3>Function: a::json</h3>
+
+<p>Convert the array to a json string</p>
+
+<h4>Syntax</h4>
+
+<pre><code>a::json('array');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>array - (array) the array to convert</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) the json string</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$array = array(
+    'cat' =&gt; 'miao',
+    'dog' =&gt; 'wuff',
+    'bird' =&gt; 'tweet'
+);    
+
+echo a::json($array);
+// output: {"cat":"miao","dog":"wuff","bird":"tweet"}    
+</code></pre>
+
+<hr />
+
+<h3>Function: a::xml</h3>
+
+<p>Convert the array to xml</p>
+
+<h4>Syntax</h4>
+
+<pre><code>a::xml('array'[, 'tag'[, 'head'[, 'charset'[,'tab']]]]);
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>array - (array) the array to convert</li>
+<li>tag - (string) the root tag (default = root)</li>
+<li>head - (boolean) true: a xml header will be added, false: returns just the raw xml</li>
+<li>charset - (string) default is utf-8</li>
+<li>tab - (string) determins the used tab character(s), default is '  '</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) the xml</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$array = array(
+    'cat' =&gt; 'miao',
+    'dog' =&gt; 'wuff',
+    'bird' =&gt; 'tweet'
+);    
+
+echo a::xml($array, 'animals');
+// output: 
+// &lt;animals&gt;
+//   &lt;cat&gt;miao&lt;/cat&gt;
+//   &lt;dog&gt;wuff&lt;/dog&gt;
+//   &lt;bird&gt;tweet&lt;/bird&gt;
+// &lt;/animals&gt;
+</code></pre>
+
+<hr />
+
+<h3>Function: a::extract</h3>
+
+<p>Extract a certain field from a multidimensional array</p>
+
+<h4>Syntax</h4>
+
+<pre><code>a::extract('array', 'key');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>array - (array) the array to extract from</li>
+<li>key - (string) the name of the key</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(array) a new array with the extracted values</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$array[0] = array(
+    'id' =&gt; 1,
+    'username' =&gt; 'bastian',
+);    
+
+$array[1] = array(
+    'id' =&gt; 2,
+    'username' =&gt; 'peter',
+);    
+
+$array[3] = array(
+    'id' =&gt; 3,
+    'username' =&gt; 'john',
+);    
+
+$extract = a::extract($array, 'username');
+// output: array(
+//    'bastian',
+//    'peter',
+//    'john'
+// );
+</code></pre>
+
+<hr />
+
+<h3>Function: a::shuffle</h3>
+
+<p>Shuffle an array and keep the key/value pairs</p>
+
+<h4>Syntax</h4>
+
+<pre><code>a::shuffle('array');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>array - (array) the array to shuffle</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(array) the shuffled array</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$array = array(
+    'cat' =&gt; 'miao',
+    'dog' =&gt; 'wuff',
+    'bird' =&gt; 'tweet'
+);    
+
+$shuffled = a::shuffle($array);
+// output: array(
+//    'dog' =&gt; 'wuff',
+//    'cat' =&gt; 'miao',
+//    'bird' =&gt; 'tweet'
+// );
+</code></pre>
+
+<hr />
+
+<h3>Function: a::first</h3>
+
+<p>Get the first element of the array</p>
+
+<h4>Syntax</h4>
+
+<pre><code>a::first('array');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>array - (array) the array</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(mixed) the first element</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$array = array(
+    'cat',
+    'dog',
+    'bird',
+);    
+
+$first = a::first($array);
+// first: 'cat'
+</code></pre>
+
+<hr />
+
+<h3>Function: a::last</h3>
+
+<p>Get the last element of the array</p>
+
+<h4>Syntax</h4>
+
+<pre><code>a::last('array');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>array - (array) the array</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(mixed) the last element</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$array = array(
+    'cat',
+    'dog',
+    'bird',
+);    
+
+$last = a::last($array);
+// first: 'bird'
+</code></pre>
+
+<hr />
+
+<h3>Function: a::search</h3>
+
+<p>Search for the given element inside the array</p>
+
+<h4>Syntax</h4>
+
+<pre><code>a::search('array', 'searchword');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>array - (array) the array</li>
+<li>searchword - (string) the searchword</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(array) returns an array of searchresults</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$array = array(
+    'cat',
+    'dog',
+    'bird',
+);    
+
+$search = a::search($array, 'cat');
+// output: array(
+//    'cat'
+// )
+</code></pre>
+
+<hr />
+
+<h3>Function: a::contains</h3>
+
+<p>Check if the string is contained in the array</p>
+
+<h4>Syntax</h4>
+
+<pre><code>a::contains('array', 'searchword');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>array - (array) the array</li>
+<li>searchword - (string) the searchword</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(boolean) true: it's inside the array, false: it's not inside</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$array = array(
+    'cat',
+    'dog',
+    'bird',
+);    
+
+if(a::contains($array, 'cat')) echo 'miao';
+</code></pre>
+
+<hr />
+
+<h3>Function: a::fill</h3>
+
+<p>Fill up an array with whatever you like</p>
+
+<h4>Syntax</h4>
+
+<pre><code>a::fill('array', 'limit'[, 'fill']);
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>array - (array) the array</li>
+<li>limit - (int) the numer of elements which should be added to the array</li>
+<li>fill - (mixed) the elements which should be added (default: 'placeholder') </li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(array) returns the new array</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$array = array(
+    'cat',
+    'dog',
+    'bird',
+);    
+
+$result = a::fill($array, 5, 'elephant');
+// result: array(
+//    'cat',
+//    'dog',
+//    'bird',
+//    'elephant',
+//    'elephant',
+// );
+</code></pre>
+
+<hr />
+
+<h3>Function: a::missing</h3>
+
+<p>Check for missing elements inside an array</p>
+
+<h4>Syntax</h4>
+
+<pre><code>a::missing('array', 'required');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>array - (array) the array</li>
+<li>required - (array) array of required elements to search for</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(array) returns either an array of missing elements</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$array = array(
+    'cat' =&gt; 'miao',
+    'dog' =&gt; 'wuff',
+    'bird' =&gt; 'tweet'
+);    
+
+$required = array('cat', 'elephant');
+
+$missng = a::missing($array, $required);
+// missing: array(
+//    'elephant'
+// );
+</code></pre>
+
+<hr />
+
+<h3>Function: a::sort</h3>
+
+<p>Sort an mulitdimensional array like you would sort a database table</p>
+
+<h4>Syntax</h4>
+
+<pre><code>a::sort('array', 'params');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>array - (array) the array</li>
+<li>params - (array) the sort parameters</li>
+</ol>
+
+<h4>Params</h4>
+
+<p>The sort params are pretty similar to MySQL sort params:<br />
+<em>fieldname ASC or fieldname DESC</em></p>
+
+<p>You can even sort by multiple fields:<br />
+<em>fieldname1 ASC, fieldname2 DESC</em></p>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(array) returns the sorted array</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$array[0] = array(
+    'id' =&gt; 1,
+    'username' =&gt; 'bastian',
+);    
+
+$array[1] = array(
+    'id' =&gt; 2,
+    'username' =&gt; 'peter',
+);    
+
+$array[3] = array(
+    'id' =&gt; 3,
+    'username' =&gt; 'john',
+);    
+
+$sorted = a::sort($array, 'username ASC');
+// Array
+// (
+//      [0] =&gt; Array
+//          (
+//              [id] =&gt; 1
+//              [username] =&gt; bastian
+//          )
+//      [1] =&gt; Array
+//          (
+//              [id] =&gt; 3
+//              [username] =&gt; john
+//          )
+//      [2] =&gt; Array
+//          (
+//              [id] =&gt; 2
+//              [username] =&gt; peter
+//          )
+// )
+</code></pre>
+</div>  </div>
+
+  <div id="footer">
+    &copy; 2010 – <a href="http://bastian-allgeier.de">Bastian Allgeier</a>
+    <ul>
+      <li><a href="http://twitter.com/getkirby">Follow Kirby on Twitter</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<script type="text/javascript" src="/js/mootools.js"></script>
+<script type="text/javascript" src="/lighter/Lighter.js"></script>
+<script type="text/javascript" src="/lighter/Fuel.js"></script>
+<script type="text/javascript" src="/js/scripts.js"></script>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-431401-11");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+</body>
+
+</html>

@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Kirby</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="description" content="Kirby is a super simple, designy PHP toolkit" />
+<meta name="keywords" content="php, toolkit, jquery, simple, design" />
+<meta name="author" content="Bastian Allgeier" />
+<meta http-equiv="imagetoolbar" content="no" />
+
+<link rel="shortcut icon" href="/favicon.ico" />
+
+<link rel="stylesheet" href="/css/styles.css" media="all" type="text/css" />
+
+</head>
+
+<body>
+
+<div id="page">
+
+  <div id="menu">
+  
+    <ul>
+            <li><a href="/home.htm">kirby</a></li>
+            <li><a class="active" href="/docs.htm">docs</a></li>
+            <li><a href="/download">download</a></li>
+            <li><a href="/plugins.htm">plugins</a></li>
+          </ul>
+  
+  </div>
+  
+  <div id="content" class="docs">
+  <h1>Documentation</h1>
+
+
+<ul id="docsmenu">
+    <li><a class="active" href="/docs/array.htm">array</a></li>
+      <li><a href="/docs/browser.htm">browser</a></li>
+      <li><a href="/docs/config.htm">config</a></li>
+      <li><a href="/docs/content.htm">content</a></li>
+      <li><a href="/docs/cookie.htm">cookie</a></li>
+      <li><a href="/docs/core.htm">core</a></li>
+      <li><a href="/docs/database.htm">database</a></li>
+      <li><a href="/docs/dir.htm">dir</a></li>
+      <li><a href="/docs/file.htm">file</a></li>
+      <li><a href="/docs/globals.htm">globals</a></li>
+      <li><a href="/docs/helper.htm">helper</a></li>
+      <li><a href="/docs/language.htm">language</a></li>
+      <li><a href="/docs/request.htm">request</a></li>
+      <li><a href="/docs/server.htm">server</a></li>
+      <li><a href="/docs/session.htm">session</a></li>
+      <li><a href="/docs/size.htm">size</a></li>
+      <li><a href="/docs/string.htm">string</a></li>
+      <li><a href="/docs/url.htm">url</a></li>
+      <li><a href="/docs/validation.htm">validation</a></li>
+      <li><a href="/docs/xml.htm">xml</a></li>
+  </ul>
+
+<div id="documentation">
+<h2>F (File)</h2>
+
+<p>The f class simplifies file handling</p>
+
+<h3>Function: f::write</h3>
+
+<p>Create a new file with some content</p>
+
+<h4>Syntax</h4>
+
+<pre><code>f::write('filename', 'content');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>filename - (string) The filename for the new file</li>
+<li>content - (mixed) Content can either be a string, binary stuff or an array. Arrays will be converted to json</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(boolean) returns true or false</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>f::write('test.txt', 'hello');
+// creates a new text file with hello as content
+
+// create a new file
+f::write('text.txt', array('test' =&gt; 'hello'));
+// creates a new file and encodes the array as json    
+</code></pre>
+
+<hr />
+
+<h3>Function: f::read</h3>
+
+<p>Read a file and return all the content</p>
+
+<h4>Syntax</h4>
+
+<pre><code>f::read('filename'[, 'format']);
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>filename - (string) The filename/path to the file</li>
+<li>format - (string) The content can be parsed at once (json, xml, php)</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(mixed) returns the content or false</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$content = f::read('test.txt');
+// i.e. content is hello
+
+$content = f::read('text.txt', 'json');
+// returns an array with the parsed content
+</code></pre>
+
+<hr />
+
+<h3>Function: f::move</h3>
+
+<p>Move the file to a new directory or rename it</p>
+
+<h4>Syntax</h4>
+
+<pre><code>f::move('old_filename', 'new_filename');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>old_filename - (string) The path to the original file</li>
+<li>new_filename - (string) The path to where the file should be next</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(boolean) returns true or false</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$move = f::move('test.txt', 'super.txt');
+
+if($move) echo 'The file has been moved';
+</code></pre>
+
+<hr />
+
+<h3>Function: f::remove</h3>
+
+<p>Removes the file</p>
+
+<h4>Syntax</h4>
+
+<pre><code>f::remove('filename');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>filename - (string) The path to the file</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(boolean) returns true or false</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$remove = f::remove('test.txt');
+
+if($remove) echo 'The file has been removed';
+</code></pre>
+
+<hr />
+
+<h3>Function: f::extension</h3>
+
+<p>Get the extension of the filename</p>
+
+<h4>Syntax</h4>
+
+<pre><code>f::extension('filename');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>filename - (string) The filename</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) returns the extension</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$extension = f::extension('test.txt');
+// extension is txt
+</code></pre>
+
+<hr />
+
+<h3>Function: f::filename</h3>
+
+<p>Get the filename without the path</p>
+
+<h4>Syntax</h4>
+
+<pre><code>f::filename('path');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>path - (string) The path to the file</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) returns the filename</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$filename = f::filename('/var/www/test.txt');
+// filename is test.txt
+</code></pre>
+
+<hr />
+
+<h3>Function: f::name</h3>
+
+<p>Get the name without the path and the extension</p>
+
+<h4>Syntax</h4>
+
+<pre><code>f::name('path');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>path - (string) The path to the file</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) returns the name</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$name = f::name('/var/www/test.txt');
+// name is test
+</code></pre>
+
+<hr />
+
+<h3>Function: f::dirname</h3>
+
+<p>Get the name of the directory without filename itself</p>
+
+<h4>Syntax</h4>
+
+<pre><code>f::dirname('path');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>path - (string) The path to the file</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) returns the dirname</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$dirname = f::dirname('/var/www/test.txt');
+// dirname is /var/www
+</code></pre>
+
+<hr />
+
+<h3>Function: f::size</h3>
+
+<p>Get the size of the file</p>
+
+<h4>Syntax</h4>
+
+<pre><code>f::size('path'[,'nice_size']);
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>path - (string) The path to the file</li>
+<li>nice_size - (boolean) true: the size will be returned in a human readable format, otherwise in kb   </li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(mixed) returns the size</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$size = f::size('/var/www/test.txt');
+// size is ie: 1231939
+
+$size = f::size('/var/www/test.txt', true);
+// size is ie: 1,2 MB
+</code></pre>
+
+<hr />
+
+<h3>Function: f::nice_size</h3>
+
+<p>Converts kb into a human readable size format</p>
+
+<h4>Syntax</h4>
+
+<pre><code>f::nice_size('size');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>size - (int) the size of a file in kb</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) returns the readable size</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$nice_size = f::nice_size(1231939);
+// nice size is: 1,2 MB
+</code></pre>
+
+<hr />
+
+<h3>Function: f::convert</h3>
+
+<p>Converts the filename into a new file type</p>
+
+<h4>Syntax</h4>
+
+<pre><code>f::convert('filename', 'filetype');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>filename - (string) the name of the file</li>
+<li>filetype - (string) the extension of the new type. i.e. jpg</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) returns the new filename</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$convert = f::convert('test.txt', 'jpg');
+// convert will be test.jpg
+</code></pre>
+
+<hr />
+
+<h3>Function: f::safe_name</h3>
+
+<p>Converts a given string into a safe filename</p>
+
+<h4>Syntax</h4>
+
+<pre><code>f::save_name('string');
+</code></pre>
+
+<h4>Arguments</h4>
+
+<ol>
+<li>string - (string) the unsafe string</li>
+</ol>
+
+<h4>Returns</h4>
+
+<ul>
+<li>(string) returns the new filename</li>
+</ul>
+
+<h4>Example</h4>
+
+<pre><code>$safe = f::safe_name('über genious.txt');
+// safe will be ueber-genious.txt
+</code></pre>
+</div>  </div>
+
+  <div id="footer">
+    &copy; 2010 – <a href="http://bastian-allgeier.de">Bastian Allgeier</a>
+    <ul>
+      <li><a href="http://twitter.com/getkirby">Follow Kirby on Twitter</a></li>
+    </ul>
+  </div>
+
+</div>
+
+<script type="text/javascript" src="/js/mootools.js"></script>
+<script type="text/javascript" src="/lighter/Lighter.js"></script>
+<script type="text/javascript" src="/lighter/Fuel.js"></script>
+<script type="text/javascript" src="/js/scripts.js"></script>
+
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-431401-11");
+pageTracker._trackPageview();
+} catch(err) {}</script>
+
+</body>
+
+</html>
