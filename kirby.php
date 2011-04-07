@@ -1,6 +1,6 @@
 <?php
 
-c::set('version', 0.1);
+c::set('version', 0.4);
 c::set('language', 'en');
 c::set('charset', 'utf-8');
 c::set('root', dirname(__FILE__));
@@ -80,7 +80,7 @@ class a {
 		return (isset($array[ $key ])) ? $array[ $key ] : $default;
 	}
 
-	function remove($array, $search, $key=false) {
+	function remove($array, $search, $key=true) {
 		if($key) {
 			unset($array[$search]);
 		} else {
@@ -174,7 +174,7 @@ class a {
 	function fill($array, $limit, $fill='placeholder') {
 		if(count($array) < $limit) {
 			$diff = $limit-count($array);
-			for($x=0; $x<$diff; $x++) $array[] = 'placeholder';
+			for($x=0; $x<$diff; $x++) $array[] = $fill;
 		}
 		return $array;
 	}
@@ -186,7 +186,8 @@ class a {
 		}
 		return $missing;
 	}
-
+	
+	// Not working - atleast not in php 5.3
 	// example: a::sort($array, 'volume DESC, edition ASC');
 	function sort($array, $params) {
 
@@ -298,20 +299,17 @@ class browser {
 			self::$version = $array[1];
 			self::$browser = 'ie';
 			self::$engine	= 'trident';
-		}	else if(strstr(self::$ua, 'firefox/2')) {
-			self::$version = 2;
+		}	else if(strstr(self::$ua, 'firefox/3.6')) {
+			self::$version = 3.6;
 			self::$browser = 'fx';
 			self::$engine	= 'gecko';
 		}	else if (strstr(self::$ua, 'firefox/3.5')) {
 			self::$version = 3.5;
 			self::$browser = 'fx';
 			self::$engine	= 'gecko';
-		}	else if(strstr(self::$ua, 'firefox/3')) {
-			self::$version = 3;
+		}	else if(preg_match('/firefox\/(\d+)/i', self::$ua, $array)) {
+			self::$version = $array[1];
 			self::$browser = 'fx';
-			self::$engine	= 'gecko';
-		} else if(strstr(self::$ua, 'gecko/')) {
-			self::$browser = 'gecko';
 			self::$engine	= 'gecko';
 		} else if(preg_match('/opera(\s|\/)(\d+)/', self::$ua, $array)) {
 			self::$engine	= 'presto';
@@ -320,12 +318,13 @@ class browser {
 		} else if(strstr(self::$ua, 'konqueror')) {
 			self::$browser = 'konqueror';
 			self::$engine	= 'webkit';
-		} else if(strstr(self::$ua, 'chrome')) {
-			self::$browser = 'chrome';
-			self::$engine	= 'webkit';
 		} else if(strstr(self::$ua, 'iron')) {
 			self::$browser = 'iron';
 			self::$engine	= 'webkit';
+		} else if(strstr(self::$ua, 'chrome')) {
+			self::$browser = 'chrome';
+			self::$engine	= 'webkit';
+			if(preg_match('/chrome\/(\d+)/i', self::$ua, $array)) { self::$version = $array[1]; }
 		} else if(strstr(self::$ua, 'applewebkit/')) {
 			self::$browser = 'safari';
 			self::$engine	= 'webkit';
@@ -401,6 +400,32 @@ class c {
 		return c::get();
 	}
 
+	// @since 0.4
+	function get_array($key, $default=null) {
+		$keys = array_keys(self::$config);
+		$n = array();
+		foreach($keys AS $k) {
+			$pos = strpos($key.'.', $k);
+			if ($pos === 0) {
+				$n[substr($k,strlen($key.'.'))] = self::$config[$k];
+			}
+		}
+		return ($n) ? $n : $default;
+	}
+	
+	// @since 0.4
+	function set_array($key, $value=null) {
+		if (!is_array($value)) {
+			$m = self::get_sub($key);
+			foreach($m AS $k => $v) {
+				self::set($k, $value);
+			}
+		} else {
+			foreach($value AS $k => $v) {
+				self::set($key.'.'.$k, $v);
+			}
+		}
+	}
 }
 
 
@@ -619,8 +644,9 @@ class db {
 		self::$trace[] = $sql;
 
 		if(!$execute) return self::error(l::get('db.errors.query_failed', 'The database query failed'));
-		return self::last_id();
-
+		
+		$last_id = self::last_id();
+		return ($last_id === false) ? self::$affected : self::last_id();
 	}
 
 	function affected() {
@@ -917,6 +943,22 @@ class dir {
 		return self::remove($dir, true);
 	}
 
+	function size($path, $recusive=true, $nice=false) {
+		if(!file_exists($path)) return false;
+		if(is_file($path)) return self::size($path, $nice);
+		$size = 0;
+		foreach(glob($path."/*") AS $file) {
+			if($file != "." && $file != "..") {
+				if($recusive) {
+					$size += self::folder_size($file, true);
+				} else {
+					$size += self::size($path);
+				}
+			}
+		}
+		return ($nice) ? self::nice_size($size) : $size;
+	}
+
 }
 
 
@@ -940,6 +982,10 @@ class f {
 		return $write;
 	}
 
+	function append($file,$content){
+		return self::write($file,$content,true);
+	}
+	
 	function read($file, $parse=false) {
 		$content = @file_get_contents($file);
 		return ($parse) ? str::parse($content, $parse) : $content;
@@ -973,7 +1019,7 @@ class f {
 	function dirname($file=__FILE__) {
 		return dirname($file);
 	}
-
+	
 	function size($file, $nice=false) {
 		@clearstatcache();
 		$size = @filesize($file);
@@ -986,26 +1032,8 @@ class f {
 		$size = str::sanitize($size, 'int');
 		if($size < 1) return '0 kb';
 
-		$gb_c = 1048576 * 1024;
-		$mb_c = 1048576;
-		$kb_c = 1024;
-
-		if($size > $gb_c){
-			$terminator = 'GB';
-			$rounded = round(($size/$gb_c), 2);
-		} else if($size > $mb_c){
-			$terminator = 'MB';
-			$rounded = round(($size/$mb_c), 1);
-		} else if($size > $kb_c){
-			$terminator = 'kb';
-			$rounded = ceil(($size/$kb_c));
-		} else{
-			$terminator = 'bytes';
-			$rounded = $size;
-		}
-
-		return($rounded . ' ' . $terminator);
-
+		$unit=array('b','kb','mb','gb','tb','pb');
+		return @round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
 	}
 
 	function convert($name, $type='jpg') {
@@ -1217,7 +1245,7 @@ class s {
 	}
 
 	function remove($key) {
-		$_SESSION = a::remove($_SESSION, $key, true);
+		return a::remove(&$_SESSION, $key, true);
 	}
 
 	function start() {
