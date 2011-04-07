@@ -1,6 +1,6 @@
 <?php
 
-c::set('version', 0.4);
+c::set('version', 0.5);
 c::set('language', 'en');
 c::set('charset', 'utf-8');
 c::set('root', dirname(__FILE__));
@@ -33,9 +33,26 @@ function go($url=false, $code=false) {
 	exit();
 }
 
+function status($response) {
+	return core::status($response);
+}
 
+function msg($response) {
+	return core::msg($response);
+}
 
+function error($response) {
+	return core::error($response);
+}
 
+function load() {
+	$files  = func_get_args();
+	$root   = dirname(__FILE__);
+	$files  = (array)$files;
+	foreach($files AS $f) {
+		include_once($root . '/kirby.' . $f . '.php');
+	}
+}
 
 
 
@@ -95,6 +112,12 @@ class a {
 			}
 		}
 		return $array;
+	}
+
+	function inject($array, $position, $element='placeholder') {
+		$start = array_slice($array, 0, $position);
+		$end = array_slice($array, $position);
+		return array_merge($start, (array)$element, $end);
 	}
 
 	function show($array, $echo=true) {
@@ -268,6 +291,11 @@ class browser {
 		return (in_array(self::$platform, array('ipod', 'iphone'))) ? true : false;
 	}
 
+	function ios($ua=null) {
+		self::detect($ua);
+		return (in_array(self::$platform, array('ipod', 'iphone', 'ipad'))) ? true : false;
+	}
+
 	function css($ua=null, $array=false) {
 		self::detect($ua);
 		$css[] = self::$engine;
@@ -341,6 +369,8 @@ class browser {
 			self::$platform = 'iphone';
 		} else if(strstr(self::$ua, 'ipod')) {
 			self::$platform = 'ipod';
+		} else if(strstr(self::$ua, 'ipad')) {
+			self::$platform = 'ipad';
 		} else if(strstr(self::$ua, 'mac')) {
 			self::$platform = 'mac';
 		} else if(strstr(self::$ua, 'darwin')) {
@@ -356,9 +386,9 @@ class browser {
 		}
 
 		return array(
-			'browser'	=> self::$browser,
-			'engine'	 => self::$engine,
-			'version'	=> self::$version,
+			'browser'  => self::$browser,
+			'engine'   => self::$engine,
+			'version'  => self::$version,
 			'platform' => self::$platform
 		);
 
@@ -400,7 +430,6 @@ class c {
 		return c::get();
 	}
 
-	// @since 0.4
 	function get_array($key, $default=null) {
 		$keys = array_keys(self::$config);
 		$n = array();
@@ -413,7 +442,6 @@ class c {
 		return ($n) ? $n : $default;
 	}
 	
-	// @since 0.4
 	function set_array($key, $value=null) {
 		if (!is_array($value)) {
 			$m = self::get_sub($key);
@@ -488,17 +516,19 @@ class content {
 */
 class cookie {
 
-	function set($key, $value, $expires=3600) {
+	function set($key, $value, $expires=3600, $domain='/') {
 		if(is_array($value)) $value = a::json($value);
-		return @setcookie($key, $value, time()+$expires, '/');
+		$_COOKIE[$key] = $value;
+		return @setcookie($key, $value, time()+$expires, $domain);
 	}
 
 	function get($key, $default=null) {
 		return a::get($_COOKIE, $key, $default);
 	}
 
-	function remove($key) {
-		return @setcookie($key, false, time()-3600, '/');
+	function remove($key, $domain='/') {
+		$_COOKIE[$key] = false;
+		return @setcookie($key, false, time()-3600, $domain);
 	}
 
 }
@@ -683,15 +713,43 @@ class db {
 
 	}
 
-	function insert($table, $input) {
-		return self::execute('INSERT INTO ' . self::prefix($table) . ' SET ' . self::values($input));
+	function insert($table, $input, $ignore=false) {
+		$ignore = ($ignore) ? ' IGNORE' : '';
+		return self::execute('INSERT' . ($ignore) . ' INTO ' . self::prefix($table) . ' SET ' . self::values($input));
+	}
+
+	function insert_all($table, $fields, $values) {
+			
+		$query = 'INSERT INTO ' . self::prefix($table) . ' (' . implode(',', $fields) . ') VALUES ';
+		$rows  = array();
+		
+		foreach($values AS $v) {    
+			$str = '(\'';
+			$sep = '';
+			
+			foreach($v AS $input) {
+				$str .= $sep . db::escape($input);            
+				$sep = "','";  
+			}
+
+			$str .= '\')';
+			$rows[] = $str;
+		}
+		
+		$query .= implode(',', $rows);
+		return db::execute($query);
+	
+	}
+
+	function replace($table, $input) {
+		return self::execute('REPLACE INTO ' . self::prefix($table) . ' SET ' . self::values($input));
 	}
 
 	function update($table, $input, $where) {
 		return self::execute('UPDATE ' . self::prefix($table) . ' SET ' . self::values($input) . ' WHERE ' . self::where($where));
 	}
 
-	function delete($table, $where="") {
+	function delete($table, $where='') {
 		$sql = 'DELETE FROM ' . self::prefix($table);
 		if(!empty($where)) $sql .= ' WHERE ' . self::where($where);
 		return self::execute($sql);
@@ -716,7 +774,7 @@ class db {
 
 	function column($table, $column, $where=null, $order=null, $page=null, $limit=null) {
 
-		$result = self::select($table, $column, $where, $order, $page, $column, false);
+		$result = self::select($table, $column, $where, $order, $page, $limit, false);
 
 		$array = array();
 		while($r = self::fetch($result)) array_push($array, a::get($r, $column));
@@ -957,6 +1015,17 @@ class dir {
 			}
 		}
 		return ($nice) ? self::nice_size($size) : $size;
+	}
+
+	function modified($dir, $modified=0) {
+		$files = self::read($dir);
+		foreach($files AS $file) {
+			if(!is_dir($dir . '/' . $file)) continue;
+			$filectime = filectime($dir . '/' . $file);
+			$modified  = ($filectime > $modified) ? $filectime : $modified;
+			$modified  = self::modified($dir . '/' . $file, $modified);
+		}
+		return $modified;
 	}
 
 }
@@ -1487,6 +1556,11 @@ class str {
 		$string = (empty($text)) ? $email : $text;
 		$email	= self::encode($email, 3);
 		return '<a title="' . $email . '" class="email" href="mailto:' . $email . '">' . self::encode($string, 3) . '</a>';
+	}
+
+	function link($link, $text=false) {
+		$text = ($text) ? $text : $link;
+		return '<a href="' . $link . '">' . str::html($text) . '</a>';
 	}
 
 	function short($string, $chars, $rep='…') {
