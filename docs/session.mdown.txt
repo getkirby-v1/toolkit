@@ -1,0 +1,163 @@
+## S (Session)
+
+The s class helps to handle sessions a bit easier.
+
+
+### Function: s::set
+
+Set a new session variable
+
+#### Syntax    
+
+    s::set('key'[, 'value']);
+
+#### Arguments
+
+1. key - (mixed) either the key or an array with multiple key/value pairs
+2. value - (mixed) can be pretty much anything
+
+#### Example
+    
+    s::set('username', 'bastian');
+    // saves the username in the session
+        
+    s::set(array(
+        'key1' => 'val1',
+        'key2' => 'val2',
+        'key3' => 'val3'
+    ));
+    // setting multiple variables at once
+    
+----
+
+
+
+### Function: s::get
+
+Get back a value from the session, you've stored earlier.
+
+#### Syntax    
+
+    s::get('key'[, 'default']);
+
+#### Arguments
+
+1. key - (string) the key where you've stored the value
+2. default - (mixed) can be pretty much anything to return when the key has not been found
+
+#### Returns
+
+- (mixed) returns whatever is stored with this key
+
+#### Example
+    
+    s::get('username', 'bastian');
+    // saves the username in the session
+
+    echo s::get('username');
+    // output: 'bastian'
+    
+
+
+----
+
+
+### Function: s::remove
+
+Remove a value from the session
+
+#### Syntax    
+
+    s::remove('key');
+
+#### Arguments
+
+1. key - (string) the key where you've stored the value
+
+#### Example
+    
+    $_SESSION = array(
+        'username' => 'bastian',
+        'id' => 1,
+    );
+    
+    s::remove('username');
+    // $_SESSION = array(
+    //    'id' => 1
+    // )
+    
+
+
+----
+
+
+### Function: s::start
+
+Start a new session. It's just a shortcut for session_start, so you can use that as well.
+
+#### Syntax    
+
+    s::start();
+
+#### Example
+    
+    s::start();
+        
+    // do whatever you want with the session now
+
+----
+
+
+### Function: s::destroy
+
+Destroy the session, i.e. for logouts. It's just a shortcut for session_destroy, so you can use that as well.
+
+#### Syntax    
+
+    s::destroy();
+
+#### Example
+    
+    s::start();
+    // do whatever you want with the session now
+
+    s::destroy();
+    // everything stored in the session will be deleted
+
+----
+
+
+### Function: s::expired
+
+Checks, whether the session has expired
+
+#### Syntax    
+
+    s::expired('time');
+
+#### Arguments
+
+1. time - (timestamp) the time when the session has been started
+
+#### Returns
+
+- (boolean) true: the session has expired, false: the session is still valid
+
+#### Note
+
+you must define how long the session stays valid in the config array:
+
+    c::set('session.expires', 3600);
+    // define the time in seconds, i.e. 1 hour
+
+#### Example
+    
+    c::set('session.expires', 3600);
+    
+    if( s::expired('sometimestamp-yesterday') ) echo 'your session has expired';
+    // output 'your session has expired'
+
+    if( s::expired('sometimestamp-two-minutes-ago') ) echo 'your session has expired';
+    // output nothing
+
+----

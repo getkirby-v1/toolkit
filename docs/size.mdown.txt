@@ -1,0 +1,140 @@
+## Size
+
+The size class helps scaling image dimensions.
+
+
+### Function: size::ratio
+
+Calculate the image ratio
+
+#### Syntax    
+
+    size::ratio('width', 'height');
+
+#### Arguments
+
+1. width - (int) the width of an image
+2. height - (int) the height of an image
+
+#### Returns
+
+- (int) returns the ratio
+
+#### Example
+    
+    echo size::ratio(1200, 768);
+    // output: 1.5625
+
+
+----
+
+
+
+### Function: size::fit
+
+Fit the image size into a predefined box
+
+#### Syntax    
+
+    size::fit('width', 'height', 'box'[, 'force']);
+
+#### Arguments
+
+1. width - (int) the width of an image
+2. height - (int) the height of an image
+3. box - (int) the size of the box
+4. force - (boolean) if the smallest side of the image is smaller as the box this will force to the smallest side to fit.
+
+#### Returns
+
+- (array) returns an array with the new width and height
+
+#### Example
+    
+    $new_size = size::fit(1200, 768, 500);
+    // output: array(
+    //    'width' => 500,
+    //    'height' => 320
+    // );
+
+    $new_size = size::fit(1200, 768, 3000, true);
+    // output: array(
+    //    'width' => 3000,
+    //    'height' => 1920
+    // );
+
+
+----
+
+
+### Function: size::fit_width
+
+Recalculate the image dimensions to fit the width with the given value.
+
+#### Syntax    
+
+    size::fit_width('width', 'height', 'fit'[, 'force']);
+
+#### Arguments
+
+1. width - (int) the width of an image
+2. height - (int) the height of an image
+3. fit - (int) the new width
+4. force - (boolean) if the width of the image is smaller than the new width this will force the width to adjust.
+
+#### Returns
+
+- (array) returns an array with the new width and height
+
+#### Example
+    
+    $new_size = size::fit_width(1200, 768, 500);
+    // output: array(
+    //    'width' => 500,
+    //    'height' => 320
+    // );
+
+    $new_size = size::fit_width(1200, 768, 3000, true);
+    // output: array(
+    //    'width' => 3000,
+    //    'height' => 1920
+    // );
+
+----
+
+
+
+### Function: size::fit_height
+
+Recalculate the image dimensions to fit the height with the given value.
+
+#### Syntax    
+
+    size::fit_width('width', 'height', 'fit'[, 'force']);
+
+#### Arguments
+
+1. width - (int) the width of an image
+2. height - (int) the height of an image
+3. fit - (int) the new height
+4. force - (boolean) if the height of the image is smaller than the new height this will force the height to adjust.
+
+#### Returns
+
+- (array) returns an array with the new width and height
+
+#### Example
+    
+    $new_size = size::fit_height(1200, 768, 500);
+    // output: array(
+    //    'width' => 781,
+    //    'height' => 500
+    // );
+
+    $new_size = size::fit_height(1200, 768, 3000, true);
+    // output: array(
+    //    'width' => 4687,
+    //    'height' => 3000
+    // );
+
+----

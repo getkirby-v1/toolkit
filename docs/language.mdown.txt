@@ -1,0 +1,288 @@
+## L (Language)
+
+The language class helps to make multi-language support easier.
+
+
+### Function: l::set
+
+Set a new language variable
+
+#### Syntax    
+
+    l::set('key'[, 'value']);
+
+#### Arguments
+
+1. key - (mixed) either the key or an array with multiple key/value pairs
+2. value - (mixed) can be pretty much anything
+
+#### Example
+    
+    // in the german translation file
+    l::set('yes', 'Ja');
+    
+    // in the english translation file    
+    l::set('yes', 'yes');
+
+    // set multiple values at once
+    l::set(array(
+        'yes' => 'Ja',
+        'no'  => 'Nein'
+    ));
+
+
+----
+
+
+
+### Function: l::get
+
+Get back a value you've stored earlier.
+
+#### Syntax    
+
+    l::get(['key'[, 'default']]);
+
+#### Arguments
+
+1. key - (string) the key where you've stored the value. if empty the whole language array is returned
+2. default - (mixed) can be pretty much anything to return when the key has not been found
+
+#### Returns
+
+- (mixed)
+
+#### Example
+    
+    // for german users
+    echo l::get('yes');
+    // output: Ja
+    
+    // for english users
+    echo l::get('yes');
+    // output: yes
+    
+    a::show( l::get() );
+    // returns the whole language array     
+
+
+----
+
+
+
+### Function: l::current
+
+Get the currently active language
+
+#### Syntax    
+
+    l::current();
+
+#### Returns
+
+- (string) return the language iso code (de, en, it, etc...)
+
+#### Note
+
+Make sure to add an array of allowed language codes and a default language to your config file to successfully use this function:
+    
+    // set allowed languages
+    c::set('languages', array('de', 'en', 'fr'));
+
+    // set default language
+    c::set('language', 'en');
+    
+
+#### Example
+    
+    echo l::current();
+    // sample output: en
+
+
+----
+
+
+
+### Function: l::toggle
+
+Set a different language
+
+#### Syntax    
+
+    l::toggle('language');
+
+#### Arguments
+
+1. language - (string) the language code for the new lang. must be defined in the config (see note)
+
+#### Returns
+
+- (string) returns the new language code ('de', 'en', 'fr', etc...)
+
+#### Note
+
+Make sure to add an array of allowed language codes and a default language to your config file to successfully use this function:
+    
+    // set allowed languages
+    c::set('languages', array('de', 'en', 'fr'));
+
+    // set default language
+    c::set('language', 'en');
+    
+
+#### Example
+    
+    echo l::toggle('fr');
+    // sample output: fr
+
+
+----
+
+
+
+### Function: l::detect
+
+Detect the user language
+
+#### Syntax    
+
+    l::detect();
+
+#### Returns
+
+- (string) returns the new language code ('de', 'en', 'fr', etc...)
+
+#### Note
+
+Make sure to add an array of allowed language codes and a default language to your config file to successfully use this function:
+    
+    // set allowed languages
+    c::set('languages', array('de', 'en', 'fr'));
+
+    // set default language
+    c::set('language', 'en');
+    
+#### Example
+    
+    echo l::detect();
+    // sample output: en
+
+
+----
+
+
+
+### Function: l::locale
+
+Set the locale enviroment (warning: this is very alpha!!!)
+
+#### Syntax    
+
+    l::locale('language');
+
+#### Arguments
+
+1. language - (string) the language code ('de', 'en', 'fr', etc...)
+
+#### Note
+
+Make sure to add an array of allowed language codes and a default language to your config file to successfully use this function:
+    
+    // set allowed languages
+    c::set('languages', array('de', 'en', 'fr'));
+
+    // set default language
+    c::set('language', 'en');
+    
+#### Example
+    
+    echo l::locale('en');
+    // does: setlocale(LC_ALL, 'en_US', 'en_US', 'en');
+
+
+----
+
+
+
+### Function: l::load
+
+Load a new language file
+
+#### Syntax    
+
+    l::load('file');
+
+#### Arguments
+
+1. file - (string) path to the language file. please see placeholders for more infor
+
+#### Returns
+
+- (array) returns the whole language array on success, otherwise false
+
+#### Placeholders
+
+To load the correct language file, the specified filename for the l::load function can 
+be mixed with a placeholder: 
+
+i.e. instead of *'/languages/lang-en.php'* write *'/languages/lang-{language}.php'*
+
+The placeholder will be replaced with the current language code automatically.
+
+#### Note
+
+Make sure to add an array of allowed language codes and a default language to your config file to successfully use this function:
+    
+    // set allowed languages
+    c::set('languages', array('de', 'en', 'fr'));
+
+    // set default language
+    c::set('language', 'en');
+    
+#### Example
+    
+    l::load('/languages/lang-{language}.php');
+    // now all the language variables with the correct values for the current language are available
+    
+
+
+----
+
+
+
+### Function: l::sanitize
+
+Sanitize the language code to make sure only allowed/installed languages are being loaded
+
+#### Syntax    
+
+    l::sanitize('language');
+
+#### Arguments
+
+1. language - (string) the language code ('de', 'en', 'fr', etc...)
+
+#### Returns
+
+- (string) returns the sanitized language code
+
+#### Note
+
+Make sure to add an array of allowed language codes and a default language to your config file to successfully use this function:
+    
+    // set allowed languages
+    c::set('languages', array('de', 'en', 'fr'));
+
+    // set default language
+    c::set('language', 'en');
+    
+#### Example
+    
+    c::set('languages', array('de', 'fr', 'en'));
+    c::set('language', 'en')
+    
+    echo l::sanitize('it');
+    // output will be 'en' (the defined default language) because 'it' is not supported   
+
+    echo l::sanitize('de');
+    // output will be 'de' 

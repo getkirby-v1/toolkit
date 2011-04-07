@@ -1,0 +1,177 @@
+## R (Request)
+
+The r class helps to handle post and get requests
+
+
+### Function: r::set
+
+Adds stuff to the request
+
+#### Syntax    
+
+    r::set('key', 'value');
+
+#### Arguments
+
+1. key - (string) 
+2. value - (mixed) the value can be pretty much anything
+
+#### Returns
+
+- (void)
+
+#### Example
+
+    r::set('username', 'bastian');
+    
+    a::show($_REQUEST);
+    
+    // sample output: array(
+    //    'username' => 'bastian'
+    //    ... other stuff from the request
+    // );
+
+
+----
+
+
+### Function: r::get
+
+Get any value from the request
+
+#### Syntax    
+
+    r::get('key'[, 'default']);
+
+#### Arguments
+
+1. key - (string) 
+2. default - (mixed) set a default value if the result is empty
+
+#### Returns
+
+- (mixed) returns whatever has been stored with this key
+
+#### Shortcut
+
+The shortcut for this function is get()    
+
+#### Example
+
+    echo r::get('username');
+    // sample output 'bastian'
+
+    echo r::get('username', 'peter');
+    // if no username is found in the request peter will be echoed
+
+    echo get('username');
+    // shortcut
+
+
+----
+
+
+### Function: r::parse
+
+Parse and sanitize the whole request
+
+#### Syntax    
+
+    r::parse(['param1'[,'param2'[,'param3']]] etc...);
+
+#### Arguments
+
+1. a comma sperarated list of params: params1, params2, params3
+
+#### Params
+
+Add all the fields you wanna get from the request in the following way:  
+*field:type:default* (type and default are optional)
+
+list of supported types:
+
+- int
+- str
+- array
+- nohtml
+- noxml
+- enum
+- checkbox
+- url
+- email
+- plain
+- lower
+- upper
+- words		
+- tags	
+- nobreaks
+- url
+- filename
+
+#### Returns
+
+- (array) returns the sanitized array with exactly the fields you've specified above
+
+#### Example
+
+    $data = r::parse(
+        'id:int:1',
+        'active:enum:n',
+        'username:str',
+        'email:email',
+        'bio:nohtml'
+    );
+    
+    // sample result: array(
+    //    'id' => 211,
+    //    'active' => 'y',
+    //    'username' => 'bastian',
+    //    'email' => 'mail@bastian-allgeier.de',
+    //    'bio' => 'some super exciting bio'
+    // );
+
+
+----
+
+
+### Function: r::ajax
+
+Checks whether the request has been made via ajax
+
+#### Syntax    
+
+    r::ajax();
+
+#### Returns
+
+- (boolean) true: yes, that was ajax - false: boring old fashioned request
+
+#### Example
+
+    if(r::ajax()) echo 'ajax rulez';
+
+
+----
+
+
+### Function: r::referer
+
+Get the referer for this request
+
+#### Syntax    
+
+    r::referer(['default_url']);
+
+#### Arguments
+
+1. default_url - (string) you can define a default url here, which should be returned when there's no referer
+
+#### Returns
+
+- (string) returns the url
+
+#### Example
+
+    echo r::referer();
+    // sample result: http://someurl.com    
+      

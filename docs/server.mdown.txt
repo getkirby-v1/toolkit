@@ -1,0 +1,29 @@
+## Server
+
+The server class is a shorthand the $_SERVER array
+
+
+### Function: server::get
+
+Get any variable from the $_SERVER array
+
+#### Syntax    
+
+    server::get(['key'[, 'default']]);
+
+#### Arguments
+
+1. key - (string) the key
+2. default - (mixed) the default value, when nothing is found
+
+#### Returns
+
+- (mixed) returns whatever has been found
+
+#### Example
+    
+    server::get('document_root');
+    // sample output: /var/www/kirby
+
+    server::get();
+    // returns the whole server array

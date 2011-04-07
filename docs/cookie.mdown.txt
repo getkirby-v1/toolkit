@@ -1,0 +1,66 @@
+## Cookie
+
+The cookie class helps to handle cookies easier
+
+
+### Function: cookie::set
+
+Set or update a cookie
+
+#### Syntax    
+
+    cookie::set('key', 'value', 'expires');
+
+#### Arguments
+
+1. key - (string) a key to store that stuff at
+2. value - (mixed) toss in either a string or array (will be converted to json)
+3. expires - (int) the time in seconds when the cookie expires
+
+#### Example
+    
+    cookie::set('mycookie', 'hello', 3600);
+    // expires in 1 hour
+    
+    
+----
+
+
+### Function: cookie::get
+
+Get the stuff back you've once set somewhere
+
+#### Syntax    
+
+    cookie::get('key'[, 'default']);
+
+#### Arguments
+
+1. key - (string) the key where the stuff is stored
+2. default - (string) default value if nothing is found
+
+#### Example
+    
+    cookie::get('mycookie', 'peter');
+    // sample output: 'hello' or if the cookie is not set 'peter'
+
+    
+----
+
+
+### Function: cookie::remove
+
+Remove the cookie
+
+#### Syntax    
+
+    cookie::remove('key');
+
+#### Arguments
+
+1. key - (string)
+
+#### Example
+    
+    cookie::remove('mycookie');
+    // mycookie is now gone

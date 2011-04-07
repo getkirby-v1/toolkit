@@ -1,0 +1,230 @@
+## DB (Database)
+
+Kirby makes the interaction with MySQL super simple. You don't have to worry about connections or other stuff. Simply setup your databse config and go for it.
+
+
+### Setup the database connection
+
+The config class is used to setup the database connection details. It's beyond the scope of this documentation to explain how to setup a MySQL database, but believe me, it's easy :-)
+You only have to do this once at the beginning of your code and it makes sense to put that stuff in an external config file and just include that each time. 
+
+#### Example
+
+    c::set('db.host', 'localhost');
+    c::set('db.user', 'root');
+    c::set('db.password', 'password');
+    c::set('db.name', 'database');
+
+
+----
+
+
+### Function: db::select 
+
+Select a bunch of rows from a table
+
+#### Syntax
+
+    db::select('table', 'select_clause'[, 'where_clause'[, 'order_clause'[, 'page'[, 'limit']]]);
+    
+#### Arguments
+
+1. table - (string) The table name
+2. select_clause - (mixed) Can be either a select string: 'field1, field2' or an array: array('field1', 'field2')
+3. where_clause - (mixed) Can be either a string: 'id = 1' or an array: array('id' => 1)
+3. order_clause - (string) i.e. 'field1 ASC'
+4. page - (int) 
+5. limit - (int)
+
+#### Returns
+
+- (array) returns an array with all results
+
+#### Example
+
+    $users = db::select('users', '*');
+    // users is an array with all rows and all columns from the table 'users'
+    
+    
+    $posts = db::select('posts', 'id, title, body', array('user' => 1));
+    // posts is an array with all posts from user 1 and the specified columns
+
+
+    $comments = db::select('comments', '*', false, 'added DESC', 0,10);
+    // comments is an array with 10 comments sorted by comments_added
+
+
+----
+
+
+### Function: db::row 
+
+Select a single row of a table
+
+#### Syntax
+
+    db::row('table', 'select_clause', 'where_clause'[, 'order_clause']);
+    
+#### Arguments
+
+1. table - (string) The table name
+2. select_clause - (mixed) Can be either a select string: 'field1, field2' or an array: array('field1', 'field2')
+3. where_clause - (mixed) Can be either a string: 'id = 1' or an array: array('id' => 1)
+4. order_clause - (string) i.e. 'field1 ASC'
+
+#### Returns
+
+- (array) returns an array with all selected fields from this row
+
+#### Example
+
+    $user = db::row('user', '*', array('id' => 1));
+    // sample result: array(
+    //    'id' => 1,
+    //    'username' => 'bastian',
+    //    'email' => 'mail@bastian-allgeier.de'
+    // );
+    
+    $user = db::row('user', 'username', array('id' => 1));
+    // sample result: array(
+    //    'username' => 'bastian'
+    // );
+
+
+----
+
+
+### Function: db::field
+
+Select a single field from a table
+
+#### Syntax
+
+    db::field('table', 'fieldname', 'where_clause');
+    
+#### Arguments
+
+1. table - (string) The table name
+2. fieldname - (string) The name of the field you want to select
+3. where_clause - (mixed) Can be either a string: 'id = 1' or an array: array('id' => 1)
+
+#### Returns
+
+- (mixed) returns the value of that field
+
+#### Example
+
+    $username = db::field('user', 'username', array('id' => 1));
+    // sample result: bastian
+
+
+----
+
+
+### Function: db::insert
+
+Insert a new row into a table
+
+#### Syntax
+
+    db::insert('table', 'data');
+    
+#### Arguments
+
+1. table - (string) The table name
+2. data - (mixed) Can be either a string: 'id = 1, title = "test"' or and array: array('id' => 1, 'title' => 'test')
+
+#### Returns
+
+- (mixed) returns the id of that new row or false if it failed
+
+#### Example
+
+    $id = db::insert('user', array('username' => 'peter', 'email' => 'peter@example.com'));
+
+
+----
+
+
+### Function: db::update
+
+Update an existing row
+
+#### Syntax
+
+    db::update('table', 'data'[, where_clause]);
+    
+#### Arguments
+
+1. table - (string) The table name
+2. data - (mixed) Can be either a string: 'id = 1, title = "test"' or and array: array('id' => 1, 'title' => 'test')
+3. where_clause - (mixed) Can be either a string: 'id = 1' or and array: array('id' => 1)
+
+#### Returns
+
+- (boolean) returns true or false
+
+#### Example
+
+    db::update('user', array('username' => 'peter'), array('id' => 1));
+    // replaces the username of user 1 with peter    
+
+
+----
+
+
+### Function: db::delete
+
+Delete a row
+
+#### Syntax
+
+    db::delete('table', 'where_clause');
+    
+#### Arguments
+
+1. table - (string) The table name
+2. where_clause - (mixed) Can be either a string: 'id = 1' or and array: array('id' => 1)
+
+#### Returns
+
+- (boolean) returns true or false
+
+#### Example
+
+    db::delete('user', array('id' => 1));
+    // deletes the user with the id 1
+
+
+----
+
+
+### ...and a lot more    
+
+DB has a lot more nifty functions which I will write about some more later.
+    
+    // select a column from a table    
+    db::column('table', 'column_name', 'where_clause', 'order_clause', 'page', 'limit');
+
+    // count entries
+    db::count('table', 'where_clause');
+
+    // the minimum value of a column
+    db::min('table', 'column', 'where_clause');
+
+    // the maximum value of a column
+    db::max('table', 'column', 'where_clause');
+
+    // the sum of a column
+    db::sum('table', 'column', 'where_clause');
+
+    // join tables
+    db::join('table1', 'table2', 'on_clause', 'select_clause', 'where_clause', 'order_clause', 'page', 'limit');
+
+    // left join tables
+    db::left_join('table1', 'table2', 'on_clause', 'select_clause', 'where_clause', 'order_clause', 'page', 'limit');
+
+    // execute a custom query
+    db::query('query');
+    
+    // and even some more...

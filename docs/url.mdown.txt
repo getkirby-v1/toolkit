@@ -1,0 +1,127 @@
+## URL
+
+The url class is still very alpha. There are more features to come. 
+
+
+### Function: url::short
+
+Shorten a url
+
+#### Syntax    
+
+    url::short('url', 'length'[, 'rep'])
+
+#### Arguments
+
+1. url - (string) the looooong url
+2. length - (int) the number of chars it should finally have
+3. rep - (string) the replacement character - default: …
+
+#### Returns
+
+- (string) returns the shortened url
+
+#### Example
+
+    echo url::short('http://veryveryverylongurl.com', 30);
+    // output: veryveryverylongurl.com
+
+
+----
+
+
+### Function: url::has_query
+
+Checks, whether an url has a query attached.
+
+#### Syntax    
+
+    url::has_query('url')
+
+#### Arguments
+
+1. url - (string) the url
+
+#### Returns
+
+- (boolean) true: there's a query attached, false: there's no query attached
+
+#### Example
+
+    if(url::has_query('http://www.youtube.com/watch?v=9q_aXttJduk')) echo 'Yes, there is a query attached';
+    // output: 'Yes, there is a query attached'
+
+
+----
+
+
+### Function: url::strip_query
+
+Strips the query off the url
+
+#### Syntax    
+
+    url::strip_query('url')
+
+#### Arguments
+
+1. url - (string) the url
+
+#### Returns
+
+- (string) the stripped url
+
+#### Example
+
+    echo url::strip_query('http://www.youtube.com/watch?v=9q_aXttJduk');
+    // output: 'http://www.youtube.com/watch'
+
+
+----
+
+
+### Function: url::strip_hash
+
+Strips the hash off the url
+
+#### Syntax    
+
+    url::strip_hash('url')
+
+#### Arguments
+
+1. url - (string) the url
+
+#### Returns
+
+- (string) the stripped url
+
+#### Example
+
+    echo url::strip_hash('http://testurl.com/#somehash');
+    // output: 'http://testurl.com/'
+
+
+----
+
+
+### Function: url::valid
+
+Checks whether an url is valid
+
+#### Syntax    
+
+    url::valid('url')
+
+#### Arguments
+
+1. url - (string) the url
+
+#### Returns
+
+- (string) true: url is valid, false: url is not valid
+
+#### Example
+
+    echo url::valid('http://testurl.com/');
+    // output: true

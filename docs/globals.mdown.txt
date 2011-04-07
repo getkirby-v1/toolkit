@@ -1,0 +1,50 @@
+## G (Globals)
+
+Setter and getter for global variables.
+
+
+### Function: g::set
+
+Set a new global variable
+
+#### Syntax    
+
+    g::set('key', 'value');
+
+#### Arguments
+
+1. key - (string) the key where to store the new value (must be unique)
+2. value - (mixed) can be pretty much anything
+
+#### Example
+    
+    g::set('var1', 'some value');
+
+    // later
+    echo g::get('var1');
+    // output: 'some value'
+    
+
+----
+
+
+### Function: g::get
+
+Get back a value you've stored earlier.
+
+#### Syntax    
+
+    g::get('key'[, 'default']);
+
+#### Arguments
+
+1. key - (string) the key where you've stored the value
+2. default - (mixed) can be pretty much anything to return when the key has not been found
+
+#### Example
+    
+    g::get('var1', 'some other value');
+    // returns 'some value' if var1 has been set earlier, otherwise returns 'some other value'
+
+
+----

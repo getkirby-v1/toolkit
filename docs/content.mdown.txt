@@ -1,0 +1,88 @@
+## Content
+
+The content class helps to handle content output right
+
+
+### Function: content::start
+
+Start new content. (This will start the output buffer)
+
+#### Syntax    
+
+    content::start();
+
+#### Example
+    
+    content::start();
+
+    echo 'some content';
+    
+    content::end();
+    
+    
+----
+
+
+### Function: content::end
+
+Return or echo the gathered content. (This will flush the output buffer)
+
+#### Syntax    
+
+    content::start('return');
+
+#### Arguments
+
+1. return - (boolean) true: output will be returned, false: output will be echoed immediatelly
+
+#### Example
+    
+    content::start();
+    echo 'some content';
+    content::end();    
+    // echo the content immediatelly
+
+
+    content::start();
+    echo 'some content';
+    $content = content::end(true);    
+    // return the content    
+        
+
+----
+
+
+### Function: content::type
+
+Set the content type header
+
+#### Syntax    
+
+    content::type('type'[, 'charset']);
+
+#### Arguments
+
+1. type - (string) any mime type or a shortcut (see below)
+2. charset - (string) any valid charset. utf-8 is the default charset
+
+#### Shortcuts
+
+- html => text/html
+- css  => text/css
+- js   => text/javascript
+- jpg  => image/jpeg
+- png  => image/png
+- gif  => image/gif
+
+
+#### Example
+    
+    content::type('js');
+    // some javascript
+
+    content::type('png');
+    // some png 
+    
+    content::type('text/rtf', 'iso-8859-1');    
+    // rtf document
+    

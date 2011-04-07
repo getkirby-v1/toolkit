@@ -1,0 +1,298 @@
+## STR (String)
+
+The str class gives you a lot of helpful little tools to handle common tasks on strings.
+
+
+### Function: str::html
+
+Returns the given string as valid html
+
+#### Syntax    
+
+    str::html('string'[, 'keep_html']);
+
+#### Arguments
+
+1. string - (string) the string
+2. keep_html - (boolean) true: any html tags in the string won't be touched false: everything is converted to html
+
+#### Returns
+
+- (string) nice and clean html
+
+#### Example
+
+    echo str::html('some <em>über crazy</em> stuff');
+    // output: some <em>&uuml;ber crazy</em> stuff
+
+    echo str::html('some <em>über crazy</em> stuff', false);    
+    // output: some &lt;em&gt;&uuml;ber crazy&lt;/em&gt; stuff
+    
+
+----
+
+
+### Function: str::unhtml
+
+Strip all html tags from a string
+
+#### Syntax    
+
+    str::unhtml('html');
+
+#### Arguments
+
+1. html - (string) the html
+
+#### Returns
+
+- (string) nice and clean string without html tags
+
+#### Example
+
+    echo str::unhtml('some <em>crazy</em> stuff');
+    // output: some uber crazy stuff
+    
+
+----
+
+
+### Function: str::xml
+
+Returns the given string as valid xml
+
+#### Syntax    
+
+    str::xml('string');
+
+#### Arguments
+
+1. string - (string) the string
+
+#### Returns
+
+- (string) nice and clean xml
+
+#### Example
+
+    echo str::xml('some über crazy stuff');
+    // output: some &#252;ber crazy stuff
+    
+
+----
+
+
+### Function: str::unxml
+
+Strips all the xml hocuspocus from the string
+
+#### Syntax    
+
+    str::unxml('string');
+
+#### Arguments
+
+1. string - (string) the string
+
+#### Returns
+
+- (string) nice and clean string without xml
+
+#### Example
+
+    echo str::unxml('some <em>&#252;ber</em> crazy stuff');
+    // output: some &uuml;ber crazy stuff
+
+
+----
+
+
+### Function: str::parse
+
+This is the most awesome function. It parses a string
+with different modes.
+
+#### Syntax    
+
+    str::parse('string'[, 'mode']);
+
+#### Arguments
+
+1. string - (string) the string
+2. mode - (string) Can be either json, xml, php, url or query
+
+#### Returns
+
+- (string) returns the parsed string
+
+#### Example
+
+    str::parse('{"test":"cool","super":"genious"}');
+    // output: array(
+    //  'test' => 'cool',
+    //  'super' => 'genious'
+    // );
+
+    str::parse('<xml><entries><cool>nice</cool></entries></xml>', 'xml');
+    // output: array(
+    //    'entries' => array(
+    //        'cool' => 'nice'
+    //    )
+    // );
+
+    
+----
+
+
+### Function: str::email
+
+Encode an email and build a nice html tag for it
+
+#### Syntax    
+
+    str::email('email'[, 'text']);
+
+#### Arguments
+
+1. email - (string) the email address
+2. text - (string) the text, which should be linked instead of the email
+
+#### Returns
+
+- (string) returns the html tag
+
+#### Example
+
+    echo str::email('mail@bastian-allgeier.de');
+    // output: <a title="&#109;&#97;&#x69;&#108;&#x40;&#x62;&#97;&#x73;&#x74;&#x69;&#97;&#110;&#45;&#97;&#x6c;&#108;&#103;&#101;&#x69;&#x65;&#x72;&#46;&#x64;&#101;" class="email" href="mailto:&#109;&#97;&#x69;&#108;&#x40;&#x62;&#97;&#x73;&#x74;&#x69;&#97;&#110;&#45;&#97;&#x6c;&#108;&#103;&#101;&#x69;&#x65;&#x72;&#46;&#x64;&#101;">&#109;&#x61;&#105;&#x6c;&#64;&#x62;&#97;&#115;&#116;&#x69;&#x61;&#110;&#45;&#97;&#x6c;&#108;&#x67;&#101;&#105;&#x65;&#114;&#46;&#100;&#x65;</a>
+    // unencoded: <a title="mail@bastian-allgeier.de" class="email" href="mailto:mail@bastian-allgeier.de">mail@bastian-allgeier.de</a>
+
+    echo str::email('mail@bastian-allgeier.de', 'mail me');
+    // output: <a title="&#109;&#x61;&#105;&#108;&#64;&#x62;&#x61;&#115;&#x74;&#105;&#x61;&#x6e;&#x2d;&#x61;&#108;&#108;&#103;&#x65;&#x69;&#x65;&#114;&#x2e;&#100;&#101;" class="email" href="mailto:&#109;&#x61;&#105;&#108;&#64;&#x62;&#x61;&#115;&#x74;&#105;&#x61;&#x6e;&#x2d;&#x61;&#108;&#108;&#103;&#x65;&#x69;&#x65;&#114;&#x2e;&#100;&#101;">&#x6d;&#97;&#x69;&#108;&#x20;&#109;&#101;</a>
+    // unencoded: <a title="mail@bastian-allgeier.de" class="email" href="mailto:mail@bastian-allgeier.de">mail me</a>
+    
+
+    
+----
+
+
+
+### Function: str::short
+
+Shorten a string
+
+#### Syntax    
+
+    str::short('string', 'length'[, 'rep'])
+
+#### Arguments
+
+1. string - (string) the looooong string
+2. length - (int) the number of chars it should finally have
+3. rep - (string) the replacement character - default: …
+
+#### Returns
+
+- (string) returns the shortened string
+
+#### Example
+
+    echo str::short('This is a very, very, very long string', 10);
+    // output: This is a…
+
+    echo str::short('This is a very, very, very long string', 10, '####');
+    // output: This i####
+    
+
+    
+----
+
+
+
+### Function: str::shorturl
+
+Special function to shorten urls
+
+#### Syntax    
+
+    str::shorturl('url', 'length'[, 'rep'])
+
+#### Arguments
+
+1. url - (string) the looooong url
+2. length - (int) the number of chars it should finally have
+3. rep - (string) the replacement character - default: …
+
+#### Returns
+
+- (string) returns the shortened url
+
+#### Example
+
+    echo str::shorturl('http://veryveryverylongurl.com', 30);
+    // output: veryveryverylongurl.com
+
+
+    
+----
+
+  
+
+### ...and much, much more
+
+Please stay tuned for the full documentation for the other str functions.  
+(they should be pretty self explainatory in the meanwhile)
+  
+    // shorten a string by cutting out characters in the middle test...bla.txt
+    str::cutout('string', 20);    
+
+    // add a correct apostroph to the string
+    str::apostrophe('name');    
+
+    // help to create plural or singlar forms
+    str::plural(20, 'entries', 'entry');    
+    
+    // utf-8 able substring function
+    str::substr('string', 0, 20);    
+
+    // set all letters in lowercase
+    str::lower('string');    
+
+    // set all letters in uppercase
+    str::upper('string');    
+
+    // determine the string length (utf8 compatible)
+    str::length('string');    
+
+    // check if the searchword is contained in the string
+    str::contains('string', 'searchword');    
+
+    // create a random string
+    str::random(10);    
+
+    // sanitize a string to be used in an url
+    str::urlify('string');    
+
+    // split and clean a string
+    str::split('string', ':');    
+
+    // trim all unneeded whitespaces in a string
+    str::trim('string');    
+
+    // clean a string by multiple methods
+    str::sanitize('string', 'plain');    
+
+    // set all first letters in uppercase
+    str::ucwords('string');    
+
+    // set the first character in uppercase
+    str::ucfirst('string');    
+
+    // make sure the string is utf8
+    str::utf8('string');    
+
+    // custom stripslashes function
+    str::stripslashes('string');    
+
+
+

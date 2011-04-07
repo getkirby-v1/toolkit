@@ -1,0 +1,107 @@
+## DIR (Directory)
+
+The dir class simplifies directory handling 
+
+
+### Function: dir::make 
+
+Creates a new directory
+
+#### Syntax
+
+    dir::make('dirname');
+
+#### Arguments
+
+1. dirname - (string) The full or relative path for the new directory
+
+#### Returns
+
+- (boolean) If the directory has been created returns true. Otherwise, returns false.
+
+#### Example
+
+    $create = dir::make('/app/test/new-directory');
+    
+    if($create) echo 'the directory has been created';
+
+
+----
+
+
+### Function: dir::read
+
+Gets a list of all files and directories in that directory and returns it as array
+
+#### Syntax
+
+    dir::read('dirname');
+
+#### Arguments
+
+1. dirname - (string) The full or relative path for the directory
+
+#### Returns
+
+- (array) returns an array with all filenames
+
+#### Example
+
+    $files = dir::read('mydirectory');
+    // returns array('file-1.txt', 'file-2.txt', 'file-3.txt', etc...);
+
+
+----
+
+
+### Function dir::move
+    
+Moves a directory to a new place or renames it
+
+#### Syntax
+
+    dir::move('old_path', 'new_path');
+
+#### Arguments
+
+1. old_path - (string) The path where the directory is now
+2. new_path - (string) The path where the directory should be afterwards
+
+#### Returns
+
+- (boolean) returns true if the directory has been moved, otherwise returns false
+
+#### Example
+
+    $move = dir::move('mydirectory', 'mynewdirectory');
+
+    if($move) echo 'the directory has been moved to mynewdirectory';
+
+
+----
+
+
+### Function dir::remove
+
+Removes a directory and all its content
+
+#### Syntax
+
+    dir::remove('dirname');
+
+#### Arguments
+
+1. dirname - (string) The full or relative path for the directory
+
+#### Returns
+
+- (boolean) returns true if the directory has been removed, otherwise returns false
+
+#### Example
+
+    $remove = dir::remove('mydirectory');
+
+    if($remove) echo 'the directory has been removed';
+
+
+
