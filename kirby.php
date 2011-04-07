@@ -46,11 +46,10 @@ function error($response) {
 }
 
 function load() {
-	$files  = func_get_args();
-	$root   = dirname(__FILE__);
-	$files  = (array)$files;
-	foreach($files AS $f) {
-		include_once($root . '/kirby.' . $f . '.php');
+	$root  = c::get('plugins', c::get('root') . '/plugins');
+	$files = func_get_args();
+	foreach((array)$files AS $f) {
+		include_once($root . '/' . $f . '.php');
 	}
 }
 
