@@ -1,6 +1,6 @@
 <?php
 
-c::set('version', 0.5);
+c::set('version', 0.6);
 c::set('language', 'en');
 c::set('charset', 'utf-8');
 c::set('root', dirname(__FILE__));
@@ -1250,11 +1250,21 @@ class r {
 			$_REQUEST[$key] = $value;
 		}
 	}
+	
+	function method() {
+		return strtoupper(server::get('request_method'));
+	}
 
 	function get($key=false, $default=null) {
-		if(empty($key)) return $_REQUEST;
-		$value = a::get($_REQUEST, $key, $default);
+		$request = (self::method() == 'GET') ? $_REQUEST : array_merge($_REQUEST, self::body());
+		if(empty($key)) return $request;
+		$value = a::get($request, $key, $default);
 		return (!is_array($value)) ? trim(str::stripslashes($value)) : $value;
+	}
+
+	function body() {
+		@parse_str(@file_get_contents('php://input'), $body);	
+		return (array)$body;
 	}
 
 	function parse() {
@@ -1270,8 +1280,24 @@ class r {
 		return $result;
 	}
 
-	function ajax() {
-		return (server::get('http_x_requested_with') == 'XMLHttpRequest') ? true : false;
+	function is_ajax() {
+		return (strtolower(server::get('http_x_requested_with')) == 'xmlhttprequest') ? true : false;
+	}
+	
+	function is_get() {
+		return (self::method() == 'GET') ? true : false;
+	}
+	
+	function is_post() {
+		return (self::method() == 'POST') ? true : false;	
+	}
+	
+	function is_delete() {
+		return (self::method() == 'DELETE') ? true : false;	
+	}
+	
+	function is_put() {
+		return (self::method() == 'PUT') ? true : false;	
 	}
 
 	function referer($default=null) {
@@ -1281,7 +1307,7 @@ class r {
 
 }
 
-function get($key, $default=null) {
+function get($key=false, $default=null) {
 	return r::get($key, $default);
 }
 
