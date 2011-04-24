@@ -35,6 +35,12 @@ class StringTest extends UnitTestCase {
     $this->assertEqual(str::unxml('some <em>&#252;ber</em> crazy stuff'), 'some &uuml;ber crazy stuff');
   }
 
+  function testParse()
+  {
+    $this->assertEqual(str::parse('{"test":"cool","super":"genious"}'), array('test'=>'cool','super'=>'genious'));
+    $this->assertEqual(str::parse('<xml><entries><cool>nice</cool></entries></xml>', 'xml'), array('entries'=>array('cool'=>'nice')));
+  }
+
 }
 
 
