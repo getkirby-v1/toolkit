@@ -1,7 +1,7 @@
 <?php
 
-require_once('../../simpletest/unit_tester.php');
-require_once('../../simpletest/reporter.php');
+// require_once('../../simpletest/unit_tester.php');
+// require_once('../../simpletest/reporter.php');
 require_once('../kirby.php');
 
 class StringTest extends UnitTestCase {
@@ -44,7 +44,5 @@ class StringTest extends UnitTestCase {
 }
 
 
-$test = new StringTest();
-$test->run(new HtmlReporter());
 
 
