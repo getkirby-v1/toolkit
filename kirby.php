@@ -1530,7 +1530,7 @@ class str {
 		$table = array_flip(self::entities());
 
 		// convert html entities to xml entities
-		return strtr($string, $table);
+		return strip_tags(strtr($string, $table));
 
 	}
 
