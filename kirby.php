@@ -443,7 +443,7 @@ class c {
 	
 	function set_array($key, $value=null) {
 		if (!is_array($value)) {
-			$m = self::get_sub($key);
+			$m = self::get_array($key);
 			foreach($m AS $k => $v) {
 				self::set($k, $value);
 			}
@@ -452,6 +452,10 @@ class c {
 				self::set($key.'.'.$k, $v);
 			}
 		}
+	}
+	
+	function set_default($key, $value) {
+		self::set($key, self::get($key, $value));
 	}
 }
 
