@@ -208,7 +208,7 @@ class a {
 		}
 		return $missing;
 	}
-	
+
 	// Not working - atleast not in php 5.3
 	// example: a::sort($array, 'volume DESC, edition ASC');
 	function sort($array, $params) {
@@ -426,7 +426,8 @@ class c {
 
 	function load($file) {
 		if(file_exists($file)) require_once($file);
-		return c::get();
+		self::set($config);
+		return self::get();
 	}
 
 	function get_array($key, $default=null) {
@@ -440,7 +441,7 @@ class c {
 		}
 		return ($n) ? $n : $default;
 	}
-	
+
 	function set_array($key, $value=null) {
 		if (!is_array($value)) {
 			$m = self::get_sub($key);
@@ -673,7 +674,7 @@ class db {
 		self::$trace[] = $sql;
 
 		if(!$execute) return self::error(l::get('db.errors.query_failed', 'The database query failed'));
-		
+
 		$last_id = self::last_id();
 		return ($last_id === false) ? self::$affected : self::last_id();
 	}
@@ -718,26 +719,26 @@ class db {
 	}
 
 	function insert_all($table, $fields, $values) {
-			
+
 		$query = 'INSERT INTO ' . self::prefix($table) . ' (' . implode(',', $fields) . ') VALUES ';
 		$rows  = array();
-		
-		foreach($values AS $v) {    
+
+		foreach($values AS $v) {
 			$str = '(\'';
 			$sep = '';
-			
+
 			foreach($v AS $input) {
-				$str .= $sep . db::escape($input);            
-				$sep = "','";  
+				$str .= $sep . db::escape($input);
+				$sep = "','";
 			}
 
 			$str .= '\')';
 			$rows[] = $str;
 		}
-		
+
 		$query .= implode(',', $rows);
 		return db::execute($query);
-	
+
 	}
 
 	function replace($table, $input) {
@@ -1053,7 +1054,7 @@ class f {
 	function append($file,$content){
 		return self::write($file,$content,true);
 	}
-	
+
 	function read($file, $parse=false) {
 		$content = @file_get_contents($file);
 		return ($parse) ? str::parse($content, $parse) : $content;
@@ -1087,7 +1088,7 @@ class f {
 	function dirname($file=__FILE__) {
 		return dirname($file);
 	}
-	
+
 	function size($file, $nice=false) {
 		@clearstatcache();
 		$size = @filesize($file);
@@ -1250,7 +1251,7 @@ class r {
 			$_REQUEST[$key] = $value;
 		}
 	}
-	
+
 	function method() {
 		return strtoupper(server::get('request_method'));
 	}
@@ -1263,7 +1264,7 @@ class r {
 	}
 
 	function body() {
-		@parse_str(@file_get_contents('php://input'), $body);	
+		@parse_str(@file_get_contents('php://input'), $body);
 		return (array)$body;
 	}
 
@@ -1283,21 +1284,21 @@ class r {
 	function is_ajax() {
 		return (strtolower(server::get('http_x_requested_with')) == 'xmlhttprequest') ? true : false;
 	}
-	
+
 	function is_get() {
 		return (self::method() == 'GET') ? true : false;
 	}
-	
+
 	function is_post() {
-		return (self::method() == 'POST') ? true : false;	
+		return (self::method() == 'POST') ? true : false;
 	}
-	
+
 	function is_delete() {
-		return (self::method() == 'DELETE') ? true : false;	
+		return (self::method() == 'DELETE') ? true : false;
 	}
-	
+
 	function is_put() {
-		return (self::method() == 'PUT') ? true : false;	
+		return (self::method() == 'PUT') ? true : false;
 	}
 
 	function referer($default=null) {
