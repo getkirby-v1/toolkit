@@ -4,6 +4,15 @@
 
 - removed the docs from the repository
 - a new optimized a::shuffle() function, which preserves array keys while shuffling it. 
+- removed the core class. moved error, status, msg functions to helper functions
+- added a::getall($array,$keys)
+- updated the browser sniffer
+- declared all static functions
+- new content::load() function
+- put the missing db class back in
+- added a new s::id() function
+- added a new s::restart() function
+- better str::split function
 
 ## Before 0.9
 

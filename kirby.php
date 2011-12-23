@@ -34,15 +34,19 @@ function go($url=false, $code=false) {
 }
 
 function status($response) {
-  return core::status($response);
+  return a::get($response, 'status');
 }
 
 function msg($response) {
-  return core::msg($response);
+  return a::get($response, 'msg');
 }
 
 function error($response) {
-  return core::error($response);
+  return (status($response) == 'error') ? true : false;
+}
+
+function success($response) {
+  return !error($response);
 }
 
 function load() {
@@ -75,35 +79,6 @@ function load() {
 
 
 
-/*
-
-############### CORE ###############
-
-*/
-class core {
-
-  public static $trace = array();
-
-  function status($response) {
-    return a::get($response, 'status');
-  }
-
-  function msg($response) {
-    return a::get($response, 'msg');
-  }
-
-  function error($response) {
-    return (self::status($response) == 'error') ? true : false;
-  }
-
-  function trace($msg=false) {
-    if(empty($msg)) return self::$trace;
-    self::$trace[] = $msg;
-  }
-
-}
-
-
 
 /*
 
@@ -112,11 +87,17 @@ class core {
 */
 class a {
 
-  function get($array, $key, $default=null) {
+  static function get($array, $key, $default=null) {
     return (isset($array[ $key ])) ? $array[ $key ] : $default;
   }
 
-  function remove($array, $search, $key=true) {
+  static function getall($array, $keys) {
+    $result = array();
+    foreach($keys as $key) $result[$key] = $array[$key];
+    return $result;
+  }
+
+  static function remove($array, $search, $key=true) {
     if($key) {
       unset($array[$search]);
     } else {
@@ -133,13 +114,13 @@ class a {
     return $array;
   }
 
-  function inject($array, $position, $element='placeholder') {
+  static function inject($array, $position, $element='placeholder') {
     $start = array_slice($array, 0, $position);
     $end = array_slice($array, $position);
     return array_merge($start, (array)$element, $end);
   }
 
-  function show($array, $echo=true) {
+  static function show($array, $echo=true) {
     $output = '<pre>';
     $output .= htmlspecialchars(print_r($array, true));
     $output .= '</pre>';
@@ -147,11 +128,11 @@ class a {
     return $output;
   }
 
-  function json($array) {
+  static function json($array) {
     return @json_encode( (array)$array );
   }
 
-  function xml($array, $tag='root', $head=true, $charset='utf-8', $tab='  ', $level=0) {
+  static function xml($array, $tag='root', $head=true, $charset='utf-8', $tab='  ', $level=0) {
     $result  = ($level==0 && $head) ? '<?xml version="1.0" encoding="' . $charset . '"?>' . "\n" : '';
     $nlevel  = ($level+1);
     $result .= str_repeat($tab, $level) . '<' . $tag . '>' . "\n";
@@ -179,36 +160,36 @@ class a {
     return $result . str_repeat($tab, $level) . '</' . $tag . '>' . "\n";
   }
 
-  function extract($array, $key) {
+  static function extract($array, $key) {
     $output = array();
     foreach($array AS $a) if(isset($a[$key])) $output[] = $a[ $key ];
     return $output;
   }
 
-  function shuffle($array) {
+  static function shuffle($array) {
     $keys = array_keys($array); 
     shuffle($keys); 
     return array_merge(array_flip($keys), $array); 
   } 
 
-  function first($array) {
+  static function first($array) {
     return array_shift($array);
   }
 
-  function last($array) {
+  static function last($array) {
     return array_pop($array);
   }
 
-  function search($array, $search) {
+  static function search($array, $search) {
     return preg_grep('#' . preg_quote($search) . '#i' , $array);
   }
 
-  function contains($array, $search) {
+  static function contains($array, $search) {
     $search = self::search($array, $search);
     return (empty($search)) ? false : true;
   }
 
-  function fill($array, $limit, $fill='placeholder') {
+  static function fill($array, $limit, $fill='placeholder') {
     if(count($array) < $limit) {
       $diff = $limit-count($array);
       for($x=0; $x<$diff; $x++) $array[] = $fill;
@@ -216,7 +197,7 @@ class a {
     return $array;
   }
 
-  function missing($array, $required=array()) {
+  static function missing($array, $required=array()) {
     $missing = array();
     foreach($required AS $r) {
       if(empty($array[$r])) $missing[] = $r;
@@ -224,7 +205,7 @@ class a {
     return $missing;
   }
 
-  function sort() {
+  static function sort() {
 
     $options = func_get_args();
     $array   = array_shift($options);    
@@ -296,110 +277,117 @@ class a {
 class browser {
 
   static public $ua = false;
-  static public $browser = false;
+  static public $name = false;
   static public $engine = false;
   static public $version = false;
   static public $platform = false;
+  static public $mobile = false;
+  static public $ios = false;
+  static public $iphone = false;
 
-  function name($ua=null) {
+  static function name($ua=null) {
     self::detect($ua);
-    return self::$browser;
+    return self::$name;
   }
 
-  function engine($ua=null) {
+  static function engine($ua=null) {
     self::detect($ua);
     return self::$engine;
   }
 
-  function version($ua=null) {
+  static function version($ua=null) {
     self::detect($ua);
     return self::$version;
   }
 
-  function platform($ua=null) {
+  static function platform($ua=null) {
     self::detect($ua);
     return self::$platform;
   }
 
-  function mobile($ua=null) {
+  static function mobile($ua=null) {
     self::detect($ua);
-    return (self::$platform == 'mobile') ? true : false;
+    return self::$mobile;
   }
 
-  function iphone($ua=null) {
+  static function iphone($ua=null) {
     self::detect($ua);
-    return (in_array(self::$platform, array('ipod', 'iphone'))) ? true : false;
+    return self::$iphone;
   }
 
-  function ios($ua=null) {
+  static function ios($ua=null) {
     self::detect($ua);
-    return (in_array(self::$platform, array('ipod', 'iphone', 'ipad'))) ? true : false;
+    return self::$ios;
   }
 
-  function css($ua=null, $array=false) {
+  static function css($ua=null, $array=false) {
     self::detect($ua);
     $css[] = self::$engine;
-    $css[] = self::$browser;
-    if(self::$version) $css[] = self::$browser . str_replace('.', '_', self::$version);
+    $css[] = self::$name;
+    if(self::$version) $css[] = self::$name . str_replace('.', '_', self::$version);
     $css[] = self::$platform;
     return ($array) ? $css : implode(' ', $css);
   }
 
-  function detect($ua=null) {
+  static function detect($ua=null) {
     $ua = ($ua) ? str::lower($ua) : str::lower(server::get('http_user_agent'));
 
     // don't do the detection twice
     if(self::$ua == $ua) return array(
-      'browser' => self::$browser,
+      'name'     => self::$name,
       'engine'   => self::$engine,
-      'version' => self::$version,
-      'platform' => self::$platform
+      'version'  => self::$version,
+      'platform' => self::$platform,
+      'agent'    => self::$ua,
+      'mobile'   => self::$mobile,
+      'iphone'   => self::$iphone,
+      'ios'      => self::$ios,
     );
 
-    self::$ua    = $ua;
-    self::$browser  = false;
-    self::$engine  = false;
+    self::$ua       = $ua;
+    self::$name     = false;
+    self::$engine   = false;
     self::$version  = false;
     self::$platform = false;
 
     // browser
     if(!preg_match('/opera|webtv/i', self::$ua) && preg_match('/msie\s(\d)/', self::$ua, $array)) {
       self::$version = $array[1];
-      self::$browser = 'ie';
+      self::$name = 'ie';
       self::$engine = 'trident';
     } else if(strstr(self::$ua, 'firefox/3.6')) {
       self::$version = 3.6;
-      self::$browser = 'fx';
+      self::$name = 'fx';
       self::$engine = 'gecko';
     } else if (strstr(self::$ua, 'firefox/3.5')) {
       self::$version = 3.5;
-      self::$browser = 'fx';
+      self::$name = 'fx';
       self::$engine = 'gecko';
     } else if(preg_match('/firefox\/(\d+)/i', self::$ua, $array)) {
       self::$version = $array[1];
-      self::$browser = 'fx';
+      self::$name = 'fx';
       self::$engine = 'gecko';
     } else if(preg_match('/opera(\s|\/)(\d+)/', self::$ua, $array)) {
       self::$engine = 'presto';
-      self::$browser = 'opera';
+      self::$name = 'opera';
       self::$version = $array[2];
     } else if(strstr(self::$ua, 'konqueror')) {
-      self::$browser = 'konqueror';
+      self::$name = 'konqueror';
       self::$engine = 'webkit';
     } else if(strstr(self::$ua, 'iron')) {
-      self::$browser = 'iron';
+      self::$name = 'iron';
       self::$engine = 'webkit';
     } else if(strstr(self::$ua, 'chrome')) {
-      self::$browser = 'chrome';
+      self::$name = 'chrome';
       self::$engine = 'webkit';
       if(preg_match('/chrome\/(\d+)/i', self::$ua, $array)) { self::$version = $array[1]; }
     } else if(strstr(self::$ua, 'applewebkit/')) {
-      self::$browser = 'safari';
+      self::$name = 'safari';
       self::$engine = 'webkit';
       if(preg_match('/version\/(\d+)/i', self::$ua, $array)) { self::$version = $array[1]; }
     } else if(strstr(self::$ua, 'mozilla/')) {
       self::$engine = 'gecko';
-      self::$browser = 'mozilla';
+      self::$name = 'fx';
     }
 
     // platform
@@ -425,11 +413,19 @@ class browser {
       self::$platform = 'linux';
     }
 
+    self::$mobile = (self::$platform == 'mobile') ? true : false;
+    self::$iphone = (in_array(self::$platform, array('ipod', 'iphone'))) ? true : false;
+    self::$ios    = (in_array(self::$platform, array('ipod', 'iphone', 'ipad'))) ? true : false;
+
     return array(
-      'browser'  => self::$browser,
+      'name'     => self::$name,
       'engine'   => self::$engine,
       'version'  => self::$version,
-      'platform' => self::$platform
+      'platform' => self::$platform,
+      'agent'    => self::$ua,
+      'mobile'   => self::$mobile,
+      'iphone'   => self::$iphone,
+      'ios'      => self::$ios,
     );
 
   }
@@ -451,12 +447,12 @@ class c {
 
   private static $config = array();
 
-  function get($key=null, $default=null) {
+  static function get($key=null, $default=null) {
     if(empty($key)) return self::$config;
     return a::get(self::$config, $key, $default);
   }
 
-  function set($key, $value=null) {
+  static function set($key, $value=null) {
     if(is_array($key)) {
       // set all new values
       self::$config = array_merge(self::$config, $key);
@@ -465,12 +461,12 @@ class c {
     }
   }
 
-  function load($file) {
+  static function load($file) {
     if(file_exists($file)) require_once($file);
     return c::get();
   }
 
-  function get_array($key, $default=null) {
+  static function get_array($key, $default=null) {
     $keys = array_keys(self::$config);
     $n = array();
     foreach($keys AS $k) {
@@ -482,7 +478,7 @@ class c {
     return ($n) ? $n : $default;
   }
   
-  function set_array($key, $value=null) {
+  static function set_array($key, $value=null) {
     if (!is_array($value)) {
       $m = self::get_sub($key);
       foreach($m AS $k => $v) {
@@ -508,11 +504,11 @@ class c {
 */
 class content {
 
-  function start() {
+  static function start() {
     ob_start();
   }
 
-  function end($return=false) {
+  static function end($return=false) {
     if($return) {
       $content = ob_get_contents();
       ob_end_clean();
@@ -521,24 +517,32 @@ class content {
     ob_end_flush();
   }
 
-  function type() {
+  static function load($file, $return=true) {
+    self::start();
+    require_once($file);
+    $content = self::end(true);
+    if($return) return $content;
+    echo $content;        
+  }
+
+  static function type() {
     $args    = func_get_args();
 
     // shortcuts for content types
     $ctypes = array(
       'html' => 'text/html',
-      'css' => 'text/css',
+      'css'  => 'text/css',
       'js'   => 'text/javascript',
-      'jpg' => 'image/jpeg',
-      'png' => 'image/png',
-      'gif' => 'image/gif'
+      'jpg'  => 'image/jpeg',
+      'png'  => 'image/png',
+      'gif'  => 'image/gif'
     );
 
-    $ctype   = a::get($args, 0, c::get('content_type', 'text/html'));
-    $ctype   = a::get($ctypes, $ctype, $ctype);
+    $ctype = a::get($args, 0, c::get('content_type', 'text/html'));
+    $ctype = a::get($ctypes, $ctype, $ctype);
 
     $charset = a::get($args, 1, c::get('charset', 'utf-8'));
-    header('Content-type: ' . $ctype . '; ' . $charset);
+    header('Content-type: ' . $ctype . '; charset=' . $charset);
   }
 
 }
@@ -556,19 +560,432 @@ class content {
 */
 class cookie {
 
-  function set($key, $value, $expires=3600, $domain='/') {
+  static function set($key, $value, $expires=3600, $domain='/') {
     if(is_array($value)) $value = a::json($value);
     $_COOKIE[$key] = $value;
     return @setcookie($key, $value, time()+$expires, $domain);
   }
 
-  function get($key, $default=null) {
+  static function get($key, $default=null) {
     return a::get($_COOKIE, $key, $default);
   }
 
-  function remove($key, $domain='/') {
+  static function remove($key, $domain='/') {
     $_COOKIE[$key] = false;
     return @setcookie($key, false, time()-3600, $domain);
+  }
+
+}
+
+
+
+
+
+
+/*
+
+############### DATABASE ###############
+
+*/
+class db {
+
+  public  static $trace = array();
+  private static $connection = false;
+  private static $database = false;
+  private static $charset = false;
+  private static $last_query = false;
+  private static $affected = 0;
+
+  static function connect() {
+
+    $connection = self::connection();
+    $args       = func_get_args();
+    $host       = a::get($args, 0, c::get('db.host', 'localhost'));
+    $user       = a::get($args, 1, c::get('db.user', 'root'));
+    $password   = a::get($args, 2, c::get('db.password'));
+    $database   = a::get($args, 3, c::get('db.name'));
+    $charset    = a::get($args, 4, c::get('db.charset', 'utf8'));
+
+    // don't connect again if it's already done
+    $connection = (!$connection) ? @mysql_connect($host, $user, $password) : $connection;
+
+    // react on connection failures
+    if(!$connection) return self::error(l::get('db.errors.connect', 'Database connection failed'), true);
+
+    self::$connection = $connection;
+
+    // select the database
+    $database = self::database($database);
+    if(core::error($database)) return $database;
+
+    // set the right charset
+    $charset = self::charset($charset);
+    if(core::error($charset)) return $charset;
+
+    return $connection;
+
+  }
+
+  static function connection() {
+    return (is_resource(self::$connection)) ? self::$connection : false;
+  }
+
+  static function disconnect() {
+
+    if(!c::get('db.disconnect')) return false;
+
+    $connection = self::connection();
+    if(!$connection) return false;
+
+    // kill the connection
+    $disconnect = @mysql_close($connection);
+    self::$connection = false;
+
+    if(!$disconnect) return self::error(l::get('db.errors.disconnect', 'Disconnecting database failed'));
+    return true;
+
+  }
+
+  static function database($database) {
+
+    if(!$database) return self::error(l::get('db.errors.missing_db_name', 'Please provide a database name'), true);
+
+    // check if there is a selected database
+    if(self::$database == $database) return true;
+
+    // select a new database
+    $select = @mysql_select_db($database, self::connection());
+
+    if(!$select) return self::error(l::get('db.errors.missing_db', 'Selecting database failed'), true);
+
+    self::$database = $database;
+
+    return $database;
+
+  }
+
+  static function charset($charset='utf8') {
+
+    // check if there is a assigned charset and compare it
+    if(self::$charset == $charset) return true;
+
+    // set the new charset
+    $set = @mysql_query('SET NAMES ' . $charset);
+
+    if(!$set) return self::error(l::get('db.errors.setting_charset_failed', 'Setting database charset failed'));
+
+    // save the new charset to the globals
+    self::$charset = $charset;
+    return $charset;
+
+  }
+
+  static function query($sql, $fetch=true) {
+
+    $connection = self::connect();
+    if(core::error($connection)) return $connection;
+
+    // save the query
+    self::$last_query = $sql;
+
+    // execute the query
+    $result = @mysql_query($sql, $connection);
+
+    self::$affected = @mysql_affected_rows();
+    self::$trace[] = $sql;
+
+    if(!$result) return self::error(l::get('db.errors.query_failed', 'The database query failed'));
+    if(!$fetch) return $result;
+
+    $array = array();
+    while($r = self::fetch($result)) array_push($array, $r);
+    return $array;
+
+  }
+
+  static function execute($sql) {
+
+    $connection = self::connect();
+    if(core::error($connection)) return $connection;
+
+    // save the query
+    self::$last_query = $sql;
+
+    // execute the query
+    $execute = @mysql_query($sql, $connection);
+
+    self::$affected = @mysql_affected_rows();
+    self::$trace[] = $sql;
+
+    if(!$execute) return self::error(l::get('db.errors.query_failed', 'The database query failed'));
+    
+    $last_id = self::last_id();
+    return ($last_id === false) ? self::$affected : self::last_id();
+  }
+
+  static function affected() {
+      return self::$affected;
+  }
+
+  static function last_id() {
+    $connection = self::connection();
+    return @mysql_insert_id($connection);
+  }
+
+  static function fetch($result, $type=MYSQL_ASSOC) {
+    if(!$result) return array();
+    return @mysql_fetch_array($result, $type);
+  }
+
+  static function fields($table) {
+
+    $connection = self::connect();
+    if(core::error($connection)) return $connection;
+
+    $fields = @mysql_list_fields(self::$database, self::prefix($table), $connection);
+
+    if(!$fields) return self::error(l::get('db.errors.listing_fields_failed', 'Listing fields failed'));
+
+    $output = array();
+    $count  = @mysql_num_fields($fields);
+
+    for($x=0; $x<$count; $x++) {
+      $output[] = @mysql_field_name($fields, $x);
+    }
+
+    return $output;
+
+  }
+
+  static function insert($table, $input, $ignore=false) {
+    $ignore = ($ignore) ? ' IGNORE' : '';
+    return self::execute('INSERT' . ($ignore) . ' INTO ' . self::prefix($table) . ' SET ' . self::values($input));
+  }
+
+  static function insert_all($table, $fields, $values) {
+      
+    $query = 'INSERT INTO ' . self::prefix($table) . ' (' . implode(',', $fields) . ') VALUES ';
+    $rows  = array();
+    
+    foreach($values AS $v) {    
+      $str = '(\'';
+      $sep = '';
+      
+      foreach($v AS $input) {
+        $str .= $sep . db::escape($input);            
+        $sep = "','";  
+      }
+
+      $str .= '\')';
+      $rows[] = $str;
+    }
+    
+    $query .= implode(',', $rows);
+    return db::execute($query);
+  
+  }
+
+  static function replace($table, $input) {
+    return self::execute('REPLACE INTO ' . self::prefix($table) . ' SET ' . self::values($input));
+  }
+
+  static function update($table, $input, $where) {
+    return self::execute('UPDATE ' . self::prefix($table) . ' SET ' . self::values($input) . ' WHERE ' . self::where($where));
+  }
+
+  static function delete($table, $where='') {
+    $sql = 'DELETE FROM ' . self::prefix($table);
+    if(!empty($where)) $sql .= ' WHERE ' . self::where($where);
+    return self::execute($sql);
+  }
+
+  static function select($table, $select='*', $where=null, $order=null, $page=null, $limit=null, $fetch=true) {
+
+    if($limit === 0) return array();
+
+    if(is_array($select)) $select = self::select_clause($select);
+
+    $sql = 'SELECT ' . $select . ' FROM ' . self::prefix($table);
+
+    if(!empty($where)) $sql .= ' WHERE ' . self::where($where);
+    if(!empty($order)) $sql .= ' ORDER BY ' . $order;
+    if($page !== null && $limit !== null) $sql .= ' LIMIT ' . $page . ',' . $limit;
+
+    return self::query($sql, $fetch);
+
+  }
+
+  static function row($table, $select='*', $where=null, $order=null) {
+    $result = self::select($table, $select, $where, $order, 0,1, false);
+    return self::fetch($result);
+  }
+
+  static function column($table, $column, $where=null, $order=null, $page=null, $limit=null) {
+
+    $result = self::select($table, $column, $where, $order, $page, $limit, false);
+
+    $array = array();
+    while($r = self::fetch($result)) array_push($array, a::get($r, $column));
+    return $array;
+  }
+
+  static function field($table, $field, $where=null, $order=null) {
+    $result = self::row($table, $field, $where, $order);
+    return a::get($result, $field);
+  }
+
+  static function join($table_1, $table_2, $on, $select, $where=null, $order=null, $page=null, $limit=null, $type="JOIN") {
+      return self::select(
+        self::prefix($table_1) . ' ' . $type . ' ' .
+        self::prefix($table_2) . ' ON ' .
+        self::where($on),
+        $select,
+        self::where($where),
+        $order,
+        $page,
+        $limit
+      );
+  }
+
+  static function left_join($table_1, $table_2, $on, $select, $where=null, $order=null, $page=null, $limit=null) {
+      return self::join($table_1, $table_2, $on, $select, $where, $order, $page, $limit, 'LEFT JOIN');
+  }
+
+  static function count($table, $where='') {
+    $result = self::row($table, 'count(*)', $where);
+    return ($result) ? a::get($result, 'count(*)') : 0;
+  }
+
+  static function min($table, $column, $where=null) {
+
+    $sql = 'SELECT MIN(' . $column . ') AS min FROM ' . self::prefix($table);
+    if(!empty($where)) $sql .= ' WHERE ' . self::where($where);
+
+    $result = self::query($sql, false);
+    $result = self::fetch($result);
+
+    return a::get($result, 'min', 1);
+
+  }
+
+  static function max($table, $column, $where=null) {
+
+    $sql = 'SELECT MAX(' . $column . ') AS max FROM ' . self::prefix($table);
+    if(!empty($where)) $sql .= ' WHERE ' . self::where($where);
+
+    $result = self::query($sql, false);
+    $result = self::fetch($result);
+
+    return a::get($result, 'max', 1);
+
+  }
+
+  static function sum($table, $column, $where=null) {
+
+    $sql = 'SELECT SUM(' . $column . ') AS sum FROM ' . self::prefix($table);
+    if(!empty($where)) $sql .= ' WHERE ' . self::where($where);
+
+    $result = self::query($sql, false);
+    $result = self::fetch($result);
+
+    return a::get($result, 'sum', 0);
+
+  }
+
+  static function prefix($table) {
+    $prefix = c::get('db.prefix');
+    if(!$prefix) return $table;
+    return (!str::contains($table,$prefix)) ? $prefix . $table : $table;
+  }
+
+  static function simple_fields($array) {
+    if(empty($array)) return false;
+    $output = array();
+    foreach($array AS $key => $value) {
+      $key = substr($key, strpos($key, '_')+1);
+      $output[$key] = $value;
+    }
+    return $output;
+  }
+
+  static function values($input) {
+    if(!is_array($input)) return $input;
+
+    $output = array();
+    foreach($input AS $key => $value) {
+      if($value === 'NOW()')
+        $output[] = $key . ' = NOW()';
+      elseif(is_array($value))
+        $output[] = $key . ' = \'' . a::json($value) . '\'';
+      else
+        $output[] = $key . ' = \'' . self::escape($value) . '\'';
+    }
+    return implode(', ', $output);
+
+  }
+
+  static function escape($value) {
+    $value = str::stripslashes($value);
+    return mysql_real_escape_string((string)$value, self::connect());
+  }
+
+  static function search_clause($search, $fields, $mode='OR') {
+
+    if(empty($search)) return false;
+
+    $arr = array();
+    foreach($fields AS $f) {
+      array_push($arr, $f . ' LIKE \'%' . $search . '%\'');
+      //array_push($arr, $f . ' REGEXP "[[:<:]]' . db::escape($search) . '[[:>:]]"');
+    }
+    return '(' . implode(' ' . trim($mode) . ' ', $arr) . ')';
+
+  }
+  
+  static function with($field, $char) {
+    return 'LOWER(SUBSTRING(' . $field . ',1,1)) = "' . db::escape($char) . '"';
+  }
+
+  static function select_clause($fields) {
+    return implode(', ', $fields);
+  }
+
+  static function in($array) {
+    return '\'' . implode('\',\'', $array) . '\'';
+  }
+
+  static function where($array, $method='AND') {
+
+    if(!is_array($array)) return $array;
+
+    $output = array();
+    foreach($array AS $field => $value) {
+      $output[] = $field . ' = \'' . self::escape($value) . '\'';
+      $separator = ' ' . $method . ' ';
+    }
+    return implode(' ' . $method . ' ', $output);
+
+  }
+
+  static function error($msg=null, $exit=false) {
+
+    $connection = self::connection();
+
+    $error  = (mysql_error()) ? @mysql_error($connection) : false;
+    $number = (mysql_errno()) ? @mysql_errno($connection) : 0;
+
+    if(c::get('db.debugging')) {
+      if($error) $msg .= ' -> ' . $error . ' (' . $number . ')';
+      if(self::$last_query) $msg .= ' Query: ' . self::$last_query;
+    } else $msg .= ' - ' . l::get('db.errors.msg', 'This will be fixed soon!');
+
+    if($exit || c::get('db.debugging')) die($msg);
+
+    return array(
+      'status' => 'error',
+      'msg' => $msg
+    );
+
   }
 
 }
@@ -584,20 +1001,20 @@ class cookie {
 */
 class dir {
 
-  function make($dir) {
+  static function make($dir) {
     if(is_dir($dir)) return true;
     if(!@mkdir($dir, 0777)) return false;
     @chmod($dir, 0777);
     return true;
   }
 
-  function read($dir) {
+  static function read($dir) {
     if(!is_dir($dir)) return false;
     $skip = array('.', '..', '.DS_Store');
     return array_diff(scandir($dir),$skip);
   }
   
-  function inspect($dir) {
+  static function inspect($dir) {
     
     if(!is_dir($dir)) return array();
 
@@ -624,12 +1041,12 @@ class dir {
           
   }
 
-  function move($old, $new) {
+  static function move($old, $new) {
     if(!is_dir($old)) return false;
     return (@rename($old, $new) && is_dir($new)) ? true : false;
   }
 
-  function remove($dir, $keep=false) {
+  static function remove($dir, $keep=false) {
     if(!is_dir($dir)) return false;
 
     $handle = @opendir($dir);
@@ -651,11 +1068,11 @@ class dir {
 
   }
 
-  function clean($dir) {
+  static function clean($dir) {
     return self::remove($dir, true);
   }
 
-  function size($path, $recusive=true, $nice=false) {
+  static function size($path, $recusive=true, $nice=false) {
     if(!file_exists($path)) return false;
     if(is_file($path)) return self::size($path, $nice);
     $size = 0;
@@ -671,7 +1088,7 @@ class dir {
     return ($nice) ? self::nice_size($size) : $size;
   }
 
-  function modified($dir, $modified=0) {
+  static function modified($dir, $modified=0) {
     $files = self::read($dir);
     foreach($files AS $file) {
       if(!is_dir($dir . '/' . $file)) continue;
@@ -697,7 +1114,7 @@ class dir {
 
 class f {
 
-  function write($file,$content,$append=false){
+  static function write($file,$content,$append=false){
     if(is_array($content)) $content = a::json($content);
     $mode = ($append) ? FILE_APPEND : false;
     $write = @file_put_contents($file, $content, $mode);
@@ -705,53 +1122,52 @@ class f {
     return $write;
   }
 
-  function append($file,$content){
+  static function append($file,$content){
     return self::write($file,$content,true);
   }
   
-  function read($file, $parse=false) {
+  static function read($file, $parse=false) {
     $content = @file_get_contents($file);
     return ($parse) ? str::parse($content, $parse) : $content;
   }
 
-  function move($old, $new) {
+  static function move($old, $new) {
     if(!file_exists($old)) return false;
     return (@rename($old, $new) && file_exists($new)) ? true : false;
   }
 
-  function remove($file) {
+  static function remove($file) {
     return (file_exists($file) && is_file($file) && !empty($file)) ? @unlink($file) : false;
   }
 
-  function extension($filename) {
+  static function extension($filename) {
     $ext = str_replace('.', '', strtolower(strrchr(trim($filename), '.')));
     return url::strip_query($ext);
   }
 
-  function filename($name) {
+  static function filename($name) {
     return basename($name);
   }
 
-  function name($name, $remove_path = false) {
+  static function name($name, $remove_path = false) {
     if($remove_path == true) $name = self::filename($name);
     $dot=strrpos($name,'.');
     if($dot) $name=substr($name,0,$dot);
     return $name;
   }
 
-  function dirname($file=__FILE__) {
+  static function dirname($file=__FILE__) {
     return dirname($file);
   }
   
-  function size($file, $nice=false) {
+  static function size($file, $nice=false) {
     @clearstatcache();
     $size = @filesize($file);
     if(!$size) return false;
     return ($nice) ? self::nice_size($size) : $size;
   }
 
-  function nice_size($size) {
-
+  static function nice_size($size) {
     $size = str::sanitize($size, 'int');
     if($size < 1) return '0 kb';
 
@@ -759,11 +1175,11 @@ class f {
     return @round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
   }
 
-  function convert($name, $type='jpg') {
+  static function convert($name, $type='jpg') {
     return self::name($name) . $type;
   }
 
-  function safe_name($string) {
+  static function safe_name($string) {
     return str::urlify($string);
   }
 
@@ -782,12 +1198,12 @@ class f {
 
 class g {
 
-  function get($key=null, $default=null) {
+  static function get($key=null, $default=null) {
     if(empty($key)) return $GLOBALS;
     return a::get($GLOBALS, $key, $default);
   }
 
-  function set($key, $value=null) {
+  static function set($key, $value=null) {
     if(is_array($key)) {
       // set all new values
       $GLOBALS = array_merge($GLOBALS, $key);
@@ -813,7 +1229,7 @@ class l {
 
   public static $lang = array();
 
-  function set($key, $value=null) {
+  static function set($key, $value=null) {
     if(is_array($key)) {
       self::$lang = array_merge(self::$lang, $key);
     } else {
@@ -821,17 +1237,17 @@ class l {
     }
   }
 
-  function get($key=null, $default=null) {
+  static function get($key=null, $default=null) {
     if(empty($key)) return self::$lang;
     return a::get(self::$lang, $key, $default);
   }
 
-  function change($language='en') {
+  static function change($language='en') {
     s::set('language', l::sanitize($language));
     return s::get('language');
   }
 
-  function current() {
+  static function current() {
     if(s::get('language')) return s::get('language');
     $lang = str::split(server::get('http_accept_language'), '-');
     $lang = str::trim(a::get($lang, 0));
@@ -840,7 +1256,7 @@ class l {
     return $lang;
   }
 
-  function locale($language=false) {
+  static function locale($language=false) {
     if(!$language) $language = l::current();
     $default_locales = array(
       'de' => array('de_DE.UTF8','de_DE@euro','de_DE','de','ge'),
@@ -857,7 +1273,7 @@ class l {
     return setlocale(LC_ALL, 0);
   }
 
-  function load($file) {
+  static function load($file) {
 
     // replace the language variable
     $file = str_replace('{language}', l::current(), $file);
@@ -877,7 +1293,7 @@ class l {
 
   }
 
-  function sanitize($language) {
+  static function sanitize($language) {
     if(!in_array($language, c::get('languages', array('en')) )) $language = c::get('language', 'en');
     return $language;
   }
@@ -946,10 +1362,10 @@ class r {
     $keep  = func_get_args();
     $result = array();
     foreach($keep AS $k) {
-      $params    = explode(':', $k);
-      $key      = a::get($params, 0);
-      $type    = a::get($params, 1, 'str');
-      $default    = a::get($params, 2, '');
+      $params       = explode(':', $k);
+      $key          = a::get($params, 0);
+      $type         = a::get($params, 1, 'str');
+      $default      = a::get($params, 2, '');
       $result[$key] = str::sanitize( get($key, $default), $type );
     }
     return $result;
@@ -997,10 +1413,14 @@ function get($key=false, $default=null) {
 ############### SESSION ###############
 
 */
-
 class s {
 
-  function set($key, $value=false) {
+  static function id() {
+    return @session_id();
+  }
+
+  static function set($key, $value=false) {
+    if(!isset($_SESSION)) return false;
     if(is_array($key)) {
       $_SESSION = array_merge($_SESSION, $key);
     } else {
@@ -1008,25 +1428,32 @@ class s {
     }
   }
 
-  function get($key=false, $default=null) {
+  static function get($key=false, $default=null) {
+    if(!isset($_SESSION)) return false;
     if(empty($key)) return $_SESSION;
     return a::get($_SESSION, $key, $default);
   }
 
-  function remove($key) {
-    unset($_SESSION[$key]);
+  static function remove($key) {
+    if(!isset($_SESSION)) return false;
+    $_SESSION = a::remove($_SESSION, $key, true);
     return $_SESSION;
   }
 
-  function start() {
+  static function start() {
     @session_start();
   }
 
-  function destroy() {
+  static function destroy() {
     @session_destroy();
   }
 
-  function expired($time) {
+  static function restart() {
+    self::destroy();
+    self::start();
+  }
+
+  static function expired($time) {
     // get the logged in seconds
     $elapsed_time = (time() - $time);
     // if the session has not expired yet
@@ -1047,7 +1474,7 @@ class s {
 
 */
 class server {
-  function get($key=false, $default=null) {
+  static function get($key=false, $default=null) {
     if(empty($key)) return $_SERVER;
     return a::get($_SERVER, str::upper($key), $default);
   }
@@ -1067,11 +1494,11 @@ class server {
 */
 class size {
 
-  function ratio($width, $height) {
+  static function ratio($width, $height) {
     return ($width / $height);
   }
 
-  function fit($width, $height, $box, $force=false) {
+  static function fit($width, $height, $box, $force=false) {
 
     if($width == 0 || $height == 0) return array('width' => $box, 'height' => $box);
 
@@ -1096,7 +1523,7 @@ class size {
 
   }
 
-  function fit_width($width, $height, $fit, $force=false) {
+  static function fit_width($width, $height, $fit, $force=false) {
     if($width <= $fit && !$force) return array(
       'width' => $width,
       'height' => $height
@@ -1108,7 +1535,7 @@ class size {
     );
   }
 
-  function fit_height($width, $height, $fit, $force=false) {
+  static function fit_height($width, $height, $fit, $force=false) {
     if($height <= $fit && !$force) return array(
       'width' => $width,
       'height' => $height
@@ -1138,7 +1565,7 @@ class size {
 
 class str {
 
-  function html($string, $keep_html=true) {
+  static function html($string, $keep_html=true) {
     if($keep_html) {
       return stripslashes(implode('', preg_replace('/^([^<].+[^>])$/e', "htmlentities('\\1', ENT_COMPAT, 'utf-8')", preg_split('/(<.+?>)/', $string, -1, PREG_SPLIT_DELIM_CAPTURE))));
     } else {
@@ -1146,12 +1573,12 @@ class str {
     }
   }
 
-  function unhtml($string) {
+  static function unhtml($string) {
     $string = strip_tags($string);
     return html_entity_decode($string, ENT_COMPAT, 'utf-8');
   }
 
-  function entities() {
+  static function entities() {
 
     return array(
       '&nbsp;' => '&#160;', '&iexcl;' => '&#161;', '&cent;' => '&#162;', '&pound;' => '&#163;', '&curren;' => '&#164;', '&yen;' => '&#165;', '&brvbar;' => '&#166;', '&sect;' => '&#167;',
@@ -1190,7 +1617,7 @@ class str {
 
   }
 
-  function xml($text, $html=true) {
+  static function xml($text, $html=true) {
 
     // convert raw text to html safe text
     if($html) $text = self::html($text);
@@ -1200,7 +1627,7 @@ class str {
 
   }
 
-  function unxml($string) {
+  static function unxml($string) {
 
     // flip the conversion table
     $table = array_flip(self::entities());
@@ -1210,7 +1637,7 @@ class str {
 
   }
 
-  function parse($string, $mode='json') {
+  static function parse($string, $mode='json') {
 
     if(is_array($string)) return $string;
 
@@ -1243,7 +1670,7 @@ class str {
 
   }
 
-  function encode($string) {
+  static function encode($string) {
     $encoded = '';
     $length = str::length($string);
     for($i=0; $i<$length; $i++) {
@@ -1252,19 +1679,19 @@ class str {
     return $encoded;
   }
 
-  function email($email, $text=false) {
+  static function email($email, $text=false) {
     if(empty($email)) return false;
     $string = (empty($text)) ? $email : $text;
     $email  = self::encode($email, 3);
     return '<a title="' . $email . '" class="email" href="mailto:' . $email . '">' . self::encode($string, 3) . '</a>';
   }
 
-  function link($link, $text=false) {
+  static function link($link, $text=false) {
     $text = ($text) ? $text : $link;
     return '<a href="' . $link . '">' . str::html($text) . '</a>';
   }
 
-  function short($string, $chars, $rep='…') {
+  static function short($string, $chars, $rep='…') {
     if(str::length($string) <= $chars) return $string;
     $string = self::substr($string,0,($chars-str::length($rep)));
     $punctuation = '.!?:;,-';
@@ -1272,11 +1699,11 @@ class str {
     return $string . $rep;
   }
 
-  function shorturl($url, $chars=false, $base=false, $rep='…') {
+  static function shorturl($url, $chars=false, $base=false, $rep='…') {
     return url::short($url, $chars, $base, $rep);
   }
 
-  function excerpt($string, $chars=140, $removehtml=true, $rep='…') {
+  static function excerpt($string, $chars=140, $removehtml=true, $rep='…') {
     if($removehtml) $string = strip_tags($string);
     $string = str::trim($string);    
     $string = str_replace("\n", '', $string);
@@ -1284,7 +1711,7 @@ class str {
     return ($chars==0) ? $string : substr($string, 0, strrpos(substr($string, 0, $chars), ' ')) . $rep;
   }
 
-  function cutout($str, $length, $rep='…') {
+  static function cutout($str, $length, $rep='…') {
 
     $strlength = str::length($str);
     if($length >= $strlength) return $str;
@@ -1309,17 +1736,17 @@ class str {
 
   }
 
-  function apostrophe($name) {
+  static function apostrophe($name) {
     return (substr($name,-1,1) == 's' || substr($name,-1,1) == 'z') ? $name .= "'" : $name .= "'s";
   }
 
-  function plural($count, $many, $one, $zero = '') {
+  static function plural($count, $many, $one, $zero = '') {
     if($count == 1) return $one;
     else if($count == 0 && !empty($zero)) return $zero;
     else return $many;
   }
 
-  function substr($str,$start) {
+  static function substr($str,$start) {
     preg_match_all('/./u', $str, $ar);
     if(func_num_args() >= 3) {
        $end = func_get_arg(2);
@@ -1329,30 +1756,30 @@ class str {
     }
   }
 
-  function lower($str) {
+  static function lower($str) {
     return mb_strtolower($str, 'UTF-8');
   }
 
-  function upper($str) {
+  static function upper($str) {
     return mb_strtoupper($str, 'UTF-8');
   }
 
-  function length($str) {
+  static function length($str) {
     return mb_strlen($str, 'UTF-8');
   }
 
-  function contains($str, $needle) {
+  static function contains($str, $needle) {
     return strstr($str, $needle);
   }
 
-  function match($string, $preg, $get=false, $placeholder=false) {
+  static function match($string, $preg, $get=false, $placeholder=false) {
     $match = @preg_match($preg, $string, $array);
     if(!$match) return false;
     if($get === false) return $array;
     return a::get($array, $get, $placeholder);
   }
 
-  function random($length=false) {
+  static function random($length=false) {
     $length = ($length) ? $length : rand(5,10);
     $chars  = range('a','z');
     $num  = range(0,9);
@@ -1365,7 +1792,7 @@ class str {
     return $string;
   }
 
-  function urlify($text) {
+  static function urlify($text) {
     $text = trim($text);
     $text = str::lower($text);
     $text = str_replace('ä', 'ae', $text);
@@ -1378,16 +1805,14 @@ class str {
     return $text;
   }
 
-  function split($string, $separator=',', $length=1) {
+  static function split($string, $separator=',', $length=1) {
 
     if(is_array($string)) return $string;
 
-    $psep  = preg_quote($separator);
-    $string = preg_replace('!^' . $psep . '!', '', $string);
-    $string = preg_replace('!' . $psep . '$!', '', $string);
-
-    $parts = explode($separator, $string);
-    $out   = array();
+    $string = ltrim($string, $separator);
+    $string = rtrim($string, $separator);
+    $parts  = explode($separator, $string);
+    $out    = array();
 
     foreach($parts AS $p) {
       $p = self::trim($p);
@@ -1398,12 +1823,12 @@ class str {
 
   }
 
-  function trim($string) {
+  static function trim($string) {
     $string = preg_replace('/\s\s+/u', ' ', $string);
     return trim($string);
   }
 
-  function sanitize($string, $type='str', $default=null) {
+  static function sanitize($string, $type='str', $default=null) {
 
     $string = stripslashes((string)$string);
     $string = urldecode($string);
@@ -1473,20 +1898,20 @@ class str {
 
   }
 
-  function ucwords($str) {
+  static function ucwords($str) {
     return mb_convert_case($str, MB_CASE_TITLE, 'UTF-8');
   }
 
-  function ucfirst($str) {
+  static function ucfirst($str) {
     return str::upper(str::substr($str, 0, 1)) . str::substr($str, 1);
   }
 
-  function utf8($string) {
+  static function utf8($string) {
     $encoding = mb_detect_encoding($string,'UTF-8, ISO-8859-1, GBK');
     return ($encoding != 'UTF-8') ? iconv($encoding,'utf-8',$string) : $string;
   }
 
-  function stripslashes($string) {
+  static function stripslashes($string) {
     if(is_array($string)) return $string;
     return (get_magic_quotes_gpc()) ? stripslashes(stripslashes($string)) : $string;
   }
@@ -1508,11 +1933,11 @@ class str {
 
 class url {
 
-  function current() {
+  static function current() {
     return 'http://' . server::get('http_host') . server::get('request_uri');
   }
 
-  function short($url, $chars=false, $base=false, $rep='…') {
+  static function short($url, $chars=false, $base=false, $rep='…') {
     $url = str_replace('http://','',$url);
     $url = str_replace('https://','',$url);
     $url = str_replace('ftp://','',$url);
@@ -1524,19 +1949,19 @@ class url {
     return ($chars) ? str::short($url, $chars, $rep) : $url;
   }
 
-  function has_query($url) {
+  static function has_query($url) {
     return (str::contains($url, '?')) ? true : false;
   }
 
-  function strip_query($url) {
+  static function strip_query($url) {
     return preg_replace('/\?.*$/is', '', $url);
   }
 
-  function strip_hash($url) {
+  static function strip_hash($url) {
     return preg_replace('/#.*$/is', '', $url);
   }
 
-  function valid($url) {
+  static function valid($url) {
     return v::url($url);
   }
 
@@ -1556,7 +1981,7 @@ class url {
 
 class v {
 
-  function string($string, $options) {
+  static function string($string, $options) {
     $format = null;
     $min_length = $max_length = 0;
     if(is_array($options)) extract($options);
@@ -1567,11 +1992,11 @@ class v {
     return true;
   }
 
-  function password($password) {
+  static function password($password) {
     return self::string($password, array('min_length' => 4));
   }
 
-  function passwords($password1, $password2) {
+  static function passwords($password1, $password2) {
 
     if($password1 == $password2
       && self::password($password1)
@@ -1583,7 +2008,7 @@ class v {
 
   }
 
-  function date($date) {
+  static function date($date) {
     $time = strtotime($date);
     if(!$time) return false;
 
@@ -1595,17 +2020,17 @@ class v {
 
   }
 
-  function email($email) {
+  static function email($email) {
     $regex = '/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i';
     return (preg_match($regex, $email)) ? true : false;
   }
 
-  function url($url) {
+  static function url($url) {
     $regex = '/^(https?|ftp|rmtp|mms|svn):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?\/?/i';
     return (preg_match($regex, $url)) ? true : false;
   }
 
-  function filename($string) {
+  static function filename($string) {
 
     $options = array(
       'format' => 'a-zA-Z0-9_-',
@@ -1631,7 +2056,7 @@ class v {
 */
 class x {
 
-  function parse($xml) {
+  static function parse($xml) {
 
     $xml = preg_replace('/(<\/?)(\w+):([^>]*>)/', '$1$2$3', $xml);
     $xml = @simplexml_load_string($xml, null, LIBXML_NOENT);
