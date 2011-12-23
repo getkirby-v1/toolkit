@@ -1,6 +1,6 @@
 <?php
 
-c::set('version', 0.9);
+c::set('version', 0.91);
 c::set('language', 'en');
 c::set('charset', 'utf-8');
 c::set('root', dirname(__FILE__));
@@ -186,15 +186,10 @@ class a {
   }
 
   function shuffle($array) {
-    $aux  = array();
-    $keys = array_keys($array);
-    shuffle($keys);
-    foreach($keys as $key) {
-      $aux[$key] = $array[$key];
-      unset($array[$key]);
-    }
-    return $aux;
-  }
+    $keys = array_keys($array); 
+    shuffle($keys); 
+    return array_merge(array_flip($keys), $array); 
+  } 
 
   function first($array) {
     return array_shift($array);
@@ -228,22 +223,6 @@ class a {
     }
     return $missing;
   }
-
-  /*
-  function sort($array, $field, $direction='desc') {
-
-    $direction = ($direction == 'desc') ? SORT_DESC : SORT_ASC;
-    $helper = array(); 
-    
-    foreach($array as $elem) {  
-      $helper[] = $elem[$field];
-    }
-    
-    array_multisort($helper, $direction, $array);    
-    return $array;
-      
-  } 
-  */
 
   function sort() {
 

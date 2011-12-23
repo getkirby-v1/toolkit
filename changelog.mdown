@@ -1,0 +1,11 @@
+# Kirby Toolkit Changelog
+
+## 0.9.1
+
+- removed the docs from the repository
+- a new optimized a::shuffle() function, which preserves array keys while shuffling it. 
+
+## Before 0.9
+
+Sorry, but I can't really track the changes before 0.9 anymore. I will be more careful about this in the future :)
+
