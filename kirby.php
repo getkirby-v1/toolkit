@@ -913,8 +913,8 @@ class db {
 
     $output = array();
     foreach($input AS $key => $value) {
-      if($value === 'NOW()')
-        $output[] = $key . ' = NOW()';
+      if(in_array($value, array('NOW()', 'NULL'), true))
+        $output[] = $key . ' = ' . $value;
       elseif(is_array($value))
         $output[] = $key . ' = \'' . a::json($value) . '\'';
       else
