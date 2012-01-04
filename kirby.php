@@ -616,11 +616,11 @@ class db {
 
     // select the database
     $database = self::database($database);
-    if(core::error($database)) return $database;
+    if(self::error($database)) return $database;
 
     // set the right charset
     $charset = self::charset($charset);
-    if(core::error($charset)) return $charset;
+    if(self::error($charset)) return $charset;
 
     return $connection;
 
@@ -683,7 +683,7 @@ class db {
   static function query($sql, $fetch=true) {
 
     $connection = self::connect();
-    if(core::error($connection)) return $connection;
+    if(self::error($connection)) return $connection;
 
     // save the query
     self::$last_query = $sql;
@@ -706,7 +706,7 @@ class db {
   static function execute($sql) {
 
     $connection = self::connect();
-    if(core::error($connection)) return $connection;
+    if(self::error($connection)) return $connection;
 
     // save the query
     self::$last_query = $sql;
@@ -740,7 +740,7 @@ class db {
   static function fields($table) {
 
     $connection = self::connect();
-    if(core::error($connection)) return $connection;
+    if(self::error($connection)) return $connection;
 
     $fields = @mysql_list_fields(self::$database, self::prefix($table), $connection);
 
@@ -913,8 +913,8 @@ class db {
 
     $output = array();
     foreach($input AS $key => $value) {
-      if($value === 'NOW()')
-        $output[] = $key . ' = NOW()';
+      if(in_array($value, array('NOW()', 'NULL'), true))
+        $output[] = $key . ' = ' . $value;
       elseif(is_array($value))
         $output[] = $key . ' = \'' . a::json($value) . '\'';
       else
