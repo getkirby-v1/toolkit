@@ -1,6 +1,6 @@
 <?php
 
-c::set('version', 0.91);
+c::set('version', 0.92);
 c::set('language', 'en');
 c::set('charset', 'utf-8');
 c::set('root', dirname(__FILE__));
@@ -616,11 +616,11 @@ class db {
 
     // select the database
     $database = self::database($database);
-    if(core::error($database)) return $database;
+    if(error($database)) return $database;
 
     // set the right charset
     $charset = self::charset($charset);
-    if(core::error($charset)) return $charset;
+    if(error($charset)) return $charset;
 
     return $connection;
 
@@ -683,7 +683,7 @@ class db {
   static function query($sql, $fetch=true) {
 
     $connection = self::connect();
-    if(core::error($connection)) return $connection;
+    if(error($connection)) return $connection;
 
     // save the query
     self::$last_query = $sql;
@@ -706,7 +706,7 @@ class db {
   static function execute($sql) {
 
     $connection = self::connect();
-    if(core::error($connection)) return $connection;
+    if(error($connection)) return $connection;
 
     // save the query
     self::$last_query = $sql;
@@ -740,7 +740,7 @@ class db {
   static function fields($table) {
 
     $connection = self::connect();
-    if(core::error($connection)) return $connection;
+    if(error($connection)) return $connection;
 
     $fields = @mysql_list_fields(self::$database, self::prefix($table), $connection);
 
