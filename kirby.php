@@ -1,6 +1,6 @@
 <?php
 
-c::set('version', 0.92);
+c::set('version', 0.921);
 c::set('language', 'en');
 c::set('charset', 'utf-8');
 c::set('root', dirname(__FILE__));
@@ -1681,6 +1681,7 @@ class str {
 
   static function email($email, $text=false) {
     if(empty($email)) return false;
+    $email  = (string)$email;
     $string = (empty($text)) ? $email : $text;
     $email  = self::encode($email, 3);
     return '<a title="' . $email . '" class="email" href="mailto:' . $email . '">' . self::encode($string, 3) . '</a>';
