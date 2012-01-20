@@ -1,6 +1,6 @@
 <?php
 
-c::set('version', 0.924);
+c::set('version', 0.925);
 c::set('language', 'en');
 c::set('charset', 'utf-8');
 c::set('root', dirname(__FILE__));
@@ -1637,12 +1637,16 @@ class str {
     return $encoded;
   }
 
-  static function email($email, $text=false) {
+  static function email($email, $text=false, $title=false, $class=false) {
     if(empty($email)) return false;
     $email  = (string)$email;
     $string = (empty($text)) ? $email : $text;
     $email  = self::encode($email, 3);
-    return '<a title="' . $email . '" class="email" href="mailto:' . $email . '">' . self::encode($string, 3) . '</a>';
+    
+    if(!empty($class)) $class = ' class="' . $class . '"';
+    if(!empty($title)) $title = ' title="' . html($title) . '"';
+    
+    return '<a' . $title . $class . ' href="mailto:' . $email . '">' . self::encode($string, 3) . '</a>';
   }
 
   static function link($link, $text=false) {

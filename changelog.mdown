@@ -1,5 +1,9 @@
 # Kirby Toolkit Changelog
 
+## 0.9.2.5
+
+made class and title in str::email variable.
+
 ## 0.9.2.4
 
 fixed a::sort. multi column sort is no longer working but instead the a::sort function works properly on a single column. you can now use it like this: a::sort($array, 'mycolumn', 'desc', SORT_NUMERIC);
