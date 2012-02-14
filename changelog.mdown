@@ -1,5 +1,17 @@
 # Kirby Toolkit Changelog
 
+## 0.9.2.9
+
+- added MIT license
+- full documentation
+- removed c::set_all and c::get_all
+- removed c::get_array and c::set_array
+- added content::type('json')
+- repaired dir::size
+- changed chmod definitions
+- removed r::parse()
+- removed s::expired()
+
 ## 0.9.2.8
 
 fixed a bug in str::excerpt
