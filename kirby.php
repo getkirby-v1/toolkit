@@ -3,7 +3,7 @@
 /**
  * Kirby -- A stripped down and easy to use toolkit for PHP
  *
- * @version 0.928
+ * @version 0.929
  * @author Bastian Allgeier <bastian@getkirby.com>
  * @link http://toolkit.getkirby.com
  * @copyright Copyright 2009-2012 Bastian Allgeier
