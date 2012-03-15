@@ -1382,6 +1382,17 @@ class db {
     return self::execute($sql);
   }
 
+  /**
+   * Drops a table
+   * 
+   * @param  string 	$table The table to drop
+   * @return mixed 		Response
+   */
+  static function drop($table)
+  {
+    return db::execute('DROP TABLE IF EXISTS `' .$table. '`;');
+  }
+
   /** 
     * Returns multiple rows from a table
     *
