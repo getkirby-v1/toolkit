@@ -1388,13 +1388,14 @@ class db {
     * @param  string  $table The table name
     * @param  mixed   $select Either an array of fields or a MySQL string of fields
     * @param  mixed   $where Either a key/value array as AND connected where clause or a simple MySQL where clause string
+    * @param  mixed   $where Group by clause without the group by keyword, ie: "category" 
     * @param  string  $order Order clause without the order keyword. ie: "added desc"
     * @param  int     $page a page number
     * @param  int     $limit a number for rows to return
     * @param  boolean $fetch true: apply db::fetch(), false: don't apply db::fetch()
     * @return mixed      
     */
-  static function select($table, $select='*', $where=null, $order=null, $page=null, $limit=null, $fetch=true) {
+  static function select($table, $select='*', $where=null, $group = NULL, $order=null, $page=null, $limit=null, $fetch=true) {
 
     if($limit === 0) return array();
 
@@ -1403,6 +1404,7 @@ class db {
     $sql = 'SELECT ' . $select . ' FROM ' . self::prefix($table);
 
     if(!empty($where)) $sql .= ' WHERE ' . self::where($where);
+    if(!empty($group)) $sql .= ' GROUP BY ' .$group;
     if(!empty($order)) $sql .= ' ORDER BY ' . $order;
     if($page !== null && $limit !== null) $sql .= ' LIMIT ' . $page . ',' . $limit;
 
