@@ -148,12 +148,22 @@ class a {
     * Gets an element of an array by key
     *
     * @param  array    $array The source array
-    * @param  mixed    $key The key to look for
+    * @param  mixed    $key The key to look for, or a path through a multidimensionnal array under the form key1,key2,... or arrray[key1,key2,...]
     * @param  mixed    $default Optional default value, which should be returned if no element has been found
     * @return mixed
     */
   static function get($array, $key, $default=null) {
-    return (isset($array[ $key ])) ? $array[ $key ] : $default;
+    if(str::find(',', $key)) $key = explode(',', $key);
+	if(!is_array($key)) return (isset($array[$key])) ? $array[$key] : $default;
+	else
+	{
+		foreach($key as $k)
+		{
+			$array = self::get($array, $k, $default);
+			if($array == $default) break;
+		}
+		return $array;
+	}
   }
   
   /**
