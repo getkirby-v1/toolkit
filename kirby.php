@@ -1317,7 +1317,19 @@ class db {
       return $detail ? $return : ($found == sizeof($tables));
     }
   }
-
+  
+  /**
+   * Checks wether a field exists in a table
+   * 
+   * @param string		$field The field to search for
+   * @param string		$table The table to search in
+   * @return boolean 	A boolean stating if the table exists
+   */
+  static function is_field($field, $table)
+  {
+    return in_array($field, self::fields($table));
+  }
+  
   /** 
     * Returns an array of fields in a given table
     *
