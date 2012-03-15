@@ -449,7 +449,35 @@ class a {
   {
     return !is_array($mixed) ? array($mixed) : $mixed;;
   }
-
+  
+  /**
+   * Reduces an array (most often the result of a query) to its simplest form
+   * 
+   * @param  array 		$array The array to simplify
+   * @param  boolean 	$stay_array Allows the function to be transformed into a string if it only contains one value
+   * @return mixed 		Either an array simplified, or a single mixed value
+   */
+  static function simplify($array, $stay_array = false)
+  {
+    $output = array();
+    
+    if(sizeof($array) == 1 and !$stay_array)
+    {
+      $output = self::get(array_values($array), 0);
+      if(is_array($output)) $output = self::simplify($output);
+    }
+    else
+    {
+      foreach($array as $key => $value)
+      {
+        if(is_array($value) and sizeof($value) == 1)
+          $output[$key] = self::simplify($value);
+        else $output[$key] = $value;
+      }
+    }
+    return $output;
+  }
+  
 }
 
 
