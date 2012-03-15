@@ -1217,6 +1217,18 @@ class db {
     return $array;
 
   }
+  
+  /**
+   * Returns the next ID to be in the table
+   * 
+   * @return int	The next ID in Auto Increment
+   */
+  static function increment($table)
+  {
+    $result = db::query('SHOW TABLE STATUS LIKE "' .$table. '"');
+    $result = $result[0];
+    return a::get($result, 'Auto_increment');
+  }
 
   /** 
     * Executes a MySQL query without result set.
