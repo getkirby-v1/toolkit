@@ -478,6 +478,35 @@ class a {
     return $output;
   }
   
+  /**
+   * Rearrange an array by one of it's subkeys
+   * 
+   * Takes per example an array array(0 => array('id' => 'key1', 'value' => 'value1'), array('id' => 'key2', 'value' => 'value2'))
+   * And rearrange it as array('key1' => array('value' => 'value1'), 'key2' => array('value' => 'value2'))
+   * 
+   * @param  array 		$array The array to rearrange
+   * @param  string 	$subkey The subkey to use as the new key
+   * @param  boolean 	$remove Remove or not the subkey from the original values
+   * @return array 		The rearranged array
+   */
+  static function rearrange($array, $subkey = NULL, $remove = FALSE)
+  {
+    $output = array();
+	
+    foreach($array as $key => $value)
+    {
+      if(!$subkey) $subkey = self::get(array_keys($value), 0);
+        
+      if(isset($value[$subkey]))
+      {
+        $output[$value[$subkey]] = $value;
+        if($remove) $output[$value[$subkey]] = self::remove($output[$value[$subkey]], $subkey);
+      }
+      else $output[$key] = $value;
+    }
+    return $output;
+  }
+  
 }
 
 
