@@ -439,6 +439,17 @@ class a {
     return !ctype_digit(implode(NULL, array_keys($array)));
   }
   
+  /**
+   * Forces a variable to be an array
+   * 
+   * @param  mixed	$mixed The value to transform in an array
+   * @return array 	The entry value if it's already an array, or an array containing the value if it's not 
+   */
+  static function force_array(&$mixed)
+  {
+    return !is_array($mixed) ? array($mixed) : $mixed;;
+  }
+
 }
 
 
