@@ -1264,6 +1264,16 @@ class db {
     return @mysql_insert_id($connection);
   }
 
+  /**
+   * Returns the last query exectued
+   * 
+   * @return string		The last query executed
+   */
+  static function last_sql()
+  {
+    return end(self::$trace);
+  }
+
   /** 
     * Shortcut for mysql_fetch_array
     *
