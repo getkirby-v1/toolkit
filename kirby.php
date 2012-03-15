@@ -1275,6 +1275,48 @@ class db {
     if(!$result) return array();
     return @mysql_fetch_array($result, $type);
   }
+  
+  /** Shows the different tables in the database
+   * 
+   * @return array 	The different tables in the database
+   */
+  static function showtables()
+  {
+    $tables = self::query('SHOW TABLES', TRUE);
+    $tables = a::simplify($tables, TRUE);
+    return $tables;
+  }
+  
+  /**
+   * Checks if one or more given tables exist in the database
+   * 
+   * @param array 		$tables The tables to search for
+   * @param boolean 	$detail In case of multiple tables in the first parameter
+   *                            true: returns the existence of each table false: returns
+   *                            a boolean stating if all or none of the table exist
+   * @return mixed		A boolean if $detail is false, an array of booleans if it's true
+   */
+  static function is_table($tables, $detail = false)
+  {
+    $tables = func_get_args();
+    if(sizeof($tables) == 1)
+      return in_array($tables[0], self::showtables());
+    
+    else
+    {
+      $found = 0;
+      $return = array();
+    
+      foreach($tables as $table)
+      {
+        $exists = in_array($table, self::showtables());
+        if($detail) $return[$table] = $exists;
+        else if($exists) $found++;
+      }
+  
+      return $detail ? $return : ($found == sizeof($tables));
+    }
+  }
 
   /** 
     * Returns an array of fields in a given table
