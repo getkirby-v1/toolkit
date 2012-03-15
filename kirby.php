@@ -337,6 +337,18 @@ class a {
   }
 
   /**
+   * Returns the average value of an array
+   * 
+   * @param  array 	$array The source array
+   * @param  int 	$decimals The number of decimals to return
+   * @return int	The average value
+   */
+  static function average($array, $decimals = 0)
+  {
+    return round(array_sum($array), $decimals) / sizeof($array); 
+  }
+
+  /**
     * Search for elements in an array by regular expression
     *
     * @param  array   $array The source array
