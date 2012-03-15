@@ -427,7 +427,18 @@ class a {
     return $array;
   
   }
-
+  
+  /**
+   * Checks wether an array is associative or not (experimental)
+   * 
+   * @param  array 		$array The array to analyze
+   * @return boolean 	true: The array is associative false: It's not
+   */
+  static function is_associative($array)
+  {
+    return !ctype_digit(implode(NULL, array_keys($array)));
+  }
+  
 }
 
 
