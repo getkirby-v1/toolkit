@@ -2178,6 +2178,19 @@ class f {
   static function filename($name) {
     return basename($name);
   }
+  
+  /**
+   * Returns the path of a file if it exists, or a default given value
+   * 
+   * @param string 	$file The file wanted
+   * @param string 	$default The path to returns if the file doesn't exist
+   * @return string A file path/file name
+   * 
+   */
+  static function get_path($file, $default = NULL)
+  {
+    return file_exists($file) ? $file : $default;
+  }
 
   /**
    * Extracts the name from a file path or filename without extension
