@@ -3280,6 +3280,17 @@ class str {
   static function contains($str, $needle) {
     return strstr($str, $needle);
   }
+  
+  /**
+   * Displays the value of a boolean, for debugging
+   * 
+   * @param boolean  $boolean The boolean to display
+   * @return string  TRUE or FALSE
+   */
+  static function boolprint($boolean)
+  {
+    return $boolean ? 'TRUE' : 'FALSE';
+  }
 
   /** 
     * preg_match sucks! This tries to make it more convenient
