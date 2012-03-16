@@ -2077,19 +2077,32 @@ class dir {
 class f {
   
   /**
-   * Creates a new file
+   * Creates a new file, and the folders containing it if they don't exist
    * 
    * @param  string  $file The path for the new file
    * @param  mixed   $content Either a string or an array. Arrays will be converted to JSON. 
    * @param  boolean $append true: append the content to an exisiting file if available. false: overwrite. 
    * @return boolean 
    */  
-  static function write($file,$content,$append=false){
-    if(is_array($content)) $content = a::json($content);
-    $mode = ($append) ? FILE_APPEND : false;
-    $write = @file_put_contents($file, $content, $mode);
-    @chmod($file, 0666);
-    return $write;
+  static function write($file, $content = NULL, $append = false)
+  {
+    $folder = dirname($file);
+    if(!file_exists($folder))
+    {
+      $folder = dir::make($folder);
+      if($folder) self::write($file, $content);
+      else l::get('file.folder.error');
+    }
+    else
+    {
+      if(is_array($content))
+        $content = a::json($content);
+          $mode  = ($append) ? FILE_APPEND : false;
+          $write = @file_put_contents($file, $content, $mode);
+      
+      if(file_exists($file)) @chmod($file, 0666);
+        return $write;
+    }
   }
 
   /**
