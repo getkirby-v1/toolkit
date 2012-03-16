@@ -3632,6 +3632,17 @@ class url {
    return $url.'/';
   }
   
+  /**
+   * Ensures that HTTP:// is present at the beginning of a link. Avoid unvoluntary relative paths
+   * 
+   * @param string  $url The URL to check
+   * @return string  The corrected URL
+   */
+  static function http($url = NULL)
+  {
+    return 'http://' .str_replace('http://', NULL, ($url));
+  }
+
   /** 
     * Checks if the URL has a query string attached
     * 
