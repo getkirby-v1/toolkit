@@ -2535,6 +2535,15 @@ class r {
   }
 
   /**
+   * Gets a request value by key, only in the POST array
+   */
+  static function post($key = NULL, $default = NULL)
+  {
+    if(!$key) return $_POST;
+    else return a::get($_POST, $key, $default);
+  }
+
+  /**
     * Returns the current request method
     *
     * @return string POST, GET, DELETE, PUT
