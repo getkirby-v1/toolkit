@@ -3120,6 +3120,29 @@ class str {
     $text = ($text) ? $text : $link;
     return '<a href="' . $link . '">' . str::html($text) . '</a>';
   }
+  
+  /**
+   * Displays a picture and ensures there is always an alt tag
+   * 
+   * @param string  $src The source of the image
+   * @param string  $alt The alternative text
+   * @param array   $attr The picture attributes
+   * @return string  The <img> tag
+   */
+  static function img($src, $alt = NULL, $attr = NULL)
+  {
+    $alt = $alt ? $alt : f::filename($src);
+    if(!is_array($attr)) $attributes = 'src="' .$src. '" alt="' .$alt. '" '.$attr;
+    else
+    {
+      $attributes = NULL;
+      $attr['src'] = $src;
+      $attr['alt'] = $alt;
+      foreach($attr as $a)
+        if(!empty($value)) $attributes .= $key. '="' .$value. '" ';
+    }  
+    return '<img ' .trim($attributes). ' />';
+  }
 
   /**
     * Shortens a string and adds an ellipsis if the string is too long
