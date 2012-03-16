@@ -1886,16 +1886,36 @@ class db {
 class dir {
   
   /**
-   * Creates a new directory
+   * Creates a new directory. 
+   * If the folders containing the end folder don't exist, they will be created too
    * 
-   * @param   string  $dir The path for the new directory
+   * @param   string  $directory The path for the new directory
+   * @param   boolean $recursive Tells the function to act recursively or not
    * @return  boolean True: the dir has been created, false: creating failed
    */
-  static function make($dir) {
-    if(is_dir($dir)) return true;
-    if(!@mkdir($dir, 0755)) return false;
-    @chmod($dir, 0755);
-    return true;
+  static function make($directory, $recursive = TRUE)
+  {
+    if(!$recursive)
+    {
+      if(is_dir($directory)) return true;
+      if(!@mkdir($directory, 0755)) return false;
+      @chmod($directory, 0755);
+      return true;  
+    }
+    else
+    {
+      $directories = explode('/', $directory);
+      $current_path = NULL;
+      
+      foreach($directories as $directory)
+        if($directory !== '.' and $directory !== '..')
+        {
+          $current_path .= $directory.'/';
+          $make = self::make($current_path, FALSE);
+          if(!$make) return false;  
+        }
+      return true;
+    }
   }
 
   /**
