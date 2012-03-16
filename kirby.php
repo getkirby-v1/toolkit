@@ -3114,11 +3114,22 @@ class str {
     *
     * @param  string  $link The URL
     * @param  string  $text Specify a text for the link tag. If false the URL will be used
+    * @param  string  $attr The link tag attributes
     * @return string  
     */  
-  static function link($link, $text=false) {
+  static function link($link, $text = false, $attr = NULL)
+  {
     $text = ($text) ? $text : $link;
-    return '<a href="' . $link . '">' . str::html($text) . '</a>';
+    if(!is_array($attr)) $attributes = 'href="' .$link. '" '.$attr;
+    else
+    {
+      $attributes = NULL;
+      $attr['href'] = $link;
+      $attr['title'] = $text;
+      foreach($attr as $a)
+        if(!empty($value)) $attributes .= $key. '="' .$value. '" ';
+    }  
+    return '<a ' .$attributes. '>' . str::html($text) . '</a>';
   }
   
   /**
