@@ -3365,18 +3365,45 @@ class str {
     * Convert a string to a safe version to be used in an URL
     * 
     * @param  string  $text The unsafe string
+    * @param  boolean $accents Set to true if you just want to slugify the accents of a string
     * @return string  The safe string
     */
-  static function urlify($text) {
-    $text = trim($text);
+  static function urlify($text, $accents = false)
+  {
+    $foreign = array
+    (
+      '/À|Á|Â|Ã|Ä|Å|Ǻ|Ā|Ă|Ą|Ǎ|А/' => 'A',
+      '/à|á|â|ã|ä|å|ǻ|ā|ă|ą|ǎ|ª|а/' => 'a',
+      '/È|É|Ê|Ë/' => 'E',
+      '/è|é|ê|ë/' => 'e',
+      '/Ì|Í|Î|Ï/' => 'I',
+      '/ì|í|î|ï/' => 'i',
+      '/Ò|Ó|Ô|Õ|Ö|Ō|Ŏ|Ǒ|Ő|Ơ|Ø|Ø|Ǿ|О/' => 'O',
+      '/ò|ó|ô|õ|ö|ō|ŏ|ǒ|ő|ơ|ø|ǿ|º|о/' => 'o',
+      '/Ù|Ú|Û|Ü/' => 'U',
+      '/ù|ú|û|ü/' => 'u',
+      '/Ç/' => 'C',
+      '/ç/' => 'c',
+      '/Ñ/' => 'N',
+      '/Œ/' => 'OE',
+      '/œ/' => 'oe',
+      '/Ý/' => 'Y',
+      '/Þ/' => 'B',
+      '/ß/' => 's',
+      '/Š/' => 'S',
+      '/š/' => 's',
+      '/Ž/' => 'Z',
+      '/ž/' => 'z',
+      '/æ/' => 'ae'
+    );
+    
+    $text = preg_replace(array_keys($foreign), array_values($foreign), $text);
+      if($accents == true) return $text;
+    
+    $text = preg_replace('![^a-z0-9_]!i', '-', $text);
+    $text = preg_replace('/-+/', '-', $text);
+    $text = trim($text, '-');
     $text = str::lower($text);
-    $text = str_replace('ä', 'ae', $text);
-    $text = str_replace('ö', 'oe', $text);
-    $text = str_replace('ü', 'ue', $text);
-    $text = str_replace('ß', 'ss', $text);
-    $text = preg_replace("![^a-z0-9]!i","-", $text);
-    $text = preg_replace("![-]{2,}!","-", $text);
-    $text = preg_replace("!-$!","", $text);
     return $text;
   }
 
