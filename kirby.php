@@ -2881,6 +2881,47 @@ class size {
 class str {
 
   /**
+   * Find one or more needles in one or more haystacks
+   * 
+   * Also avoid the retarded counter-intuitive original
+   * strpos syntax that makes you put haystack before needle
+   * 
+   * @param mixed    $needle  The needle(s) to search for
+   * @param mixed    $haystack The haystack(s) to search in
+   * @param boolean  $absolute If true all the needle(s) need to be found in all the haystack(s), otherwise one found is enough
+   * @param boolean  $case_sensitive Wether the function is case sensitive or not
+   * @return boolean  Found or not
+   */
+  static function find($needle, $haystack, $absolute = FALSE, $case_sensitive = FALSE)
+  {
+    if(is_array($needle))
+    {
+      $found = 0;
+      foreach($needle as $need) if(self::find($need, $haystack, $absolute, $case_sensitive)) $found++;
+      return ($absolute) ? count($needle) == $found : $found > 0;
+    }
+    elseif(is_array($haystack))
+    {
+      $found = 0;
+      foreach($haystack as $hay) if(self::find($needle, $hay, $absolute, $case_sensitive)) $found++;
+      return ($absolute) ? count($haystack) == $found : $found > 0;
+    }
+    else
+    {
+      if(!$case_sensitive)
+      {
+        $haystack = strtolower($haystack);
+        $needle = strtolower($needle);
+      }
+      
+      // Simple strpos
+      $pos = strpos($haystack, $needle);
+      if($pos === false) return FALSE;
+      else return TRUE;
+    }
+  }
+
+  /**
     * Converts a string to a html-safe string
     *
     * @param  string  $string
