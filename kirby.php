@@ -2141,13 +2141,21 @@ class f {
   }
 
   /**
-   * Deletes a file
+   * Deletes one or more files
    * 
-   * @param  string  $file The path for the file
+   * @param  mixed 		$file The path for the file or an array of path
    * @return boolean 
    */  
-  static function remove($file) {
-    return (file_exists($file) && is_file($file) && !empty($file)) ? @unlink($file) : false;
+  static function remove($file)
+  {
+    if(is_array($file))
+      foreach($file as $f) self::remove($f);
+    else
+    {
+      return (file_exists($file) and is_file($file) and !empty($file))
+        ? @unlink($file)
+        : false;
+    }
   }
 
   /**
