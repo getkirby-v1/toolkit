@@ -1784,21 +1784,60 @@ class db {
   /**
     * A handler to convert key/value arrays to an where clause
     *
+    * You can specify modifiers appened to the keys to use special SQL functions.
+    * The syntax is the following : 'key1[MODIFIER]' => 'value1', ie: 'key1>=' => '5' will output key1 >= 5
+    * Most modifiers will just come and replace the =, with the exception of ? and ?? that will
+    * invoke a LIKE comparaison, with ?? being for using a Regex as value (it will prevent escaping it)
+    *  
     * @param  array   $array keys/values for the where clause
     * @param  string  $method AND or OR
     * @return string  The MySQL string for the where clause
     */    
-  static function where($array, $method='AND') {
-
+  static function where($array, $method='AND')
+  {
     if(!is_array($array)) return $array;
 
     $output = array();
-    foreach($array AS $field => $value) {
-      $output[] = $field . ' = \'' . self::escape($value) . '\'';
-      $separator = ' ' . $method . ' ';
+    foreach($array as $field => $value)
+    {
+      $modifiers = array('!=', '>', '<', '?', '!=', '>=', '<=', '??');
+      $modifier = '=';
+      $modifier_multiple = 'IN';
+      
+      foreach($modifiers as $m)
+        if(str::find($m, $field)) $modifier = $m;
+      $field = str_replace($modifier, NULL, $field);
+    
+      switch($modifier)
+      {
+        case '!=':
+        $modifier_multiple = 'NOT IN';
+        break;
+      
+        case '??':
+        $regex = TRUE;
+        $modifier = 'LIKE';
+        break;
+      
+        case '?':
+        $modifier = 'LIKE';
+        break;
+      }
+          
+      // Escaping
+      if(!is_array($value))
+        if(!isset($regex)) $value = self::escape($value);
+      
+      // Exceptions for aliases and SQL functions
+      $field = (str::find('.', $field) or str::find('(', $field)) ? $field :  '`' .$field. '`';
+      
+      if(is_string($value)) $output[] = $field. ' ' .$modifier. ' \'' .$value. '\'';
+      else if(is_array($value)) $output[] = $field. ' ' .$modifier_multiple. ' ("' .implode('","', $value). '")';
+      else $output[] = $field. ' ' .$modifier. ' ' .$value. '';
+      
+      $separator = ' ' .$method. ' ';
     }
     return implode(' ' . $method . ' ', $output);
-
   }
 
   /**
