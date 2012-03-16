@@ -3620,6 +3620,18 @@ class url {
     return ($chars) ? str::short($url, $chars, $rep) : $url;
   }
 
+  /**
+   * Returns the current domain
+   * 
+   * @return string  The current domain
+   */
+  static function domain()
+  {
+    $base = explode('/', self::short());
+    $url = a::get($base, 0);
+   return $url.'/';
+  }
+  
   /** 
     * Checks if the URL has a query string attached
     * 
