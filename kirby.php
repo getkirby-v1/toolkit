@@ -235,6 +235,32 @@ class a {
   }
 
   /**
+   * Implode an array by a set of glues
+   * Also a shortcut for implode but with array first (more logical)
+   * Useful per example to take an array and output KEY="VALUE",KEY="VALUE" by doing glue($array, ',', '="', '"')
+   * 
+   * @param array   The array to glue
+   * @param string   $glue_pair The glue that will go around the KEY=VALUE pairs
+   * @param string   $glue_value The glue that will go around the values
+   * @param string  If set, $glue_value will go before the value and $glue_value_after will go after
+   *           If not, $glue_value will go before and after the value
+   * @return string The glued array
+   */
+  static function glue($array, $glue_pair, $glue_value = NULL, $glue_value_after = NULL)
+  {
+    if(!is_array($array)) return FALSE;
+  
+    if(empty($glue_value)) $imploded = $array;
+    else
+    {
+      $imploded = array();
+      foreach($array as $key => $value)
+        $imploded[] = $key.$glue_value.$value.$glue_value_after;
+    }
+    return implode($glue_pair, $imploded);
+  }
+
+  /**
     * Converts an array to a JSON string
     * It's basically a shortcut for json_encode()
     * 
