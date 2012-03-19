@@ -78,7 +78,7 @@ function msg($response) {
  * @package Kirby
  */
 function error($response) {
-  return (status($response) == 'error') ? true : false;
+  return (status($response) == 'error');
 }
 
 /**
@@ -818,9 +818,9 @@ class browser {
       self::$platform = 'linux';
     }
 
-    self::$mobile = (self::$platform == 'mobile') ? true : false;
-    self::$iphone = (in_array(self::$platform, array('ipod', 'iphone'))) ? true : false;
-    self::$ios    = (in_array(self::$platform, array('ipod', 'iphone', 'ipad'))) ? true : false;
+    self::$mobile = (self::$platform == 'mobile');
+    self::$iphone = (in_array(self::$platform, array('ipod', 'iphone')));
+    self::$ios    = (in_array(self::$platform, array('ipod', 'iphone', 'ipad')));
 
     return array(
       'name'     => self::$name,
@@ -2019,7 +2019,7 @@ class dir {
    */  
   static function move($old, $new) {
     if(!is_dir($old)) return false;
-    return (@rename($old, $new) && is_dir($new)) ? true : false;
+    return (@rename($old, $new) && is_dir($new));
   }
 
   /**
@@ -2183,7 +2183,7 @@ class f {
    */  
   static function move($old, $new) {
     if(!file_exists($old)) return false;
-    return (@rename($old, $new) && file_exists($new)) ? true : false;
+    return (@rename($old, $new) && file_exists($new));
   }
 
   /**
@@ -2542,11 +2542,9 @@ class r {
     */
   static function sanitize($data) {
     foreach($data as $key => $value) {
-      if(!is_array($value)) { 
-        $value = trim(str::stripslashes($value));
-      } else {
-        $value = self::sanitize($value);
-      }
+		  $value = !is_array($value)
+		    ? trim(str::stripslashes($value))
+		    : self::sanitize($value);
       $data[$key] = $value;    
     }      
     return $data;  
@@ -2614,7 +2612,7 @@ class r {
     * @return boolean
     */
   static function is_ajax() {
-    return (strtolower(server::get('http_x_requested_with')) == 'xmlhttprequest') ? true : false;
+    return (strtolower(server::get('http_x_requested_with')) == 'xmlhttprequest');
   }
 
   /**
@@ -2623,7 +2621,7 @@ class r {
     * @return boolean
     */  
   static function is_get() {
-    return (self::method() == 'GET') ? true : false;
+    return (self::method() == 'GET');
   }
 
   /**
@@ -2632,7 +2630,7 @@ class r {
     * @return boolean
     */    
   static function is_post() {
-    return (self::method() == 'POST') ? true : false; 
+    return (self::method() == 'POST'); 
   }
 
   /**
@@ -2641,7 +2639,7 @@ class r {
     * @return boolean
     */    
   static function is_delete() {
-    return (self::method() == 'DELETE') ? true : false; 
+    return (self::method() == 'DELETE'); 
   }
 
   /**
@@ -2650,7 +2648,7 @@ class r {
     * @return boolean
     */    
   static function is_put() {
-    return (self::method() == 'PUT') ? true : false;  
+    return (self::method() == 'PUT');  
   }
 
   /**
@@ -3809,7 +3807,7 @@ class url {
     * @return boolean
     */
   static function has_query($url) {
-    return (str::contains($url, '?')) ? true : false;
+    return (str::contains($url, '?'));
   }
 
   /** 
@@ -3933,7 +3931,7 @@ class v {
     */
   static function email($email) {
     $regex = '/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i';
-    return (preg_match($regex, $email)) ? true : false;
+    return (preg_match($regex, $email));
   }
 
   /** 
@@ -3944,7 +3942,7 @@ class v {
     */
   static function url($url) {
     $regex = '/^(https?|ftp|rmtp|mms|svn):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?\/?/i';
-    return (preg_match($regex, $url)) ? true : false;
+    return (preg_match($regex, $url));
   }
 
   /** 
