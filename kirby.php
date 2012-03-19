@@ -284,6 +284,26 @@ class a {
   }
 
   /**
+    * Converts an array to CSV format
+    * 
+    * @param  array   $array The source array
+    * @param  string  $delimiter The delimiter between fields, default ;
+    * @return string  The CSV string
+    */
+  static function csv($array, $delimiter = ';')
+  {
+    $csv = NULL;
+    foreach($array as $row)
+    {
+      if(!empty($csv)) $csv .= PHP_EOL;
+      foreach($row as $key => $value)
+        $row[$key] = '"' .stripslashes($value). '"';
+        $csv .= implode($delimiter, $row);
+    }
+    return $csv;
+  }
+
+  /**
     * Extracts a single column from an array
     * 
     * @param  array   $array The source array
