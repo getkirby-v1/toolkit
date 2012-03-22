@@ -2251,6 +2251,26 @@ class f {
   }
   
   /**
+   * Renames a file without moving it
+   * 
+   * f::rename('path/folder/file.php', 'renamed') will per example execute
+   * rename('path/folder/file.php', 'path/folder/renamed.php')
+   * 
+   * @param string     $old The old file _with_ its path
+   * @param string     $new The new name for the file, and new extension if wanted (if not, old extension will be used)
+   * @return boolean   Returns whether renaming the file succeeded or not
+   */
+  static function rename($old, $new)
+  {
+    $old_name = self::filename($old);
+    $path = str_replace($old_name, NULL, $old);
+    $new = $path.$new;
+    if(!str::find('.', $new)) $new .= '.'.self::extension($old_name);
+    
+    return rename($old, $new);
+  }
+  
+  /**
    * Returns the path of a file if it exists, or a default given value
    * 
    * @param string 	$file The file wanted
