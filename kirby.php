@@ -418,6 +418,25 @@ class a {
   }
 
   /**
+   * Checks if an array is truly empty
+   * Casual empty will return FALSE on multidimensionnal arrays if it has levels, even if they are all empty
+   * 
+   * @param array     $array The array to check
+   * @return boolean  Empty or not
+   */
+  static function array_empty($array)
+  {
+    if(is_array($array))
+    {
+      foreach($array as $value)
+        if(!self::array_empty($value)) return false;
+    }
+    elseif(!empty($array)) return false;
+    
+    return true;
+  }
+
+  /**
     * Fills an array up with additional elements to certain amount. 
     *
     * @param  array   $array The source array
