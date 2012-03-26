@@ -1068,7 +1068,7 @@ class cache
    *   if(!$array) $array = cache::fetch('data', $data)
    * 
    * Or pages
-   *   cache::fetch('gallery');
+   *   cache::page('gallery');
    *     [your page]
    *   cache::save();
    * 
