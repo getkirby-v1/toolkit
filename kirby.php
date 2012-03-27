@@ -3047,6 +3047,15 @@ class server {
     return a::get($_SERVER, str::upper($key), $default);
   }
 
+  /**
+   * Gets the person's current IP
+   * 
+   * @return string    An IP address
+   */
+  static function ip()
+  {
+    self::get('remote_addr');
+  }
 }
 
 
