@@ -1,5 +1,12 @@
 # Kirby Toolkit Changelog
 
+## 0.9.3.0
+
+- fixed a bug in str::substr
+- fixed a bug in str::short
+- fixed a bug in str::unxml
+- fixed str::contains it's now case insensitive. 
+
 ## 0.9.2.9
 
 - added MIT license

@@ -12,7 +12,7 @@
  */
 
 
-c::set('version', 0.929);
+c::set('version', 0.930);
 c::set('language', 'en');
 c::set('charset', 'utf-8');
 c::set('root', dirname(__FILE__));
@@ -2654,6 +2654,8 @@ class str {
 
   /**
     * Removes all xml entities from a string
+    * and convert them to html entities first
+    * and remove all html entities afterwards.
     *
     * @param  string  $string
     * @return string
@@ -2663,8 +2665,9 @@ class str {
     // flip the conversion table
     $table = array_flip(self::entities());
 
-    // convert html entities to xml entities
-    return strtr($string, $table);
+    // convert xml entities to html entities
+    $string = strtr($string, $table);
+    return str::unhtml($string);
 
   }
 
@@ -2772,6 +2775,7 @@ class str {
     * @return string  The shortened string  
     */  
   static function short($string, $chars, $rep='…') {
+    if($chars == 0) return $string;
     if(str::length($string) <= $chars) return $string;
     $string = self::substr($string,0,($chars-str::length($rep)));
     $punctuation = '.!?:;,-';
@@ -2878,7 +2882,7 @@ class str {
     * @param  int     $end 
     * @return string  
     */
-  function substr($str, $start, $end = null) {
+  static function substr($str, $start, $end = null) {
     return mb_substr($str, $start, ($end == null) ? mb_strlen($str, 'UTF-8') : $end, 'UTF-8');
   }
 
@@ -2917,10 +2921,15 @@ class str {
     * 
     * @param  string  $str
     * @param  string  $needle
+    * @param  boolean $i ignore upper/lowercase
     * @return string  
     */
-  static function contains($str, $needle) {
-    return strstr($str, $needle);
+  static function contains($str, $needle, $i=true) {
+    if($i) {
+      $str    = str::lower($str);
+      $needle = str::lower($needle);
+    }
+    return (strstr($str, $needle)) ? true : false;
   }
 
   /** 
