@@ -154,16 +154,16 @@ class a {
     */
   static function get($array, $key, $default=null) {
     if(str::find(',', $key)) $key = explode(',', $key);
-	if(!is_array($key)) return (isset($array[$key])) ? $array[$key] : $default;
-	else
-	{
-		foreach($key as $k)
-		{
-			$array = self::get($array, $k, $default);
-			if($array == $default) break;
-		}
-		return $array;
-	}
+    if(!is_array($key)) return (isset($array[$key])) ? $array[$key] : $default;
+    else
+    {
+      foreach($key as $k)
+      {
+        $array = self::get($array, $k, $default);
+        if($array == $default) break;
+      }
+      return $array;
+    }
   }
   
   /**
@@ -239,12 +239,12 @@ class a {
    * Also a shortcut for implode but with array first (more logical)
    * Useful per example to take an array and output KEY="VALUE",KEY="VALUE" by doing glue($array, ',', '="', '"')
    * 
-   * @param array   The array to glue
+   * @param array    The array to glue
    * @param string   $glue_pair The glue that will go around the KEY=VALUE pairs
    * @param string   $glue_value The glue that will go around the values
-   * @param string  If set, $glue_value will go before the value and $glue_value_after will go after
-   *           If not, $glue_value will go before and after the value
-   * @return string The glued array
+   * @param string   If set, $glue_value will go before the value and $glue_value_after will go after
+   *                 If not, $glue_value will go before and after the value
+   * @return string  The glued array
    */
   static function glue($array, $glue_pair, $glue_value = NULL, $glue_value_after = NULL)
   {
@@ -385,13 +385,13 @@ class a {
   /**
    * Returns the average value of an array
    * 
-   * @param  array 	$array The source array
-   * @param  int 	$decimals The number of decimals to return
-   * @return int	The average value
+   * @param  array   $array The source array
+   * @param  int     $decimals The number of decimals to return
+   * @return int     The average value
    */
   static function average($array, $decimals = 0)
   {
-    return round(array_sum($array), $decimals) / sizeof($array); 
+    return round((array_sum($array) / sizeof($array)), $decimals); 
   }
 
   /**
@@ -496,8 +496,8 @@ class a {
   /**
    * Checks wether an array is associative or not (experimental)
    * 
-   * @param  array 		$array The array to analyze
-   * @return boolean 	true: The array is associative false: It's not
+   * @param  array    $array The array to analyze
+   * @return boolean  true: The array is associative false: It's not
    */
   static function is_associative($array)
   {
@@ -507,20 +507,20 @@ class a {
   /**
    * Forces a variable to be an array
    * 
-   * @param  mixed	$mixed The value to transform in an array
-   * @return array 	The entry value if it's already an array, or an array containing the value if it's not 
+   * @param  mixed   $mixed The value to transform in an array
+   * @return array   The entry value if it's already an array, or an array containing the value if it's not 
    */
   static function force_array(&$mixed)
   {
-    return !is_array($mixed) ? array($mixed) : $mixed;;
+    return !is_array($mixed) ? array($mixed) : $mixed;
   }
   
   /**
    * Reduces an array (most often the result of a query) to its simplest form
    * 
-   * @param  array 		$array The array to simplify
-   * @param  boolean 	$stay_array Allows the function to be transformed into a string if it only contains one value
-   * @return mixed 		Either an array simplified, or a single mixed value
+   * @param  array     $array The array to simplify
+   * @param  boolean   $stay_array Allows the function to be transformed into a string if it only contains one value
+   * @return mixed     Either an array simplified, or a single mixed value
    */
   static function simplify($array, $stay_array = false)
   {
@@ -528,7 +528,7 @@ class a {
     
     if(sizeof($array) == 1 and !$stay_array)
     {
-      $output = self::get(array_values($array), 0);
+      $output = self::get(array_values($array), key($array));
       if(is_array($output)) $output = self::simplify($output);
     }
     else
@@ -549,15 +549,15 @@ class a {
    * Takes per example an array array(0 => array('id' => 'key1', 'value' => 'value1'), array('id' => 'key2', 'value' => 'value2'))
    * And rearrange it as array('key1' => array('value' => 'value1'), 'key2' => array('value' => 'value2'))
    * 
-   * @param  array 		$array The array to rearrange
-   * @param  string 	$subkey The subkey to use as the new key
-   * @param  boolean 	$remove Remove or not the subkey from the original values
-   * @return array 		The rearranged array
+   * @param  array     $array The array to rearrange
+   * @param  string    $subkey The subkey to use as the new key
+   * @param  boolean   $remove Remove or not the subkey from the original values
+   * @return array     The rearranged array
    */
   static function rearrange($array, $subkey = NULL, $remove = FALSE)
   {
     $output = array();
-	
+    
     foreach($array as $key => $value)
     {
       if(!$subkey) $subkey = self::get(array_keys($value), 0);
@@ -1496,13 +1496,12 @@ class db {
   /**
    * Returns the next ID to be in the table
    * 
-   * @return int	The next ID in Auto Increment
+   * @return int    The next ID in Auto Increment
    */
   static function increment($table)
   {
     $result = db::query('SHOW TABLE STATUS LIKE "' .$table. '"');
-    $result = $result[0];
-    return a::get($result, 'Auto_increment');
+    return a::get($result[0], 'Auto_increment');
   }
 
   /** 
@@ -1554,7 +1553,7 @@ class db {
   /**
    * Returns the last query exectued
    * 
-   * @return string		The last query executed
+   * @return string        The last query executed
    */
   static function last_sql()
   {
@@ -1575,7 +1574,7 @@ class db {
   
   /** Shows the different tables in the database
    * 
-   * @return array 	The different tables in the database
+   * @return array     The different tables in the database
    */
   static function showtables()
   {
@@ -1587,15 +1586,14 @@ class db {
   /**
    * Checks if one or more given tables exist in the database
    * 
-   * @param array 		$tables The tables to search for
-   * @param boolean 	$detail In case of multiple tables in the first parameter
-   *                            true: returns the existence of each table false: returns
-   *                            a boolean stating if all or none of the table exist
-   * @return mixed		A boolean if $detail is false, an array of booleans if it's true
+   * @param array      $tables The tables to search for
+   * @param boolean    $detail In case of multiple tables in the first parameter
+   *                     true: returns the existence of each table false: returns
+   *                      a boolean stating if all or none of the table exist
+   * @return mixed     A boolean if $detail is false, an array of booleans if it's true
    */
   static function is_table($tables, $detail = false)
   {
-    $tables = func_get_args();
     if(sizeof($tables) == 1)
       return in_array($tables[0], self::showtables());
     
@@ -1618,9 +1616,9 @@ class db {
   /**
    * Checks wether a field exists in a table
    * 
-   * @param string		$field The field to search for
-   * @param string		$table The table to search in
-   * @return boolean 	A boolean stating if the table exists
+   * @param string      $field The field to search for
+   * @param string      $table The table to search in
+   * @return boolean    A boolean stating if the table exists
    */
   static function is_field($field, $table)
   {
@@ -1736,8 +1734,8 @@ class db {
   /**
    * Drops a table
    * 
-   * @param  string 	$table The table to drop
-   * @return mixed 		Response
+   * @param  string     $table The table to drop
+   * @return mixed         Response
    */
   static function drop($table)
   {
@@ -2075,41 +2073,41 @@ class db {
     $output = array();
     foreach($array as $field => $value)
     {
-      $modifiers = array('!=', '>', '<', '?', '!=', '>=', '<=', '??');
+      $modifiers = array('>', '<', '?', '!=', '>=', '<=', '??');
       $modifier = '=';
       $modifier_multiple = 'IN';
-      
+	  
       foreach($modifiers as $m)
         if(str::find($m, $field)) $modifier = $m;
       $field = str_replace($modifier, NULL, $field);
-    
+          
       switch($modifier)
       {
         case '!=':
         $modifier_multiple = 'NOT IN';
         break;
       
-        case '??':
+	    case '??':
         $regex = TRUE;
         $modifier = 'LIKE';
         break;
-      
+        
         case '?':
         $modifier = 'LIKE';
         break;
       }
-          
+                
       // Escaping
       if(!is_array($value))
         if(!isset($regex)) $value = self::escape($value);
-      
+        
       // Exceptions for aliases and SQL functions
-      $field = (str::find('.', $field) or str::find('(', $field)) ? $field :  '`' .$field. '`';
-      
+      $field = (str::find('.', $field) or str::find('(', $field)) ? $field : '`' .$field. '`';
+        
       if(is_string($value)) $output[] = $field. ' ' .$modifier. ' \'' .$value. '\'';
       else if(is_array($value)) $output[] = $field. ' ' .$modifier_multiple. ' ("' .implode('","', $value). '")';
       else $output[] = $field. ' ' .$modifier. ' ' .$value. '';
-      
+        
       $separator = ' ' .$method. ' ';
     }
     return implode(' ' . $method . ' ', $output);
@@ -2118,7 +2116,7 @@ class db {
   /**
     * An internal error handler
     *
-    * @param  string  $msg The error/success message to return
+    * @param  string   $msg The error/success message to return
     * @param  boolean  $exit die after this error?
     * @return mixed
     */    
@@ -2418,11 +2416,14 @@ class f {
   /**
    * Deletes one or more files
    * 
-   * @param  mixed 		$file The path for the file or an array of path
+   * @param  mixed      $file The path for the file or an array of path
    * @return boolean 
    */  
-  static function remove($file)
+  static function remove()
   {
+    $file = func_get_args();
+    if(sizeof($file) == 1) $file = a::get($file, 0);
+	
     if(is_array($file))
       foreach($file as $f) self::remove($f);
     else
@@ -2432,7 +2433,7 @@ class f {
         : false;
     }
   }
-
+  
   /**
    * Gets the extension of a file
    * 
@@ -2447,23 +2448,23 @@ class f {
   /**
    * Returns the type of a file according to its extension
    * 
-   * @param string 	$file The file to analyze
-   * @return string The filetype
+   * @param  string   $file The file to analyze
+   * @return string   The filetype
    */
   static function type($file) 
   {
-  	if(str::find('.', $file)) $file = self::extension($file);
-	
+      if(str::find('.', $file)) $file = self::extension($file);
+    
     $types = array(
-      'audio'     => array('aac', 'ac3', 'aif', 'aiff', 'm3a', 'm4a', 'm4b', 'mka', 'mp1', 'mp2', 'mp3', 'ogg', 'oga', 'ram', 'wav', 'wma'),
-      'video'     => array('asf', 'avi', 'divx', 'dv', 'flv', 'm4v', 'mkv', 'mov', 'mp4', 'mpeg', 'mpg', 'mpv', 'ogm', 'ogv', 'qt', 'rm', 'vob', 'wmv'),
-      'document'     => array('doc', 'docx', 'docm', 'dotm', 'odt', 'pages', 'pdf', 'rtf', 'wp', 'wpd'),
+      'audio'         => array('aac', 'ac3', 'aif', 'aiff', 'm3a', 'm4a', 'm4b', 'mka', 'mp1', 'mp2', 'mp3', 'ogg', 'oga', 'ram', 'wav', 'wma'),
+      'video'         => array('asf', 'avi', 'divx', 'dv', 'flv', 'm4v', 'mkv', 'mov', 'mp4', 'mpeg', 'mpg', 'mpv', 'ogm', 'ogv', 'qt', 'rm', 'vob', 'wmv'),
+      'document'      => array('doc', 'docx', 'docm', 'dotm', 'odt', 'pages', 'pdf', 'rtf', 'wp', 'wpd'),
       'spreadsheet'   => array('numbers', 'ods', 'xls', 'xlsx', 'xlsb', 'xlsm' ),
       'interactive'   => array('key', 'ppt', 'pptx', 'pptm', 'odp', 'swf'),
-      'text'       => array('asc', 'csv', 'tsv', 'txt'),
-      'archive'     => array('bz2', 'cab', 'dmg', 'gz', 'rar', 'sea', 'sit', 'sqx', 'tar', 'tgz', 'zip'),
-      'code'       => array('css', 'htm', 'html', 'php', 'js'),
-      'image'      => array('jpeg', 'jpg', 'png', 'gif'));
+      'text'          => array('asc', 'csv', 'tsv', 'txt'),
+      'archive'       => array('bz2', 'cab', 'dmg', 'gz', 'rar', 'sea', 'sit', 'sqx', 'tar', 'tgz', 'zip'),
+      'code'          => array('css', 'htm', 'html', 'php', 'js'),
+      'image'         => array('jpeg', 'jpg', 'png', 'gif'));
       
     foreach($types as $type => $exts)
       if(in_array($file, $exts)) return $type;
@@ -2502,9 +2503,9 @@ class f {
   /**
    * Returns the path of a file if it exists, or a default given value
    * 
-   * @param string 	$file The file wanted
-   * @param string 	$default The path to returns if the file doesn't exist
-   * @return string A file path/file name
+   * @param string     $file The file wanted
+   * @param string     $default The path to returns if the file doesn't exist
+   * @return string    A file path/file name
    * 
    */
   static function get_path($file, $default = NULL)
@@ -2515,8 +2516,8 @@ class f {
   /**
    * Extracts the name from a file path or filename without extension
    * 
-   * @param  string  $file The path or filename
-   * @param  boolean $remove_path remove the path from the name
+   * @param  string    $file The path or filename
+   * @param  boolean   $remove_path remove the path from the name
    * @return string 
    */  
   static function name($name, $remove_path = false) {
@@ -2553,7 +2554,7 @@ class f {
   /**
    * Converts an integer size into a human readable format
    * 
-   * @param  int $size The file size
+   * @param  int     $size The file size
    * @return string
    */    
   static function nice_size($size) {
@@ -2790,10 +2791,11 @@ class r {
     * @return array
     */
   static function sanitize($data) {
-    foreach($data as $key => $value) {
-		  $value = !is_array($value)
-		    ? trim(str::stripslashes($value))
-		    : self::sanitize($value);
+    foreach($data as $key => $value)
+    {
+      $value = !is_array($value)
+        ? trim(str::stripslashes($value))
+        : self::sanitize($value);
       $data[$key] = $value;    
     }      
     return $data;  
@@ -3188,10 +3190,10 @@ class str {
    * Also avoid the retarded counter-intuitive original
    * strpos syntax that makes you put haystack before needle
    * 
-   * @param mixed    $needle  The needle(s) to search for
-   * @param mixed    $haystack The haystack(s) to search in
-   * @param boolean  $absolute If true all the needle(s) need to be found in all the haystack(s), otherwise one found is enough
-   * @param boolean  $case_sensitive Wether the function is case sensitive or not
+   * @param mixed     $needle  The needle(s) to search for
+   * @param mixed     $haystack The haystack(s) to search in
+   * @param boolean   $absolute If true all the needle(s) need to be found in all the haystack(s), otherwise one found is enough
+   * @param boolean   $case_sensitive Wether the function is case sensitive or not
    * @return boolean  Found or not
    */
   static function find($needle, $haystack, $absolute = FALSE, $case_sensitive = FALSE)
@@ -3430,7 +3432,7 @@ class str {
       if(!isset($attr['title']))
         $attr['title'] = self::unhtml($text);
      
-	  foreach($attr as $key => $value)
+      foreach($attr as $key => $value)
         if(!empty($value)) $attributes .= $key. '="' .$value. '" ';
     }  
     return '<a ' .trim($attributes). '>' . str::html($text) . '</a>';
@@ -3439,9 +3441,9 @@ class str {
   /**
    * Displays a picture and ensures there is always an alt tag
    * 
-   * @param string  $src The source of the image
-   * @param string  $alt The alternative text
-   * @param array   $attr The picture attributes
+   * @param string   $src The source of the image
+   * @param string   $alt The alternative text
+   * @param array    $attr The picture attributes
    * @return string  The <img> tag
    */
   static function img($src, $alt = NULL, $attr = NULL)
@@ -3897,7 +3899,7 @@ class t
    * Very similar to the date function to the exeption that the number of seconds doesn't need to be a timestamp
    * Useful for basic conversions and formating
    * 
-   * @param int    $secs The number of seconds
+   * @param int      $secs The number of seconds
    * @param string   $format The format to apply, with units placed into brackets, ie. {h}:{m}:{s}
    * @param boolean  $modulus Wether or not the function returns the total number
    *                  of any unit, or what's left for each one in ascending order
@@ -3937,9 +3939,9 @@ class t
   /**
    * Calculates the different between two dates, in any format (default in days)
    * 
-   * @param string  $start The beginning date
-   * @param string  $end The ending date
-   * @param string  $pattern The format to apply on the result
+   * @param string   $start The beginning date
+   * @param string   $end The ending date
+   * @param string   $pattern The format to apply on the result
    * @return string  A time difference
    */
   static function difference($start, $end, $pattern = '{d}')
@@ -3970,7 +3972,7 @@ class t
   
   /**
    * Shortcut to h:i:s
-   * @param int    $s A number of seconds
+   * @param int      $s A number of seconds
    * @return string  A number of seconds converted to h:i:s
    */
   static function hms($s)
@@ -3980,7 +3982,7 @@ class t
   
   /**
    * Shortcut to i:s
-   * @param int    $s A number of seconds
+   * @param int      $s A number of seconds
    * @return string  A number of seconds converted to i:s
    */
   static function ms($s)
@@ -4052,7 +4054,7 @@ class url {
   /**
    * Ensures that HTTP:// is present at the beginning of a link. Avoid unvoluntary relative paths
    * 
-   * @param string  $url The URL to check
+   * @param string   $url The URL to check
    * @return string  The corrected URL
    */
   static function http($url = NULL)
