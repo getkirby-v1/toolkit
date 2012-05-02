@@ -3056,7 +3056,16 @@ class server {
    */
   static function ip()
   {
-    return self::get('REMOTE_ADDR');
+    $headers = array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR');
+    foreach($headers as $h)
+    {
+      if(array_key_exists($h, $_SERVER) === true)
+        foreach(explode(',', self::get($h)) as $ip)
+        {
+          if(filter_var($ip, FILTER_VALIDATE_IP) !== false)
+            return $ip;
+        }
+    }
   }
 }
 
