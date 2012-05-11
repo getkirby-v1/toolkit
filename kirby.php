@@ -3551,6 +3551,18 @@ class str {
     return str::substr($str, 0, $strlcenter) . $rep . str::substr($str, $strrcenter);
 
   }
+  
+  /**
+    * Removes a part of a string
+    * @param  string  $delete The part of the string to remove
+    * @param  string  $string The string to search in
+    * @return string          The corrected string
+    */
+  static function remove($delete, $string)
+  {
+    return str_replace($delete, NULL, $string);
+  }
+  
 
   /** 
     * Adds an apostrohpe to a string/name if applicable
