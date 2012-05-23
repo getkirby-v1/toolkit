@@ -494,6 +494,18 @@ class a {
   }
   
   /**
+   * Cleans an array from duplicates and empty strings
+   * 
+   * @param  array  $array The array to filter
+   * @return array  A clean array
+   */
+  static function clean($array)
+  {
+    foreach($array as $k => $v) if(is_array($v)) $array[$k] = self::clean($v);
+    return array_unique(array_filter($array));
+  }
+  
+  /**
    * Checks wether an array is associative or not (experimental)
    * 
    * @param  array    $array The array to analyze
