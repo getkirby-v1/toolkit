@@ -2502,16 +2502,18 @@ class f {
   }
   
   /**
-   * Returns the path of a file if it exists, or a default given value
+   * Allows to create a serie of fallbacks for a given path
    * 
-   * @param string     $file The file wanted
-   * @param string     $default The path to returns if the file doesn't exist
-   * @return string    A file path/file name
+   * @param  string A list of path fallbacks, can be infinite
+   * @return string The first path in the list to exist
    * 
    */
-  static function get_path($file, $default = NULL)
+  static function exist()
   {
-    return file_exists($file) ? $file : $default;
+    $paths = func_get_args();
+    
+    foreach($paths as $p) if($p and file_exists($p)) return $p;
+    return false;
   }
 
   /**
