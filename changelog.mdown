@@ -1,5 +1,10 @@
 # Kirby Toolkit Changelog
 
+## 0.9.4
+
+- fixed a bug in v::string
+- moved to less tiny version numbers
+
 ## 0.9.3.0
 
 - fixed a bug in str::substr
