@@ -78,7 +78,7 @@ function msg($response) {
  * @package Kirby
  */
 function error($response) {
-  return (status($response) == 'error') ? true : false;
+  return (status($response) == 'error');
 }
 
 /**
@@ -148,12 +148,22 @@ class a {
     * Gets an element of an array by key
     *
     * @param  array    $array The source array
-    * @param  mixed    $key The key to look for
+    * @param  mixed    $key The key to look for, or a path through a multidimensionnal array under the form key1,key2,... or arrray[key1,key2,...]
     * @param  mixed    $default Optional default value, which should be returned if no element has been found
     * @return mixed
     */
   static function get($array, $key, $default=null) {
-    return (isset($array[ $key ])) ? $array[ $key ] : $default;
+    if(str::find(',', $key)) $key = explode(',', $key);
+    if(!is_array($key)) return (isset($array[$key])) ? $array[$key] : $default;
+    else
+    {
+      foreach($key as $k)
+      {
+        $array = self::get($array, $k, $default);
+        if($array == $default) break;
+      }
+      return $array;
+    }
   }
   
   /**
@@ -225,6 +235,32 @@ class a {
   }
 
   /**
+   * Implode an array by a set of glues
+   * Also a shortcut for implode but with array first (more logical)
+   * Useful per example to take an array and output KEY="VALUE",KEY="VALUE" by doing glue($array, ',', '="', '"')
+   * 
+   * @param array    The array to glue
+   * @param string   $glue_pair The glue that will go around the KEY=VALUE pairs
+   * @param string   $glue_value The glue that will go around the values
+   * @param string   If set, $glue_value will go before the value and $glue_value_after will go after
+   *                 If not, $glue_value will go before and after the value
+   * @return string  The glued array
+   */
+  static function glue($array, $glue_pair, $glue_value = NULL, $glue_value_after = NULL)
+  {
+    if(!is_array($array)) return FALSE;
+  
+    if(empty($glue_value)) $imploded = $array;
+    else
+    {
+      $imploded = array();
+      foreach($array as $key => $value)
+        $imploded[] = $key.$glue_value.$value.$glue_value_after;
+    }
+    return implode($glue_pair, $imploded);
+  }
+
+  /**
     * Converts an array to a JSON string
     * It's basically a shortcut for json_encode()
     * 
@@ -271,6 +307,26 @@ class a {
       }
     }
     return $result . str_repeat($tab, $level) . '</' . $tag . '>' . "\n";
+  }
+
+  /**
+    * Converts an array to CSV format
+    * 
+    * @param  array   $array The source array
+    * @param  string  $delimiter The delimiter between fields, default ;
+    * @return string  The CSV string
+    */
+  static function csv($array, $delimiter = ';')
+  {
+    $csv = NULL;
+    foreach($array as $row)
+    {
+      if(!empty($csv)) $csv .= PHP_EOL;
+      foreach($row as $key => $value)
+        $row[$key] = '"' .stripslashes($value). '"';
+        $csv .= implode($delimiter, $row);
+    }
+    return $csv;
   }
 
   /**
@@ -327,6 +383,18 @@ class a {
   }
 
   /**
+   * Returns the average value of an array
+   * 
+   * @param  array   $array The source array
+   * @param  int     $decimals The number of decimals to return
+   * @return int     The average value
+   */
+  static function average($array, $decimals = 0)
+  {
+    return round((array_sum($array) / sizeof($array)), $decimals); 
+  }
+
+  /**
     * Search for elements in an array by regular expression
     *
     * @param  array   $array The source array
@@ -347,6 +415,25 @@ class a {
   static function contains($array, $search) {
     $search = self::search($array, $search);
     return (empty($search)) ? false : true;
+  }
+
+  /**
+   * Checks if an array is truly empty
+   * Casual empty will return FALSE on multidimensionnal arrays if it has levels, even if they are all empty
+   * 
+   * @param array     $array The array to check
+   * @return boolean  Empty or not
+   */
+  static function array_empty($array)
+  {
+    if(is_array($array))
+    {
+      foreach($array as $value)
+        if(!self::array_empty($value)) return false;
+    }
+    elseif(!empty($array)) return false;
+    
+    return true;
   }
 
   /**
@@ -405,7 +492,98 @@ class a {
     return $array;
   
   }
-
+  
+  /**
+   * Cleans an array from duplicates and empty strings
+   * 
+   * @param  array  $array The array to filter
+   * @return array  A clean array
+   */
+  static function clean($array)
+  {
+    foreach($array as $k => $v) if(is_array($v)) $array[$k] = self::clean($v);
+    return array_unique(array_filter($array));
+  }
+  
+  /**
+   * Checks wether an array is associative or not (experimental)
+   * 
+   * @param  array    $array The array to analyze
+   * @return boolean  true: The array is associative false: It's not
+   */
+  static function is_associative($array)
+  {
+    return !ctype_digit(implode(NULL, array_keys($array)));
+  }
+  
+  /**
+   * Forces a variable to be an array
+   * 
+   * @param  mixed   $mixed The value to transform in an array
+   * @return array   The entry value if it's already an array, or an array containing the value if it's not 
+   */
+  static function force_array(&$mixed)
+  {
+    return !is_array($mixed) ? array($mixed) : $mixed;
+  }
+  
+  /**
+   * Reduces an array (most often the result of a query) to its simplest form
+   * 
+   * @param  array     $array The array to simplify
+   * @param  boolean   $stay_array Allows the function to be transformed into a string if it only contains one value
+   * @return mixed     Either an array simplified, or a single mixed value
+   */
+  static function simplify($array, $stay_array = false)
+  {
+    $output = array();
+    
+    if(sizeof($array) == 1 and !$stay_array)
+    {
+      $output = self::get(array_values($array), key($array));
+      if(is_array($output)) $output = self::simplify($output);
+    }
+    else
+    {
+      foreach($array as $key => $value)
+      {
+        if(is_array($value) and sizeof($value) == 1)
+          $output[$key] = self::simplify($value);
+        else $output[$key] = $value;
+      }
+    }
+    return $output;
+  }
+  
+  /**
+   * Rearrange an array by one of it's subkeys
+   * 
+   * Takes per example an array array(0 => array('id' => 'key1', 'value' => 'value1'), array('id' => 'key2', 'value' => 'value2'))
+   * And rearrange it as array('key1' => array('value' => 'value1'), 'key2' => array('value' => 'value2'))
+   * 
+   * @param  array     $array The array to rearrange
+   * @param  string    $subkey The subkey to use as the new key
+   * @param  boolean   $remove Remove or not the subkey from the original values
+   * @return array     The rearranged array
+   */
+  static function rearrange($array, $subkey = NULL, $remove = FALSE)
+  {
+    $output = array();
+    
+    foreach($array as $key => $value)
+    {
+      if(!$subkey) $subkey = self::get(array_keys($value), 0);
+        
+      if(isset($value[$subkey]))
+      {
+        $output[$value[$subkey]] = $value;
+        if($remove) $output[$value[$subkey]] = self::remove($output[$value[$subkey]], $subkey);
+      }
+      else $output[$key] = $value;
+    }
+    return $output;
+  }
+  
 }
 
 
@@ -671,9 +849,9 @@ class browser {
       self::$platform = 'linux';
     }
 
-    self::$mobile = (self::$platform == 'mobile') ? true : false;
-    self::$iphone = (in_array(self::$platform, array('ipod', 'iphone'))) ? true : false;
-    self::$ios    = (in_array(self::$platform, array('ipod', 'iphone', 'ipad'))) ? true : false;
+    self::$mobile = (self::$platform == 'mobile');
+    self::$iphone = (in_array(self::$platform, array('ipod', 'iphone')));
+    self::$ios    = (in_array(self::$platform, array('ipod', 'iphone', 'ipad')));
 
     return array(
       'name'     => self::$name,
@@ -839,6 +1017,216 @@ class content {
 
   }
 
+}
+
+
+
+
+
+/**
+ * 
+ * Cache
+ * 
+ * Use for the caching of data, pieces of pages or complete pages
+ * It can stock variables, arrays, and use the Content class to stock anything else
+ * 
+ * @package Kirby
+ */
+class cache
+{
+  /**
+   * The name of the current output buffer being cache, initialized by fetch() and retrieved by save()
+   */
+  static private $cached_file = NULL;
+  
+  /**
+   * The folder where cached files go
+   */
+  static private $folder = NULL;
+  
+  /**
+   * The amount of time in seconds to cache files
+   */
+  static private $time = NULL;
+  
+  /**
+   * Cache current GET variables or not (useful to cache dynamic pages)
+   */
+  static private $cache_get_variables = NULL;
+  
+  /**
+   * The GET variables to avoid caching
+   */
+  static private $get_remove = array('PHPSESSID', 'gclid');
+
+  /**
+   * Initialize the cache class, will go fetch the cache parameters in the config once
+   */
+  static function init()
+  {
+    if(!self::$folder)
+    {
+      self::$folder = config::get('cache_folder', 'cache/');
+      self::$time = config::get('cache_time', 60 * 60 * 24 * 365);
+      self::$cache_get_variables = config::get('cache_get_variables', TRUE);      
+    }
+  }
+
+  /**
+   * Puts data into a cache
+   * 
+   * Can cache data
+   *   $array = cache::fetch('data');
+   *   if(!$array) $array = cache::fetch('data', $data)
+   * 
+   * Or pages
+   *   cache::page('gallery');
+   *     [your page]
+   *   cache::save();
+   * 
+   * @param string    $name The name of the cached file
+   * @param mixed     $content Facultative; a piece of data to cache, can be a variable, an array etc.
+   *                  Also starts and output buffer if the parameter type is set to output
+   *                  To save this output, call cache_save
+   * @param array     $params Additional parameters to pass the function
+   *                      -- type: if set to 'output', cache::fetch will initialize a content::start,
+   *                         and will save everything that comes after cache::fetch, until you do a cache::save
+   *                         If set to anything else (or not set), cache::fetch will
+   *                         save the given data on the spot without using an output buffer
+   *                  -- cache_folder: The folder where the cached file will be
+   *                  -- cache_time: How long you want to keep the cached version
+   *                  -- cache_variables: Appends the current $_GET variables to the name of the file, allowing caching of dynamic pages
+   * @return mixed    If you're caching a piece of data, it will return the said piece of data.
+   *                  If you're caching the page, it will return a boolean stating if the file was cached or not
+   */
+  static function fetch($name, $content = NULL, $params = array())
+  {
+    self::init();
+    
+    $time = a::get($params, 'cache_time', self::$time);
+    $cache_get_variables = a::get($params, 'cache_get_variables', self::$cache_get_variables);
+    $name = l::current(). '-' .str::slugify($name);
+    $get_remove = a::get($params, 'get_remove', self::$get_remove);
+    $cache_output = (a::get($params, 'type') == 'output');
+    
+    // Cache GET variables to allow for caching of dynamic pages
+    if($cache_get_variables and $cache_output)
+    {
+      $array_var = is_array($cache_get_variables) ? $cache_get_variables : $_GET;
+      $array_var = a::remove($array_var, $get_remove);
+      
+      $forbidden_var = array('http', '/', '\\');
+      if($array_var)
+        foreach($array_var as $var_key => $var_val)
+          if(!str::find($forbidden_var, $var_val) and !empty($var_val))
+            $name .= '-'.$var_key .'-' .$var_val;
+    }
+    
+    // Looking for a cached file
+    $modified_source = time();
+    $extension = ($content and !$cache_output) ? 'json' : 'html';
+    
+    $file = self::search($name. '-[0-9]*');
+    if($file)
+    {
+      $modified = explode('-', $file);
+      $modified = a::last($modified);
+      
+      // If source file has been updated
+      $modified_source = isset($params['source'])
+        ? filemtime(a::get($params, 'source'))
+        : $modified;
+      
+      if($modified == $modified_source and (time() - filemtime($file)) <= self::$time) $cached = $file;
+      else f::remove($file);
+    }
+    
+    // If no cached file found, we create one
+    if(!isset($cached))
+      $cached = self::$folder.$name.'-'.$modified_source.'.'.$extension;        
+    
+    // Caching of a page or data
+    if($cache_output and !$content)
+    {
+      self::$cached_file = $cached;
+      if(file_exists(self::$cached_file))
+      {
+        content::load(self::$cached_file, false);
+        exit();
+      }
+      else content::start();
+      return file_exists($cached);
+    }
+    elseif($content or file_exists($cached))
+    {
+      if(file_exists($cached)) $content = f::read($cached, 'json');
+      else f::write($cached, json_encode($content));
+      return $content;
+    }
+    else return false;
+  }
+
+  /**
+   * Shortcut to cache a page
+   * 
+   * @return mixed   The result of the cache
+   */
+  static function page($page, $params = array())
+  {
+    $params = array_merge($params, array('type' => 'output'));
+    return self::fetch($page, NULL, $params);
+  }
+
+  /**
+   * Saves an output buffer initiated with cache::fetch
+   * 
+   * @param boolean  $return Return the saved data or echoes it
+   * @return mixed   Echoes or return all the data that was just cached
+   */
+  static function save($return = false)
+  {
+    if(self::$cached_file)
+    {
+      $content = content::end(TRUE);
+      f::write(self::$cached_file, $content);
+      self::$cached_file = NULL;
+      if($return) return $content;
+      else echo $content;
+    }    
+  }
+
+  /**
+   * Search for files inside the cache
+   * 
+   * @param string    $search The key to look for
+   * @param boolean   If false returns the first file found, if true returns all files found
+   * @return mixed    FALSE if the file hasn't been found, the path if it has
+   */
+  static function search($search, $all_files = false)
+  {
+    self::init();
+    
+    $file = glob(self::$folder.$search.'.{json,html}', GLOB_BRACE);
+    if($all_files) return $file;
+    return $file ? a::get($file, 0) : FALSE;
+  }
+
+  /**
+   * Deletes file(s) from the cache. The key passed can contain * and braces as it's parsed by glob()
+   * 
+   * @param string    $delete The keys to look for. If NULL, the function empties the cache folder
+   * @param boolean   $sloppy If true if will look for all files containing the key, if not it will search an exact match
+   * @return boolean  True if the file(s) have been correctly removed, false if not found
+   */
+  static function delete($delete = NULL, $sloppy = FALSE)
+  {
+    if(!$delete) $delete = '*';      
+    if($sloppy) $delete = '*-'.$delete.'-*';
+    
+    $files = self::search($delete, true);
+    if($files) foreach($files as $file) f::remove($file);
+    else return FALSE;
+  }
 }
 
 
@@ -1116,6 +1504,17 @@ class db {
     return $array;
 
   }
+  
+  /**
+   * Returns the next ID to be in the table
+   * 
+   * @return int    The next ID in Auto Increment
+   */
+  static function increment($table)
+  {
+    $result = db::query('SHOW TABLE STATUS LIKE "' .$table. '"');
+    return a::get($result[0], 'Auto_increment');
+  }
 
   /** 
     * Executes a MySQL query without result set.
@@ -1163,6 +1562,16 @@ class db {
     return @mysql_insert_id($connection);
   }
 
+  /**
+   * Returns the last query exectued
+   * 
+   * @return string        The last query executed
+   */
+  static function last_sql()
+  {
+    return end(self::$trace);
+  }
+
   /** 
     * Shortcut for mysql_fetch_array
     *
@@ -1174,7 +1583,60 @@ class db {
     if(!$result) return array();
     return @mysql_fetch_array($result, $type);
   }
-
+  
+  /** Shows the different tables in the database
+   * 
+   * @return array     The different tables in the database
+   */
+  static function showtables()
+  {
+    $tables = self::query('SHOW TABLES', TRUE);
+    $tables = a::simplify($tables, TRUE);
+    return $tables;
+  }
+  
+  /**
+   * Checks if one or more given tables exist in the database
+   * 
+   * @param array      $tables The tables to search for
+   * @param boolean    $detail In case of multiple tables in the first parameter
+   *                     true: returns the existence of each table false: returns
+   *                      a boolean stating if all or none of the table exist
+   * @return mixed     A boolean if $detail is false, an array of booleans if it's true
+   */
+  static function is_table($tables, $detail = false)
+  {
+    if(sizeof($tables) == 1)
+      return in_array($tables[0], self::showtables());
+    
+    else
+    {
+      $found = 0;
+      $return = array();
+    
+      foreach($tables as $table)
+      {
+        $exists = in_array($table, self::showtables());
+        if($detail) $return[$table] = $exists;
+        else if($exists) $found++;
+      }
+  
+      return $detail ? $return : ($found == sizeof($tables));
+    }
+  }
+  
+  /**
+   * Checks wether a field exists in a table
+   * 
+   * @param string      $field The field to search for
+   * @param string      $table The table to search in
+   * @return boolean    A boolean stating if the table exists
+   */
+  static function is_field($field, $table)
+  {
+    return in_array($field, self::fields($table));
+  }
+  
   /** 
     * Returns an array of fields in a given table
     *
@@ -1281,19 +1743,31 @@ class db {
     return self::execute($sql);
   }
 
+  /**
+   * Drops a table
+   * 
+   * @param  string     $table The table to drop
+   * @return mixed         Response
+   */
+  static function drop($table)
+  {
+    return db::execute('DROP TABLE IF EXISTS `' .$table. '`;');
+  }
+
   /** 
     * Returns multiple rows from a table
     *
     * @param  string  $table The table name
     * @param  mixed   $select Either an array of fields or a MySQL string of fields
     * @param  mixed   $where Either a key/value array as AND connected where clause or a simple MySQL where clause string
+    * @param  mixed   $where Group by clause without the group by keyword, ie: "category" 
     * @param  string  $order Order clause without the order keyword. ie: "added desc"
     * @param  int     $page a page number
     * @param  int     $limit a number for rows to return
     * @param  boolean $fetch true: apply db::fetch(), false: don't apply db::fetch()
     * @return mixed      
     */
-  static function select($table, $select='*', $where=null, $order=null, $page=null, $limit=null, $fetch=true) {
+  static function select($table, $select='*', $where=null, $group = NULL, $order=null, $page=null, $limit=null, $fetch=true) {
 
     if($limit === 0) return array();
 
@@ -1302,6 +1776,7 @@ class db {
     $sql = 'SELECT ' . $select . ' FROM ' . self::prefix($table);
 
     if(!empty($where)) $sql .= ' WHERE ' . self::where($where);
+    if(!empty($group)) $sql .= ' GROUP BY ' .$group;
     if(!empty($order)) $sql .= ' ORDER BY ' . $order;
     if($page !== null && $limit !== null) $sql .= ' LIMIT ' . $page . ',' . $limit;
 
@@ -1594,27 +2069,66 @@ class db {
   /**
     * A handler to convert key/value arrays to an where clause
     *
+    * You can specify modifiers appened to the keys to use special SQL functions.
+    * The syntax is the following : 'key1[MODIFIER]' => 'value1', ie: 'key1>=' => '5' will output key1 >= 5
+    * Most modifiers will just come and replace the =, with the exception of ? and ?? that will
+    * invoke a LIKE comparaison, with ?? being for using a Regex as value (it will prevent escaping it)
+    *  
     * @param  array   $array keys/values for the where clause
     * @param  string  $method AND or OR
     * @return string  The MySQL string for the where clause
     */    
-  static function where($array, $method='AND') {
-
+  static function where($array, $method='AND')
+  {
     if(!is_array($array)) return $array;
 
     $output = array();
-    foreach($array AS $field => $value) {
-      $output[] = $field . ' = \'' . self::escape($value) . '\'';
-      $separator = ' ' . $method . ' ';
+    foreach($array as $field => $value)
+    {
+      $modifiers = array('>', '<', '?', '!=', '>=', '<=', '??');
+      $modifier = '=';
+      $modifier_multiple = 'IN';
+	  
+      foreach($modifiers as $m)
+        if(str::find($m, $field)) $modifier = $m;
+      $field = str_replace($modifier, NULL, $field);
+          
+      switch($modifier)
+      {
+        case '!=':
+        $modifier_multiple = 'NOT IN';
+        break;
+      
+	    case '??':
+        $regex = TRUE;
+        $modifier = 'LIKE';
+        break;
+        
+        case '?':
+        $modifier = 'LIKE';
+        break;
+      }
+                
+      // Escaping
+      if(!is_array($value))
+        if(!isset($regex)) $value = self::escape($value);
+        
+      // Exceptions for aliases and SQL functions
+      $field = (str::find('.', $field) or str::find('(', $field)) ? $field : '`' .$field. '`';
+        
+      if(is_string($value)) $output[] = $field. ' ' .$modifier. ' \'' .$value. '\'';
+      else if(is_array($value)) $output[] = $field. ' ' .$modifier_multiple. ' ("' .implode('","', $value). '")';
+      else $output[] = $field. ' ' .$modifier. ' ' .$value. '';
+        
+      $separator = ' ' .$method. ' ';
     }
     return implode(' ' . $method . ' ', $output);
-
   }
 
   /**
     * An internal error handler
     *
-    * @param  string  $msg The error/success message to return
+    * @param  string   $msg The error/success message to return
     * @param  boolean  $exit die after this error?
     * @return mixed
     */    
@@ -1657,16 +2171,36 @@ class db {
 class dir {
   
   /**
-   * Creates a new directory
+   * Creates a new directory. 
+   * If the folders containing the end folder don't exist, they will be created too
    * 
-   * @param   string  $dir The path for the new directory
+   * @param   string  $directory The path for the new directory
+   * @param   boolean $recursive Tells the function to act recursively or not
    * @return  boolean True: the dir has been created, false: creating failed
    */
-  static function make($dir) {
-    if(is_dir($dir)) return true;
-    if(!@mkdir($dir, 0755)) return false;
-    @chmod($dir, 0755);
-    return true;
+  static function make($directory, $recursive = TRUE)
+  {
+    if(!$recursive)
+    {
+      if(is_dir($directory)) return true;
+      if(!@mkdir($directory, 0755)) return false;
+      @chmod($directory, 0755);
+      return true;  
+    }
+    else
+    {
+      $directories = explode('/', $directory);
+      $current_path = NULL;
+      
+      foreach($directories as $directory)
+        if($directory !== '.' and $directory !== '..')
+        {
+          $current_path .= $directory.'/';
+          $make = self::make($current_path, FALSE);
+          if(!$make) return false;  
+        }
+      return true;
+    }
   }
 
   /**
@@ -1724,7 +2258,7 @@ class dir {
    */  
   static function move($old, $new) {
     if(!is_dir($old)) return false;
-    return (@rename($old, $new) && is_dir($new)) ? true : false;
+    return (@rename($old, $new) && is_dir($new));
   }
 
   /**
@@ -1828,19 +2362,32 @@ class dir {
 class f {
   
   /**
-   * Creates a new file
+   * Creates a new file, and the folders containing it if they don't exist
    * 
    * @param  string  $file The path for the new file
    * @param  mixed   $content Either a string or an array. Arrays will be converted to JSON. 
    * @param  boolean $append true: append the content to an exisiting file if available. false: overwrite. 
    * @return boolean 
    */  
-  static function write($file,$content,$append=false){
-    if(is_array($content)) $content = a::json($content);
-    $mode = ($append) ? FILE_APPEND : false;
-    $write = @file_put_contents($file, $content, $mode);
-    @chmod($file, 0666);
-    return $write;
+  static function write($file, $content = NULL, $append = false)
+  {
+    $folder = dirname($file);
+    if(!file_exists($folder))
+    {
+      $folder = dir::make($folder);
+      if($folder) self::write($file, $content);
+      else l::get('file.folder.error');
+    }
+    else
+    {
+      if(is_array($content))
+        $content = a::json($content);
+          $mode  = ($append) ? FILE_APPEND : false;
+          $write = @file_put_contents($file, $content, $mode);
+      
+      if(file_exists($file)) @chmod($file, 0666);
+        return $write;
+    }
   }
 
   /**
@@ -1875,19 +2422,30 @@ class f {
    */  
   static function move($old, $new) {
     if(!file_exists($old)) return false;
-    return (@rename($old, $new) && file_exists($new)) ? true : false;
+    return (@rename($old, $new) && file_exists($new));
   }
 
   /**
-   * Deletes a file
+   * Deletes one or more files
    * 
-   * @param  string  $file The path for the file
+   * @param  mixed      $file The path for the file or an array of path
    * @return boolean 
    */  
-  static function remove($file) {
-    return (file_exists($file) && is_file($file) && !empty($file)) ? @unlink($file) : false;
+  static function remove()
+  {
+    $file = func_get_args();
+    if(sizeof($file) == 1) $file = a::get($file, 0);
+	
+    if(is_array($file))
+      foreach($file as $f) self::remove($f);
+    else
+    {
+      return (file_exists($file) and is_file($file) and !empty($file))
+        ? @unlink($file)
+        : false;
+    }
   }
-
+  
   /**
    * Gets the extension of a file
    * 
@@ -1900,6 +2458,32 @@ class f {
   }
 
   /**
+   * Returns the type of a file according to its extension
+   * 
+   * @param  string   $file The file to analyze
+   * @return string   The filetype
+   */
+  static function type($file) 
+  {
+      if(str::find('.', $file)) $file = self::extension($file);
+    
+		$types = array(
+			'archive'       => array('bz2', 'cab', 'dmg', 'gz', 'rar', 'sea', 'sit', 'sqx', 'tar', 'tgz', 'zip'),
+			'audio'         => array('aac', 'ac3', 'aif', 'aiff', 'm3a', 'm4a', 'm4b', 'mka', 'mp1', 'mp2', 'mp3', 'ogg', 'oga', 'ram', 'wav', 'wma'),
+			'code'          => array('css', 'htm', 'html', 'php', 'js'),
+			'document'      => array('doc', 'docx', 'docm', 'dotm', 'odt', 'pages', 'pdf', 'rtf', 'wp', 'wpd'),
+			'fonts'         => array('ttf', 'otf', 'eot', 'woff', 'svg', 'svgz'),
+			'image'         => array('jpeg', 'jpg', 'png', 'gif'),
+			'interactive'   => array('key', 'ppt', 'pptx', 'pptm', 'odp', 'swf'),
+			'spreadsheet'   => array('numbers', 'ods', 'xls', 'xlsx', 'xlsb', 'xlsm' ),
+			'text'          => array('asc', 'csv', 'tsv', 'txt'),
+			'video'         => array('asf', 'avi', 'divx', 'dv', 'flv', 'm4v', 'mkv', 'mov', 'mp4', 'mpeg', 'mpg', 'mpv', 'ogm', 'ogv', 'qt', 'rm', 'vob', 'wmv'));
+      
+    foreach($types as $type => $exts)
+      if(in_array($file, $exts)) return $type;
+  }
+
+  /**
    * Extracts the filename from a file path
    * 
    * @param  string  $file The path
@@ -1908,12 +2492,47 @@ class f {
   static function filename($name) {
     return basename($name);
   }
+  
+  /**
+   * Renames a file without moving it
+   * 
+   * f::rename('path/folder/file.php', 'renamed') will per example execute
+   * rename('path/folder/file.php', 'path/folder/renamed.php')
+   * 
+   * @param string     $old The old file _with_ its path
+   * @param string     $new The new name for the file, and new extension if wanted (if not, old extension will be used)
+   * @return boolean   Returns whether renaming the file succeeded or not
+   */
+  static function rename($old, $new)
+  {
+    $old_name = self::filename($old);
+    $path = str_replace($old_name, NULL, $old);
+    $new = $path.$new;
+    if(!str::find('.', $new)) $new .= '.'.self::extension($old_name);
+    
+    return rename($old, $new);
+  }
+  
+  /**
+   * Allows to create a serie of fallbacks for a given path
+   * 
+   * @param  string A list of path fallbacks, can be infinite
+   * @return string The first path in the list to exist
+   * 
+   */
+  static function exist()
+  {
+    $paths = func_get_args();
+    
+    foreach($paths as $p) if($p and file_exists($p)) return $p;
+    return false;
+  }
 
   /**
    * Extracts the name from a file path or filename without extension
    * 
-   * @param  string  $file The path or filename
-   * @param  boolean $remove_path remove the path from the name
+   * @param  string    $file The path or filename
+   * @param  boolean   $remove_path remove the path from the name
    * @return string 
    */  
   static function name($name, $remove_path = false) {
@@ -1950,7 +2569,7 @@ class f {
   /**
    * Converts an integer size into a human readable format
    * 
-   * @param  int $size The file size
+   * @param  int     $size The file size
    * @return string
    */    
   static function nice_size($size) {
@@ -2187,12 +2806,11 @@ class r {
     * @return array
     */
   static function sanitize($data) {
-    foreach($data as $key => $value) {
-      if(!is_array($value)) { 
-        $value = trim(str::stripslashes($value));
-      } else {
-        $value = self::sanitize($value);
-      }
+    foreach($data as $key => $value)
+    {
+      $value = !is_array($value)
+        ? trim(str::stripslashes($value))
+        : self::sanitize($value);
       $data[$key] = $value;    
     }      
     return $data;  
@@ -2227,6 +2845,15 @@ class r {
   }
 
   /**
+   * Gets a request value by key, only in the POST array
+   */
+  static function post($key = NULL, $default = NULL)
+  {
+    if(!$key) return $_POST;
+    else return a::get($_POST, $key, $default);
+  }
+
+  /**
     * Returns the current request method
     *
     * @return string POST, GET, DELETE, PUT
@@ -2251,7 +2878,7 @@ class r {
     * @return boolean
     */
   static function is_ajax() {
-    return (strtolower(server::get('http_x_requested_with')) == 'xmlhttprequest') ? true : false;
+    return (strtolower(server::get('http_x_requested_with')) == 'xmlhttprequest');
   }
 
   /**
@@ -2260,7 +2887,7 @@ class r {
     * @return boolean
     */  
   static function is_get() {
-    return (self::method() == 'GET') ? true : false;
+    return (self::method() == 'GET');
   }
 
   /**
@@ -2269,7 +2896,7 @@ class r {
     * @return boolean
     */    
   static function is_post() {
-    return (self::method() == 'POST') ? true : false; 
+    return (self::method() == 'POST'); 
   }
 
   /**
@@ -2278,7 +2905,7 @@ class r {
     * @return boolean
     */    
   static function is_delete() {
-    return (self::method() == 'DELETE') ? true : false; 
+    return (self::method() == 'DELETE'); 
   }
 
   /**
@@ -2287,7 +2914,7 @@ class r {
     * @return boolean
     */    
   static function is_put() {
-    return (self::method() == 'PUT') ? true : false;  
+    return (self::method() == 'PUT');  
   }
 
   /**
@@ -2437,6 +3064,24 @@ class server {
     return a::get($_SERVER, str::upper($key), $default);
   }
 
+  /**
+   * Gets the person's current IP
+   * 
+   * @return string    An IP address
+   */
+  static function ip()
+  {
+    $headers = array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR');
+    foreach($headers as $h)
+    {
+      if(array_key_exists($h, $_SERVER) === true)
+        foreach(explode(',', self::get($h)) as $ip)
+        {
+          if(filter_var($ip, FILTER_VALIDATE_IP) !== false)
+            return $ip;
+        }
+    }
+  }
 }
 
 
@@ -2562,6 +3207,47 @@ class size {
  * @package Kirby
  */
 class str {
+
+  /**
+   * Find one or more needles in one or more haystacks
+   * 
+   * Also avoid the retarded counter-intuitive original
+   * strpos syntax that makes you put haystack before needle
+   * 
+   * @param mixed     $needle  The needle(s) to search for
+   * @param mixed     $haystack The haystack(s) to search in
+   * @param boolean   $absolute If true all the needle(s) need to be found in all the haystack(s), otherwise one found is enough
+   * @param boolean   $case_sensitive Wether the function is case sensitive or not
+   * @return boolean  Found or not
+   */
+  static function find($needle, $haystack, $absolute = FALSE, $case_sensitive = FALSE)
+  {
+    if(is_array($needle))
+    {
+      $found = 0;
+      foreach($needle as $need) if(self::find($need, $haystack, $absolute, $case_sensitive)) $found++;
+      return ($absolute) ? count($needle) == $found : $found > 0;
+    }
+    elseif(is_array($haystack))
+    {
+      $found = 0;
+      foreach($haystack as $hay) if(self::find($needle, $hay, $absolute, $case_sensitive)) $found++;
+      return ($absolute) ? count($haystack) == $found : $found > 0;
+    }
+    else
+    {
+      if(!$case_sensitive)
+      {
+        $haystack = strtolower($haystack);
+        $needle = strtolower($needle);
+      }
+      
+      // Simple strpos
+      $pos = strpos($haystack, $needle);
+      if($pos === false) return FALSE;
+      else return TRUE;
+    }
+  }
 
   /**
     * Converts a string to a html-safe string
@@ -2759,11 +3445,47 @@ class str {
     *
     * @param  string  $link The URL
     * @param  string  $text Specify a text for the link tag. If false the URL will be used
+    * @param  string  $attr The link tag attributes
     * @return string  
     */  
-  static function link($link, $text=false) {
+  static function link($link, $text = false, $attr = NULL)
+  {
     $text = ($text) ? $text : $link;
-    return '<a href="' . $link . '">' . str::html($text) . '</a>';
+    if(!is_array($attr)) $attributes = 'href="' .$link. '" '.$attr;
+    else
+    {
+      $attributes = NULL;
+      $attr['href'] = $link;
+      if(!isset($attr['title']))
+        $attr['title'] = self::unhtml($text);
+     
+      foreach($attr as $key => $value)
+        if(!empty($value)) $attributes .= $key. '="' .$value. '" ';
+    }  
+    return '<a ' .trim($attributes). '>' . str::html($text) . '</a>';
+  }
+  
+  /**
+   * Displays a picture and ensures there is always an alt tag
+   * 
+   * @param string   $src The source of the image
+   * @param string   $alt The alternative text
+   * @param array    $attr The picture attributes
+   * @return string  The <img> tag
+   */
+  static function img($src, $alt = NULL, $attr = NULL)
+  {
+    $alt = $alt ? $alt : f::filename($src);
+    if(!is_array($attr)) $attributes = 'src="' .$src. '" alt="' .$alt. '" '.$attr;
+    else
+    {
+      $attributes = NULL;
+      $attr['src'] = $src;
+      $attr['alt'] = $alt;
+      foreach($attr as $key => $value)
+        if(!empty($value)) $attributes .= $key. '="' .$value. '" ';
+    }  
+    return '<img ' .trim($attributes). ' />';
   }
 
   /**
@@ -2848,6 +3570,18 @@ class str {
     return str::substr($str, 0, $strlcenter) . $rep . str::substr($str, $strrcenter);
 
   }
+  
+  /**
+    * Removes a part of a string
+    * @param  string  $delete The part of the string to remove
+    * @param  string  $string The string to search in
+    * @return string          The corrected string
+    */
+  static function remove($delete, $string)
+  {
+    return str_replace($delete, NULL, $string);
+  }
+  
 
   /** 
     * Adds an apostrohpe to a string/name if applicable
@@ -2931,6 +3665,17 @@ class str {
     }
     return (strstr($str, $needle)) ? true : false;
   }
+  
+  /**
+   * Displays the value of a boolean, for debugging
+   * 
+   * @param boolean  $boolean The boolean to display
+   * @return string  TRUE or FALSE
+   */
+  static function boolprint($boolean)
+  {
+    return $boolean ? 'TRUE' : 'FALSE';
+  }
 
   /** 
     * preg_match sucks! This tries to make it more convenient
@@ -2971,18 +3716,45 @@ class str {
     * Convert a string to a safe version to be used in an URL
     * 
     * @param  string  $text The unsafe string
+    * @param  boolean $accents Set to true if you just want to slugify the accents of a string
     * @return string  The safe string
     */
-  static function urlify($text) {
-    $text = trim($text);
+  static function urlify($text, $accents = false)
+  {
+    $foreign = array
+    (
+      '/À|Á|Â|Ã|Ä|Å|Ǻ|Ā|Ă|Ą|Ǎ|А/' => 'A',
+      '/à|á|â|ã|ä|å|ǻ|ā|ă|ą|ǎ|ª|а/' => 'a',
+      '/È|É|Ê|Ë/' => 'E',
+      '/è|é|ê|ë/' => 'e',
+      '/Ì|Í|Î|Ï/' => 'I',
+      '/ì|í|î|ï/' => 'i',
+      '/Ò|Ó|Ô|Õ|Ö|Ō|Ŏ|Ǒ|Ő|Ơ|Ø|Ø|Ǿ|О/' => 'O',
+      '/ò|ó|ô|õ|ö|ō|ŏ|ǒ|ő|ơ|ø|ǿ|º|о/' => 'o',
+      '/Ù|Ú|Û|Ü/' => 'U',
+      '/ù|ú|û|ü/' => 'u',
+      '/Ç/' => 'C',
+      '/ç/' => 'c',
+      '/Ñ/' => 'N',
+      '/Œ/' => 'OE',
+      '/œ/' => 'oe',
+      '/Ý/' => 'Y',
+      '/Þ/' => 'B',
+      '/ß/' => 's',
+      '/Š/' => 'S',
+      '/š/' => 's',
+      '/Ž/' => 'Z',
+      '/ž/' => 'z',
+      '/æ/' => 'ae'
+    );
+    
+    $text = preg_replace(array_keys($foreign), array_values($foreign), $text);
+      if($accents == true) return $text;
+    
+    $text = preg_replace('![^a-z0-9_]!i', '-', $text);
+    $text = preg_replace('/-+/', '-', $text);
+    $text = trim($text, '-');
     $text = str::lower($text);
-    $text = str_replace('ä', 'ae', $text);
-    $text = str_replace('ö', 'oe', $text);
-    $text = str_replace('ü', 'ue', $text);
-    $text = str_replace('ß', 'ss', $text);
-    $text = preg_replace("![^a-z0-9]!i","-", $text);
-    $text = preg_replace("![-]{2,}!","-", $text);
-    $text = preg_replace("!-$!","", $text);
     return $text;
   }
 
@@ -3156,6 +3928,120 @@ class str {
 
 
 
+/**
+ * 
+ * Time
+ * 
+ * A few useful time conversion tools, still a work in progress
+ * 
+ * @package Kirby
+ */
+class t
+{
+  /**
+   * Returns a number of seconds to any given format
+   * 
+   * Very similar to the date function to the exeption that the number of seconds doesn't need to be a timestamp
+   * Useful for basic conversions and formating
+   * 
+   * @param int      $secs The number of seconds
+   * @param string   $format The format to apply, with units placed into brackets, ie. {h}:{m}:{s}
+   * @param boolean  $modulus Wether or not the function returns the total number
+   *                  of any unit, or what's left for each one in ascending order
+   *                  Per example, 90 seconds to the format {m}:{s} will return 01:30 with modulus on TRUE and 01:90 on FALSE
+   * @return string  A formated time string
+   */
+  static function format($secs, $format = NULL, $modulus = true) 
+  {
+    if($modulus)
+    {
+      $restant = $secs;
+      $integers = array('s' => 60, 'i' => 60, 'h' => 24, 'd' => 30.4, 'm' => 12, 'y' => 1); 
+  
+      foreach($integers as $v => $c)
+      {
+        $vals[$v] = $v == 'y' ? floor($restant) : $restant % $c;
+        $restant -= a::get($vals, $v);
+        $restant = $restant / $c;
+      }
+    }
+    else
+      $vals = array(
+        's' => $secs,
+        'i' => $secs / 60,
+        'h' => $secs / 60 / 60,
+        'd' => $secs / 60 / 60 / 24,
+        'w' => $secs / 60 / 60 / 24 / 7,
+        'm' => $secs / 60 / 60 / 24 / 30,
+        'y' => $secs / 60 / 60 / 24 / 365);
+    
+    foreach($vals as $type => $time)
+      $format = str_replace('{' .$type. '}', str_pad($time, 2, "0", STR_PAD_LEFT), $format);
+    
+    return $format;
+  }
+  
+  /**
+   * Calculates the different between two dates, in any format (default in days)
+   * 
+   * @param string   $start The beginning date
+   * @param string   $end The ending date
+   * @param string   $pattern The format to apply on the result
+   * @return string  A time difference
+   */
+  static function difference($start, $end, $pattern = '{d}')
+  {
+    $difference = strtotime($end) - strtotime($start);
+    return self::format($difference, $pattern, TRUE);
+  }
+  
+  /**
+   * Calculates the exact age (taking into account current month and day) from a birthday
+   * 
+   * @param string  $date A birthday in the format YYYY-MM-DD
+   * @return int    A number of years
+   */
+  static function age($date)
+  {
+     list($year, $month, $day) = explode('-', $date);
+     
+    $yearDiff = date('Y') - $year;
+    $monthDiff = date('m') - $month;
+    $dayDiff = date('d') - $day;
+    
+    if( ($monthDiff == 0 and $dayDiff < 0) or ($monthDiff < 0) )
+      $yearDiff--;
+    
+    return $yearDiff;
+  }
+  
+  /**
+   * Shortcut to h:i:s
+   * @param int      $s A number of seconds
+   * @return string  A number of seconds converted to h:i:s
+   */
+  static function hms($s)
+  {
+    return self::format($s, '{h}:{i}:{s}');
+  }
+  
+  /**
+   * Shortcut to i:s
+   * @param int      $s A number of seconds
+   * @return string  A number of seconds converted to i:s
+   */
+  static function ms($s)
+  {
+    return self::format($s, '{i}:{s}');
+  }
+}
+
+
+
+
+
+
+
 
 /**
  * 
@@ -3198,6 +4084,29 @@ class url {
     return ($chars) ? str::short($url, $chars, $rep) : $url;
   }
 
+  /**
+   * Returns the current domain
+   * 
+   * @return string  The current domain
+   */
+  static function domain()
+  {
+    $base = explode('/', self::short());
+    $url = a::get($base, 0);
+   return $url.'/';
+  }
+  
+  /**
+   * Ensures that HTTP:// is present at the beginning of a link. Avoid unvoluntary relative paths
+   * 
+   * @param string   $url The URL to check
+   * @return string  The corrected URL
+   */
+  static function http($url = NULL)
+  {
+    return 'http://' .str_replace('http://', NULL, ($url));
+  }
+
   /** 
     * Checks if the URL has a query string attached
     * 
@@ -3205,7 +4114,7 @@ class url {
     * @return boolean
     */
   static function has_query($url) {
-    return (str::contains($url, '?')) ? true : false;
+    return (str::contains($url, '?'));
   }
 
   /** 
@@ -3329,7 +4238,7 @@ class v {
     */
   static function email($email) {
     $regex = '/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i';
-    return (preg_match($regex, $email)) ? true : false;
+    return (preg_match($regex, $email));
   }
 
   /** 
@@ -3340,7 +4249,7 @@ class v {
     */
   static function url($url) {
     $regex = '/^(https?|ftp|rmtp|mms|svn):\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(:(\d+))?\/?/i';
-    return (preg_match($regex, $url)) ? true : false;
+    return (preg_match($regex, $url));
   }
 
   /** 
