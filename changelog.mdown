@@ -1,5 +1,11 @@
 # Kirby Toolkit Changelog
 
+## 0.9.5
+
+- improved f::extension()
+- improved str::urlify
+- added support for natural sorting to a::sort
+
 ## 0.9.4
 
 - fixed a bug in v::string
