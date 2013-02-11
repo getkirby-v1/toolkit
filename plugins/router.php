@@ -100,7 +100,6 @@ class router {
 			);
 			
 			if(preg_match('#^'.$regex.'(?:\?.*)?$#i', $url, $matches)) {
-				echo 'MATCH!!!';
 				foreach($args as $k => $v) {
 					self::$params[$k] = (array_key_exists($k, $matches)) ? urldecode($matches[$k]) : null;
 				}
