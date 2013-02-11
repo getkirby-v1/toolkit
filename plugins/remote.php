@@ -11,7 +11,7 @@ class remote {
 		$response = self::request($url, false, $options);
 		$content  = a::get($response, 'content');
 
-		if(core::error($response)) return $response;
+		if(error($response)) return $response;
 		if(empty($content)) return false;
 		if($format) return self::parse($content, $format);
 
