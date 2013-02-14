@@ -47,6 +47,7 @@
  *
  * router::run(array(
  * 		'/'								=> 'home',
+ * 		'/welcome/@name'				=> 'welcome',
  *		'/contact						=> array(array('GET', 'POST'), 'contact_callback_function'),
  * 		'/page/@page:[a-zA-Z0-9-_]+'	=> function() { echo 'viewing the "<b>'.router::param('page').'</b>" page'; },
  * 		'/user/profile' 				=> array(array('GET'), 'controller.view_user'),
@@ -56,9 +57,6 @@
  * 
  * ---------------------------------------------------------------------------------------------
  * 
-router::get('/welcome/@name', 'controller.welcome');
-
- 
  * @param	array	$methods an array of request methods allowed (GET, POST, PUT and/or DELETE)
  *
  * @param	string	$url
