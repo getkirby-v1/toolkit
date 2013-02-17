@@ -2763,7 +2763,7 @@ class str {
     */  
   static function link($link, $text=false) {
     $text = ($text) ? $text : $link;
-    return '<a href="' . $link . '">' . str::html($text) . '</a>';
+    return '<a href="' . str::html($link) . '">' . str::html($text) . '</a>';
   }
 
   /**
