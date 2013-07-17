@@ -25,7 +25,7 @@
  *
  * router::set($methods, $url, $callback)
  * - OR - 
- * router::set($url, $callback) ... supports *all* request methods ('GET', 'POST', 'PUT', 'DELETE')
+ * router::set($url, $callback) ... supports "all" request methods ('GET', 'POST', 'PUT', 'DELETE')
  * 
  * - OR -
  *
@@ -82,7 +82,7 @@
  *					3) string in the format 'class.method' (the "." can be configured via c::set('router.delimiter', ' / '))
  *  
  * All $callback routes receive an $args associative array of matched route paramters
- * These paramters can also be accessed with the the router's "param" method:
+ * These paramters can also be accessed with the router's "param" method:
  *
  * router::param($key, $default)
  * 
@@ -99,6 +99,7 @@ class router {
 	static public $routes = array();
 	static public $params = array();
 	static public $not_found = null;
+	static public $method = null;
 	
 	function to($url) {
 		return rtrim(c::get('router.root'), '/').'/'.ltrim($url, '/');
@@ -131,7 +132,7 @@ class router {
 	function put($url, $callback) {
 		self::set(array('PUT'), $url, $callback);
 	}
-	
+		
 	function delete($url, $callback) {
 		self::set(array('DELETE'), $url, $callback);
 	}
@@ -141,7 +142,9 @@ class router {
 	}
 	
 	function run($routes = null) {
-	
+
+		self::$method = strtoupper( (r::is_post()) ? r::get('_method', 'POST') : r::method() );
+		
 		if(is_array($routes)) {
 			foreach($routes as $key => $value) {
 				if(is_array($value)) {
@@ -162,7 +165,7 @@ class router {
 		
 		$url = url::strip_query( server::get('request_uri') );
 		$url = str_replace( rtrim(c::get('router.root'), '/'), '', $url);
-		$method = r::method();
+		$method = self::$method;
 		
 		foreach(self::$routes as $key => $route) {	
 					
