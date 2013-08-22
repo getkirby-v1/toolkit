@@ -3,7 +3,7 @@
 /**
  * Kirby : router
  *
- * 1. Put the following in an .htaccess file:
+ * 1. Put the following in your .htaccess file:
  *
  * RewriteEngine On
  * RewriteCond %{REQUEST_FILENAME} !-f
@@ -46,13 +46,13 @@
  * router::run($routes)
  *
  * router::run(array(
- * 		'/'								=> 'home',
- * 		'/welcome/@name'				=> 'welcome',
- *		'/contact						=> array(array('GET', 'POST'), 'contact_callback_function'),
- * 		'/page/@page:[a-zA-Z0-9-_]+'	=> function() { echo 'viewing the "<b>'.router::param('page').'</b>" page'; },
- * 		'/user/profile' 				=> array(array('GET'), 'controller.view_user'),
- * 		'/users/edit/@id:[0-9]+' 		=> array(array('GET', 'POST'), 'users.edit'),
- * 		'/users/new'					=> array(array('POST'), 'users.create')
+ * 		'/'                             => 'home',
+ * 		'/welcome/@name'                => 'welcome',
+ *		'/contact'                      => array(array('GET', 'POST'), 'contact_callback_function'),
+ * 		'/page/@page:[a-zA-Z0-9-_]+'    => function() { echo 'viewing the "<b>'.router::param('page').'</b>" page'; },
+ * 		'/user/profile'                 => array(array('GET'), 'controller.view_user'),
+ * 		'/users/edit/@id:[0-9]+'        => array(array('GET', 'POST'), 'users.edit'),
+ * 		'/users/new'                    => array(array('POST'), 'users.create')
  * ));
  * 
  * ---------------------------------------------------------------------------------------------
@@ -101,15 +101,15 @@ class router {
 	static public $not_found = null;
 	static public $method = null;
 	
-	function to($url) {
+	static function to($url) {
 		return rtrim(c::get('router.root'), '/').'/'.ltrim($url, '/');
 	}
 	
-	function param($key, $default = null) {
+	static function param($key, $default = null) {
 		return a::get(self::$params, $key, $default);
 	}
 	
-	function set($methods, $url, $callback = null) {
+	static function set($methods, $url, $callback = null) {
 	
 		$has_methods = is_array($methods);
 		$key = ($has_methods) ? $url : $methods;
@@ -121,27 +121,27 @@ class router {
 		);
 	}
 
-	function get($url, $callback) {
+	static function get($url, $callback) {
 		self::set(array('GET'), $url, $callback);
 	}
 	
-	function post($url, $callback) {
+	static function post($url, $callback) {
 		self::set(array('POST'), $url, $callback);
 	}
 	
-	function put($url, $callback) {
+	static function put($url, $callback) {
 		self::set(array('PUT'), $url, $callback);
 	}
 		
-	function delete($url, $callback) {
+	static function delete($url, $callback) {
 		self::set(array('DELETE'), $url, $callback);
 	}
 	
-	function not_found($callback) {
+	static function not_found($callback) {
 		self::$not_found = $callback;
 	}
 	
-	function run($routes = null) {
+	static function run($routes = null) {
 
 		self::$method = strtoupper( (r::is_post()) ? r::get('_method', 'POST') : r::method() );
 		
@@ -161,7 +161,7 @@ class router {
 		}
 	}
 	
-	function map() {
+	static function map() {
 		
 		$url = url::strip_query( server::get('request_uri') );
 		$url = str_replace( rtrim(c::get('router.root'), '/'), '', $url);
@@ -196,7 +196,7 @@ class router {
 		return false;
 	}
 	
-	function call($callback) {
+	static function call($callback) {
 	
 		if(is_callable($callback)) {
 			call_user_func($callback, self::$params);
@@ -221,5 +221,3 @@ class router {
 		}
 	}
 }
-
-?>
