@@ -87,7 +87,7 @@
  * router::param($key, $default)
  * 
  * For example: 
- * router::get(/report.@format:xml|csv|json', function() { echo 'Here is your report in <b>'.router::param('format').'</b>'; });
+ * router::get('/report.@format:xml|csv|json', function() { echo 'Here is your report in <b>'.router::param('format').'</b>'; });
  * 
  */
 
@@ -154,10 +154,14 @@ class router {
 				}
 			}
 		}
+		
 		if($callback = self::map()) {
 			self::call($callback);
-		} elseif(self::$not_found !== false) {
+		} elseif(self::$not_found) {
 			self::call(self::$not_found);
+		} else {
+			header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
+			header('Status: 404 Not Found');
 		}
 	}
 	
