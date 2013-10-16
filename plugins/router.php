@@ -98,8 +98,9 @@ class router {
 	
 	static public $routes = array();
 	static public $params = array();
-	static public $not_found = null;
 	static public $method = null;
+	static public $before = null;
+	static public $not_found = null;
 	
 	static function to($url) {
 		return rtrim(c::get('router.root'), '/').'/'.ltrim($url, '/');
@@ -137,6 +138,10 @@ class router {
 		self::set(array('DELETE'), $url, $callback);
 	}
 	
+	static function before($callback) {
+		self::$before = $callback;
+	}
+	
 	static function not_found($callback) {
 		self::$not_found = $callback;
 	}
@@ -156,6 +161,9 @@ class router {
 		}
 		
 		if($callback = self::map()) {
+			if(self::$before) {
+				self::call(self::$before);
+			}
 			self::call($callback);
 		} elseif(self::$not_found) {
 			self::call(self::$not_found);
