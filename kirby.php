@@ -1141,7 +1141,7 @@ class db {
     if(!$execute) return self::error(l::get('db.errors.query_failed', 'The database query failed'));
     
     $last_id = self::last_id();
-    return ($last_id === false) ? self::$affected : self::last_id();
+    return ($last_id === 0) ? self::$affected : self::last_id();
   }
 
   /** 
