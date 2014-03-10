@@ -2572,10 +2572,14 @@ class str {
     */  
   static function html($string, $keep_html=true) {
     if($keep_html) {
-      return stripslashes(implode('', preg_replace_callback('/^([^<].+[^>])$/', function($m){return htmlentities($m[1], ENT_COMPAT, 'utf-8');}, preg_split('/(<.+?>)/', $string, -1, PREG_SPLIT_DELIM_CAPTURE))));
+      return stripslashes(implode('', preg_replace_callback('/^([^<].+[^>])$/', array('str', 'htmlCallback'), preg_split('/(<.+?>)/', $string, -1, PREG_SPLIT_DELIM_CAPTURE))));
     } else {
       return htmlentities($string, ENT_COMPAT, 'utf-8');
     }
+  }
+  
+  private static function htmlCallback($m) {
+    return htmlentities($m[1], ENT_COMPAT, 'utf-8');
   }
 
   /**
