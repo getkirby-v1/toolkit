@@ -1,0 +1,19 @@
+{
+    "name": "bastianallgeier/kirby",
+    "type": "library",
+    "description": "A stripped down and easy to use toolkit for PHP",
+    "keywords": ["kirby"],
+    "homepage": "http://github.com/bastianallgeier/kirby",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Bastian Allgeier",
+            "email": "bastian@getkirby.com",
+            "homepage": "http://bastianallgeier.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.2.0"
+    }
+}
