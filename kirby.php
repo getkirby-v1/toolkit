@@ -1519,6 +1519,8 @@ class db {
     foreach($input AS $key => $value) {
       if($value === 'NOW()')
         $output[] = $key . ' = NOW()';
+      elseif(is_null($value))
+        $output[] = $key . ' = NULL';
       elseif(is_array($value))
         $output[] = $key . ' = \'' . a::json($value) . '\'';
       else
