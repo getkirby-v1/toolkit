@@ -142,8 +142,12 @@ class router {
 		self::$before = $callback;
 	}
 	
-	static function not_found($callback) {
-		self::$not_found = $callback;
+	static function not_found($callback = null) {
+		if($callback) {
+			self::$not_found = $callback;
+		} else {
+			self::call(self::$not_found);
+		}
 	}
 	
 	static function run($routes = null) {
