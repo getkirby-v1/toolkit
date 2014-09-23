@@ -138,8 +138,12 @@ class router {
 		self::set(array('DELETE'), $url, $callback);
 	}
 	
-	static function before($callback) {
-		self::$before = $callback;
+	static function before($callback = null) {
+		if($callback) {
+			self::$before = $callback;
+		} else {
+			self::call(self::$before);
+		}
 	}
 	
 	static function not_found($callback = null) {
