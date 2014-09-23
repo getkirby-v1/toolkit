@@ -1826,7 +1826,17 @@ class dir {
  * @package Kirby
  */
 class f {
-  
+
+  /**
+   * Checks if a file exists
+   * 
+   * @param  string  $file The path for the file
+   * @return boolean 
+   */  
+  static function exists($file) {
+    return file_exists($file);
+  }
+   
   /**
    * Creates a new file
    * 
