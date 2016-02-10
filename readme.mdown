@@ -1,3 +1,4 @@
 # Kirby Toolkit
 
-**This is a deprecated version of the Kirby toolkit. Please upgrade to the current version: https://github.com/getkirby/toolkit**
+**This is a deprecated version of the Kirby toolkit.  
+Please upgrade to the current version: https://github.com/getkirby/toolkit**
